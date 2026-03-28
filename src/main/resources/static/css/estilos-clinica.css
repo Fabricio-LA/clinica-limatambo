@@ -1,0 +1,15 @@
+:root {
+    --verde-clinica: #28a745;
+    --azul-corporativo: #004a99;
+}
+
+h1 {
+    color: var(--azul-corporativo);
+    font-weight: bold;
+}
+
+.btn-clinica {
+    background-color: var(--verde-clinica);
+    color: white;
+    border-radius: 8px;
+}
