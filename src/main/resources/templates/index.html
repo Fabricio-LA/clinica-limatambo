@@ -3,26 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clínica Lima Tambo</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/estilos-clinica.css}" rel="stylesheet">
+    <title>Clínica Limatambo | Excelencia Médica</title>
+    
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+
+    <nav class="navbar navbar-expand-lg navbar-clinica sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">Clínica Lima Tambo</a>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="bi bi-hospital-fill me-2"></i>
+                <span>LIMATAMBO</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item"><a class="nav-link px-3" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#especialidades">Especialidades</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#nosotros">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="#sedes">Sedes</a></li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="#" class="btn btn-reservar shadow-sm">RESERVAR CITA</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <div class="jumbotron">
-            <h1 class="display-4">Sistema de Gestión de Citas</h1>
-            <p class="lead">Bienvenido al portal administrativo de la clínica.</p>
-            <hr class="my-4">
-            <button class="btn btn-primary btn-lg">Ver Pacientes</button>
-            <button class="btn btn-success btn-lg">Nueva Cita</button>
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="badge px-3 py-2 mb-3" style="background-color: var(--matcha-soft); color: var(--matcha-dark);">Atención 100% Segura</span>
+                    <h1 class="hero-title mb-4">Tu salud, nuestra prioridad</h1>
+                    <p class="lead mb-5 text-muted">Brindamos servicios de salud accesibles con el fin de lograr el bienestar familiar de los peruanos, con calidad y profesionales comprometidos.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn btn-reservar btn-lg shadow">Reservar Cita Online</button>
+                        <button class="btn btn-outline-success btn-lg rounded-pill border-2">Ver Especialidades</button>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block text-center">
+                    <div class="p-5 rounded-5" style="background-color: var(--matcha-soft); border: 2px dashed var(--matcha-main)">
+                        <i class="bi bi-shield-plus" style="font-size: 10rem; color: var(--matcha-dark);"></i>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
+
+    <section class="py-4" style="background-color: var(--matcha-dark); color: white;">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold mb-0">34+</h3>
+                    <small>Años de Experiencia</small>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold mb-0">3</h3>
+                    <small>Sedes en Lima</small>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold mb-0">30+</h3>
+                    <small>Especialidades</small>
+                </div>
+                <div class="col-6 col-md-3">
+                    <h3 class="fw-bold mb-0">100%</h3>
+                    <small>Calidad Humana</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="especialidades" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="color: var(--matcha-dark)">Nuestras Especialidades</h2>
+                <p class="text-muted">Atención médica especializada para cada etapa de tu vida</p>
+                <hr class="mx-auto" style="width: 60px; height: 4px; background: var(--matcha-main); opacity: 1;">
+            </div>
+            
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="card card-especialidad h-100 p-4 border-0">
+                        <div class="icon-circle"><i class="bi bi-capsule"></i></div>
+                        <h4 class="fw-bold">Medicina General</h4>
+                        <p class="text-muted small">Cuidado integral y preventivo orientado al bienestar de todo el grupo familiar.</p>
+                        <div class="mt-auto"><span class="badge bg-light text-dark border">S/ 80.00</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-especialidad h-100 p-4 border-0">
+                        <div class="icon-circle"><i class="bi bi-activity"></i></div>
+                        <h4 class="fw-bold">Cardiología</h4>
+                        <p class="text-muted small">Diagnóstico avanzado y tratamiento para el cuidado de tu salud cardiovascular.</p>
+                        <div class="mt-auto"><span class="badge bg-light text-dark border">S/ 120.00</span></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-especialidad h-100 p-4 border-0">
+                        <div class="icon-circle"><i class="bi bi-baby"></i></div>
+                        <h4 class="fw-bold">Pediatría</h4>
+                        <p class="text-muted small">Especialistas dedicados al crecimiento sano y feliz de los más pequeños.</p>
+                        <div class="mt-auto"><span class="badge bg-light text-dark border">S/ 100.00</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-shield-check fs-1 me-3" style="color: var(--matcha-main);"></i>
+                        <div>
+                            <h5 class="fw-bold">Seguridad Garantizada</h5>
+                            <p class="small text-muted">Protocolos estrictos de bioseguridad en todas nuestras sedes.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-clock-history fs-1 me-3" style="color: var(--matcha-main);"></i>
+                        <div>
+                            <h5 class="fw-bold">Atención Ágil</h5>
+                            <p class="small text-muted">Reducimos los tiempos de espera con nuestro sistema digital.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-people-fill fs-1 me-3" style="color: var(--matcha-main);"></i>
+                        <div>
+                            <h5 class="fw-bold">Staff de Primera</h5>
+                            <p class="small text-muted">Médicos especialistas con amplia trayectoria nacional.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nosotros" class="py-5 bg-white border-top">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="fw-bold mb-4" style="color: var(--matcha-dark)">¿Quiénes Somos?</h2>
+                    <p class="text-muted mb-4">
+                        Clínicas Limatambo es una institución dedicada a brindar atenciones de salud, comprometida en calidad, servicio y cuidados médicos de excelencia para satisfacer integralmente las necesidades de salud de las personas y sus familias.
+                    </p>
+                    
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-3" style="background-color: #fcfdfa; border-left: 4px solid var(--matcha-main);">
+                                <h6 class="fw-bold mb-1">Misión</h6>
+                                <p class="small text-muted mb-0">Brindar servicios accesibles para lograr el bienestar familiar con calidad.</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 rounded-3" style="background-color: #fcfdfa; border-left: 4px solid var(--matcha-main);">
+                                <h6 class="fw-bold mb-1">Visión</h6>
+                                <p class="small text-muted mb-0">Ser líder en el mercado de salud con una atención centrada en el paciente.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6 class="fw-bold">Nuestros Valores:</h6>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="badge border text-dark fw-normal">Eficiencia</span>
+                            <span class="badge border text-dark fw-normal">Honestidad</span>
+                            <span class="badge border text-dark fw-normal">Respeto</span>
+                            <span class="badge border text-dark fw-normal">Lealtad</span>
+                            <span class="badge border text-dark fw-normal">Perseverancia</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="card border-0 p-4 shadow-sm" style="background-color: var(--matcha-soft); border-radius: 25px;">
+                        <h5 class="fw-bold mb-3 text-center">Nuestra Historia</h5>
+                        <div class="small">
+                            <div class="mb-2"><strong>1990:</strong> El Dr. Bertilo Malpartida crea la Sede San Isidro.</div>
+                            <div class="mb-2"><strong>2006:</strong> Apertura de la sede en San Juan de Lurigancho.</div>
+                            <div class="mb-2"><strong>2011:</strong> Sede Minka en el Callao abre sus puertas.</div>
+                            <div><strong>2021:</strong> Inauguración de Limatambo Tower (Consultorios No COVID).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sedes" class="py-5" style="background-color: #f9fbf7;">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h3 class="fw-bold" style="color: var(--matcha-dark)">Ubica nuestras Sedes</h3>
+            </div>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded-4 border-bottom border-success border-4 h-100">
+                        <i class="bi bi-geo-alt-fill text-success fs-3"></i>
+                        <h5 class="mt-3 fw-bold">San Isidro</h5>
+                        <p class="small text-muted">Sede Fundacional e Integral</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded-4 border-bottom border-success border-4 h-100">
+                        <i class="bi bi-geo-alt-fill text-success fs-3"></i>
+                        <h5 class="mt-3 fw-bold">S.J.L.</h5>
+                        <p class="small text-muted">Modernidad en el corazón del distrito</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-white shadow-sm rounded-4 border-bottom border-success border-4 h-100">
+                        <i class="bi bi-geo-alt-fill text-success fs-3"></i>
+                        <h5 class="mt-3 fw-bold">Callao (Minka)</h5>
+                        <p class="small text-muted">Atención especializada en Minka</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-white border-top pt-5">
+        <div class="container">
+            <div class="row g-4 pb-4">
+                <div class="col-lg-4">
+                    <h5 class="fw-bold" style="color: var(--matcha-dark)">CLÍNICA LIMATAMBO</h5>
+                    <p class="text-muted small">Comprometidos con tu salud desde 1990. Brindamos servicios médicos de alta calidad en 3 sedes estratégicas.</p>
+                    <div class="d-flex gap-3 fs-5 text-success">
+                        <i class="bi bi-facebook"></i><i class="bi bi-instagram"></i><i class="bi bi-linkedin"></i>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="fw-bold">Horarios de Atención</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li>Lunes a Viernes: 08:00 - 20:00</li>
+                        <li>Sábados: 08:00 - 13:00</li>
+                        <li class="text-danger fw-bold mt-2">Emergencias: 24 Horas</li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="fw-bold">Central Telefónica</h6>
+                    <p class="small text-muted mb-1"><i class="bi bi-telephone-fill me-2"></i> (01) 610-3333</p>
+                    <p class="small text-muted"><i class="bi bi-envelope-fill me-2"></i> informes@limatambo.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="py-3 text-center" style="background-color: var(--matcha-soft);">
+            <small class="text-dark fw-bold">&copy; 2026 Clínica Limatambo </small>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/51999999999" class="whatsapp-float" target="_blank">
+        <i class="bi bi-whatsapp"></i>
+    </a>
 
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>

@@ -1,15 +1,131 @@
+/* Paleta de Colores Matcha */
 :root {
-    --verde-clinica: #28a745;
-    --azul-corporativo: #004a99;
+    --matcha-main: #8FB935;
+    --matcha-dark: #3E5622;
+    --matcha-soft: #DDEBBE;
+    --text-dark: #2C3E50;
+    --white: #FFFFFF;
 }
 
-h1 {
-    color: var(--azul-corporativo);
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+/* Navbar */
+.navbar-clinica {
+    background-color: var(--white);
+    border-bottom: 3px solid var(--matcha-soft);
+}
+
+.navbar-brand {
     font-weight: bold;
+    color: var(--matcha-dark) !important;
+    font-size: 1.5rem;
 }
 
-.btn-clinica {
-    background-color: var(--verde-clinica);
+.btn-reservar {
+    background-color: var(--matcha-main);
+    color: white !important;
+    font-weight: bold;
+    padding: 12px 25px;
+    border-radius: 30px;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-reservar:hover {
+    background-color: var(--matcha-dark);
+    transform: scale(1.05);
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: #f9fbf7;
+    padding: 80px 0;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--matcha-dark);
+}
+
+/* Cards de Especialidades */
+.card-especialidad {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    background: var(--white);
+}
+
+.card-especialidad:hover {
+    box-shadow: 0 8px 25px rgba(143, 185, 53, 0.2);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background-color: var(--matcha-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    color: var(--matcha-dark);
+    font-size: 1.8rem;
+}
+
+.lista-valores li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--matcha-soft);
+    font-weight: 600;
+    color: var(--matcha-dark);
+}
+
+.lista-valores li:last-child {
+    border-bottom: none;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+footer i:hover {
+    color: var(--matcha-dark);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #25d366;
+    color: #FFF;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 3px #999;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c7e;
+    transform: scale(1.1);
     color: white;
-    border-radius: 8px;
 }
