@@ -1,4 +1,4 @@
-/* Paleta de Colores Matcha */
+/* Paleta de Colores Matcha - Identidad Clínica Lima Tambo */
 :root {
     --matcha-main: #8FB935;
     --matcha-dark: #3E5622;
@@ -8,12 +8,12 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: var(--text-dark);
     margin: 0;
+    line-height: 1.6;
 }
 
-/* Navbar */
 .navbar-clinica {
     background-color: var(--white);
     border-bottom: 3px solid var(--matcha-soft);
@@ -32,100 +32,204 @@ body {
     padding: 12px 25px;
     border-radius: 30px;
     border: none;
-    transition: 0.3s;
+    transition: 0.3s all ease;
 }
 
 .btn-reservar:hover {
     background-color: var(--matcha-dark);
     transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(143, 185, 53, 0.3);
 }
 
-/* Hero Section */
 .hero-section {
-    background-color: #f9fbf7;
-    padding: 80px 0;
+    background: linear-gradient(rgba(143, 185, 53, 0.95), rgba(62, 86, 34, 0.8)), 
+                url('../img/hero-bg.jpg'); /* Opcional: imagen de fondo */
+    background-size: cover;
+    color: white;
+    padding: 120px 0;
+    text-align: center;
 }
 
 .hero-title {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 800;
-    color: var(--matcha-dark);
 }
 
-/* Cards de Especialidades */
-.card-especialidad {
+.card-specialty {
+    transition: transform 0.3s;
+    border-radius: 20px;
     border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: 0.3s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     background: var(--white);
 }
 
-.card-especialidad:hover {
-    box-shadow: 0 8px 25px rgba(143, 185, 53, 0.2);
+.card-specialty:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 10px 30px rgba(143, 185, 53, 0.2);
 }
 
 .icon-circle {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     background-color: var(--matcha-soft);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
+    margin: 0 auto 20px;
     color: var(--matcha-dark);
-    font-size: 1.8rem;
-}
-
-.lista-valores li {
-    padding: 10px 0;
-    border-bottom: 1px solid var(--matcha-soft);
-    font-weight: 600;
-    color: var(--matcha-dark);
-}
-
-.lista-valores li:last-child {
-    border-bottom: none;
-}
-
-
-html {
-    scroll-behavior: smooth;
-}
-
-.hero-section {
-    position: relative;
-    overflow: hidden;
-}
-
-footer i:hover {
-    color: var(--matcha-dark);
-    cursor: pointer;
-    transition: 0.3s;
+    font-size: 2rem;
 }
 
 .whatsapp-float {
     position: fixed;
     width: 60px;
     height: 60px;
-    bottom: 40px;
-    right: 40px;
+    bottom: 30px;
+    right: 30px;
     background-color: #25d366;
-    color: #FFF;
+    color: white;
     border-radius: 50px;
-    text-align: center;
-    font-size: 30px;
-    box-shadow: 2px 2px 3px #999;
-    z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    font-size: 30px;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: 0.3s;
 }
 
 .whatsapp-float:hover {
     background-color: #128c7e;
     transform: scale(1.1);
-    color: white;
+}
+
+.hero-section {
+    background: linear-gradient(rgba(143, 185, 53, 0.9), rgba(62, 86, 34, 0.85));
+    color: var(--white);
+    padding: 100px 0;
+}
+
+.hero-section .lead {
+    color: #FFFFFF !important; 
+    font-weight: 500;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); 
+    max-width: 800px;
+    margin: 0 auto 2.5rem auto;
+}
+
+.btn-outline-white {
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+    background-color: transparent;
+    font-weight: 700;
+    padding: 12px 25px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-white:hover {
+    background-color: #FFFFFF;
+    color: var(--matcha-dark) !important;
+    transform: scale(1.05);
+}
+
+.badge-matcha-light {
+    background-color: var(--matcha-soft);
+    color: var(--matcha-dark);
+    font-weight: 700;
+    padding: 8px 15px;
+    border-radius: 8px;
+}
+
+.btn-reservar:hover {
+    background-color: var(--matcha-dark) !important;
+    color: var(--white) !important;
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+.btn-outline-white:hover {
+    background-color: var(--white) !important;
+    color: var(--matcha-dark) !important;
+    border-color: var(--white) !important;
+    transform: translateY(-3px);
+}
+
+
+.btn, .card-specialty {
+    transition: all 0.3s ease-in-out;
+}
+
+.stats-section {
+    background-color: var(--matcha-dark);
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--white);
+    display: block;
+}
+
+.stat-text {
+    font-size: 0.9rem;
+    color: var(--matcha-soft);
+    text-transform: uppercase;
+}
+
+.dropdown-item-button {
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            padding: 0.25rem 1rem;
+            transition: all 0.2s ease;
+            cursor: pointer; 
+}    
+
+
+.dropdown-item-button:hover {
+     background-color: #f8f9fa; 
+     color: #dc3545; 
+}
+
+
+/* Variables Globales (Asegúrate de que estén al inicio de tu CSS) */
+:root {
+    --matcha-main: #86ab4d;
+    --matcha-dark: #3e5622;
+    --matcha-soft: #e9f0df;
+}
+
+/* Estilos específicos para la página de Login */
+.login-body {
+    background-color: #f9fbf7;
+    display: flex !important; /* Forzamos el uso de Flexbox */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(62, 86, 34, 0.1);
+    width: 100%;
+    max-width: 400px;
+    border-bottom: 5px solid var(--matcha-main);
+}
+
+.logo-login {
+    color: var(--matcha-dark);
+    font-weight: 800;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
