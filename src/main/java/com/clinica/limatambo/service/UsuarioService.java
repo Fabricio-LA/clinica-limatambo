@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.service;
+package com.clinica.limatambo.service;
 
 import com.clinica.limatambo.model.Rol;
 import com.clinica.limatambo.model.Usuario;

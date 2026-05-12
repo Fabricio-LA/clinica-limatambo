@@ -114,3 +114,21 @@ BEGIN
     VALUES ('María', 'González', '12345678', '1990-05-15', @IdUsuarioPaciente);
 END
 GO
+
+-- 8. Insertar Insumos
+INSERT INTO [dbo].[Insumos] ([nombre_insumo], [descripcion], [stock_actual], [stock_minimo], [unidad_medida]) VALUES 
+('Paracetamol 500mg', 'Analgésico', 150, 50, 'Caja'),
+('Jeringas 5ml', 'Jeringas desechables', 200, 100, 'Unidad'),
+('Guantes de Látex', 'Talla M', 50, 100, 'Caja'),
+('Alcohol 96°', 'Alcohol etílico', 30, 20, 'Litro'),
+('Mascarillas N95', 'Mascarillas de protección', 8, 50, 'Caja');
+GO
+
+-- 9. Insertar Parámetros Clínica
+INSERT INTO [dbo].[Parametros_Clinica] ([clave], [valor], [descripcion]) VALUES 
+('NOMBRE_CLINICA', 'Clínica Limatambo', 'Nombre oficial de la clínica'),
+('RUC', '20123456789', 'RUC de la empresa'),
+('DIRECCION', 'Av. República de Panamá 3606, San Isidro', 'Dirección sede principal'),
+('TELEFONO_CONTACTO', '(01) 444-5555', 'Teléfono central'),
+('PRECIO_BASE_CONSULTA', '120.00', 'Precio base en soles para consultas generales');
+GO

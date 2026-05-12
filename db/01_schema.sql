@@ -168,7 +168,7 @@ ALTER TABLE [dbo].[PasswordResetTokens] ADD FOREIGN KEY([id_usuario]) REFERENCES
 GO
 
 -- =============================================
--- 6. DATA INICIAL (SEED)
+-- 6. DATA INICIAL
 -- =============================================
 SET IDENTITY_INSERT [dbo].[Roles] ON;
 INSERT INTO [dbo].[Roles] ([id_rol], [nombre_rol]) VALUES (1, 'ADMIN'), (2, 'MEDICO'), (3, 'PACIENTE');

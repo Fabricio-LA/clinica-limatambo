@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.controller;
+package com.clinica.limatambo.controller;
 
 import com.clinica.limatambo.model.Cita;
 import com.clinica.limatambo.model.Medico;
@@ -35,32 +35,6 @@ public class DashboardController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @GetMapping("/admin/dashboard")
-    public String adminPanel(Model model) {
-        List<Cita> todasLasCitas = citaRepository.findAll();
-        List<CitaDTO> citasDTO = new ArrayList<>();
-
-        for (Cita cita : todasLasCitas) {
-            String nombrePaciente = "Desconocido";
-            Paciente pacienteObj = null;
-            Integer edad = null;
-            if (cita.getIdPaciente() != null) {
-                Optional<Paciente> p = pacienteRepository.findById(cita.getIdPaciente());
-                if (p.isPresent()) {
-                    pacienteObj = p.get();
-                    nombrePaciente = p.get().getNombre() + " " + p.get().getApellido();
-                    if (p.get().getFechaNacimiento() != null) {
-                        edad = Period.between(p.get().getFechaNacimiento(), LocalDate.now()).getYears();
-                    }
-                }
-            }
-            citasDTO.add(new CitaDTO(cita, nombrePaciente, pacienteObj, edad));
-        }
-
-        model.addAttribute("citas", citasDTO);
-        model.addAttribute("totalCitas", todasLasCitas.size());
-        return "admin-dashboard";
-    }
 
     @GetMapping("/medico/dashboard")
     public String medicoPanel(Authentication authentication, Model model) {

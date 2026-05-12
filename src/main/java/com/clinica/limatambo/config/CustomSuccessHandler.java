@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.config;
+package com.clinica.limatambo.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;

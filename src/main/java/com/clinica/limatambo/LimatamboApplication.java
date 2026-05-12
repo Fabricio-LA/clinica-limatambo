@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo;
+package com.clinica.limatambo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

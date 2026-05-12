@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.controller;
+package com.clinica.limatambo.controller;
 
 import com.clinica.limatambo.model.Cita;
 import com.clinica.limatambo.model.Medico;

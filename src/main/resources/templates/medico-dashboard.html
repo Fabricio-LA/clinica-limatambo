@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
@@ -133,8 +133,15 @@
                                     
                                     <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
                                         <input type="hidden" name="nuevoEstado" value="Ausente">
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm px-3" onclick="return confirm('¿Confirmar que el paciente no se presentó a su consulta?');">
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm px-3" onclick="return confirm('\u00bfConfirmar que el paciente no se present\u00f3 a su consulta?');">
                                             <i class="bi bi-person-x me-1"></i> Ausente
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
+                                        <input type="hidden" name="nuevoEstado" value="Cancelada">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita por urgencia m\u00e9dica?');">
+                                            <i class="bi bi-x-circle me-1"></i> Cancelar
                                         </button>
                                     </form>
                                 </div>
@@ -170,7 +177,7 @@
                                     </div>
                                 </div>
                                 
-                                <div class="row g-3 bg-light p-3 rounded-3 mb-0">
+                                <div class="row g-3 bg-light p-3 rounded-3 mb-3">
                                     <div class="col-sm-6 d-flex align-items-center">
                                         <i class="bi bi-calendar3 text-secondary me-2"></i>
                                         <span class="fw-bold text-dark" th:text="${dto.cita.fechaCita}">2026-05-15</span>
@@ -179,6 +186,15 @@
                                         <i class="bi bi-clock text-secondary me-2"></i>
                                         <span class="fw-bold text-dark" th:text="${dto.cita.horaCita}">10:00:00</span>
                                     </div>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
+                                        <input type="hidden" name="nuevoEstado" value="Cancelada">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita programada por urgencia m\u00e9dica?');">
+                                            <i class="bi bi-x-circle me-1"></i> Cancelar por Urgencia
+                                        </button>
+                                    </form>
                                 </div>
                                 
                             </div>

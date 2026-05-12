@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.controller;
+package com.clinica.limatambo.controller;
 
 import com.clinica.limatambo.dto.RegistroPacienteDTO;
 import com.clinica.limatambo.model.Paciente;
@@ -62,4 +62,3 @@ public class RegistroController {
         }
     }
 }
-

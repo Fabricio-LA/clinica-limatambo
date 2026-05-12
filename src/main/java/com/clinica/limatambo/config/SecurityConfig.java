@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.config;
+package com.clinica.limatambo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

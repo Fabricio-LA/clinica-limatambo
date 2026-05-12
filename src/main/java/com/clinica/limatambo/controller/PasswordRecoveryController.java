@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.controller;
+package com.clinica.limatambo.controller;
 
 import com.clinica.limatambo.model.PasswordResetToken;
 import com.clinica.limatambo.model.Usuario;

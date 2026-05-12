@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.dto;
+package com.clinica.limatambo.dto;
 
 import java.time.LocalDate;
 
