@@ -1,4 +1,4 @@
-package com.clinica.limatambo.model;
+﻿package com.clinica.limatambo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -24,6 +24,9 @@ public class Paciente {
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
 
+    @Column(length = 15)
+    private String telefono;
+
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
@@ -43,6 +46,9 @@ public class Paciente {
 
     public LocalDate getFechaNacimiento() { return fechaNacimiento; }
     public void setFechaNacimiento(LocalDate fechaNacimiento) { this.fechaNacimiento = fechaNacimiento; }
+
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 
     public Integer getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }

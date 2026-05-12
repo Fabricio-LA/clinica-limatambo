@@ -18,7 +18,6 @@
     </properties>
 
     <dependencies>
-        <!-- Todas las dependencias deben ir AQUÍ ADENTRO -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -58,7 +57,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- AQUÍ termina el bloque de dependencias -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

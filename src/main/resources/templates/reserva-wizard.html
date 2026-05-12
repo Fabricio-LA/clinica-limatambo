@@ -1,0 +1,389 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Cita | Clínica Limatambo</title>
+    
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <style>
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
+        .step-indicator {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold;
+            background-color: #e9ecef; color: #6c757d;
+        }
+        .step-indicator.active {
+            background-color: var(--matcha-main); color: white;
+            box-shadow: 0 0 0 0.25rem rgba(136, 176, 75, 0.25);
+        }
+        .step-indicator.completed {
+            background-color: var(--matcha-dark); color: white;
+        }
+        .step-line {
+            height: 4px; background-color: #e9ecef;
+            flex-grow: 1; margin: 0 10px; border-radius: 2px;
+        }
+        .step-line.active { background-color: var(--matcha-main); }
+        .card-selectable { cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+        .card-selectable:hover { border-color: var(--matcha-light); transform: translateY(-3px); }
+        .card-selectable.selected { border-color: var(--matcha-main); background-color: #fcfdfa; }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-clinica sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/paciente/dashboard}">
+                <i class="bi bi-hospital-fill me-2" style="color: var(--matcha-main);"></i>
+                <span>LIMATAMBO - Reservas</span>
+            </a>
+            <div class="ms-auto">
+                <a th:href="@{/paciente/dashboard}" class="btn btn-outline-danger btn-sm">Cancelar</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center justify-content-between mb-5 px-3">
+                    <div class="text-center">
+                        <div class="step-indicator active" id="indicator-1">1</div>
+                        <small class="fw-bold mt-2 d-block">Especialidad</small>
+                    </div>
+                    <div class="step-line" id="line-1"></div>
+                    <div class="text-center">
+                        <div class="step-indicator" id="indicator-2">2</div>
+                        <small class="fw-bold mt-2 d-block text-muted" id="label-2">Médico y Horario</small>
+                    </div>
+                    <div class="step-line" id="line-2"></div>
+                    <div class="text-center">
+                        <div class="step-indicator" id="indicator-3">3</div>
+                        <small class="fw-bold mt-2 d-block text-muted" id="label-3">Confirmación</small>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                    
+                    <form id="wizardForm" th:action="@{/citas/reservar}" method="post">
+                        <div class="wizard-step active" id="step1">
+                            <h4 class="fw-bold mb-4" style="color: var(--matcha-dark)"><i class="bi bi-heart-pulse me-2"></i>Selecciona la Especialidad</h4>
+                            
+                            <input type="hidden" name="idEspecialidad" id="inputEspecialidad" required>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6" th:each="esp : ${especialidades}">
+                                    <div class="card card-selectable p-3 text-center" th:data-id="${esp.idEspecialidad}" th:data-name="${esp.nombreEspecialidad}" onclick="selectEspecialidad(this)">
+                                        <h5 class="fw-bold mb-0" th:text="${esp.nombreEspecialidad}">Nombre</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-end mt-5">
+                                <button type="button" class="btn btn-reservar px-4" id="btnNext1" disabled onclick="nextStep(2)">Siguiente <i class="bi bi-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+                        <div class="wizard-step" id="step2">
+                            <h4 class="fw-bold mb-4" style="color: var(--matcha-dark)"><i class="bi bi-person-badge me-2"></i>Elige a tu Médico</h4>
+                            
+                            <input type="hidden" name="idMedico" id="inputMedico" required>
+                            <div class="row g-3 mb-4" id="medicosContainer">
+                                <div class="col-md-6 medico-card" th:each="med : ${medicos}" th:data-esp="${med.idEspecialidad}">
+                                    <div class="card card-selectable p-3" th:data-id="${med.idMedico}" th:data-name="${'Dr. ' + med.nombre + ' ' + med.apellido}" th:data-dias="${med.diasLaborables}" onclick="selectMedico(this)">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person-circle fs-3 text-success me-3"></i>
+                                            <div>
+                                                <h6 class="fw-bold mb-0" th:text="${'Dr. ' + med.nombre + ' ' + med.apellido}">Dr. Nombre</h6>
+                                                <small class="text-muted" th:text="${med.diasLaborablesTexto + ' | ' + med.horaInicio + ' - ' + med.horaFin}">Lun a Vie | 08:00 - 14:00</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h5 class="fw-bold mb-3 mt-4">Fecha y Hora</h5>
+                            <div class="row g-3">
+                                <div class="col-md-5">
+                                    <label class="form-label text-muted small fw-bold">Fecha de Consulta</label>
+                                    <input type="text" class="form-control bg-white" name="fechaCita" id="inputFecha" placeholder="Selecciona un doctor primero..." required readonly>
+                                </div>
+                                <div class="col-md-7">
+                                    <label class="form-label text-muted small fw-bold">Hora Disponible</label>
+                                    <input type="hidden" name="horaCita" id="inputHoraHidden" required>
+                                    <div id="contenedorHoras" class="d-flex flex-wrap gap-2">
+                                        <div class="text-muted small w-100">Seleccione primero una fecha para ver los horarios.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-2">
+                                    <small id="alertaHorario" class="text-danger fw-bold" style="display: none;">Este doctor no atiende en el día seleccionado o ya no tiene turnos.</small>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-5">
+                                <button type="button" class="btn btn-outline-secondary px-4" onclick="prevStep(1)"><i class="bi bi-arrow-left me-2"></i> Atrás</button>
+                                <button type="button" class="btn btn-reservar px-4" id="btnNext2" disabled onclick="nextStep(3)">Siguiente <i class="bi bi-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+                        <div class="wizard-step" id="step3">
+                            <div class="text-center mb-4">
+                                <div class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle mb-3" style="width: 70px; height: 70px;">
+                                    <i class="bi bi-check2-all fs-1"></i>
+                                </div>
+                                <h4 class="fw-bold text-success">Resumen de tu Reserva</h4>
+                                <p class="text-muted">Por favor revisa los datos antes de confirmar.</p>
+                            </div>
+
+                            <div class="card bg-light border-0 rounded-4 p-4 mb-4">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <small class="text-muted fw-bold d-block">Especialidad</small>
+                                        <span class="fs-5" id="resumenEspecialidad">-</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted fw-bold d-block">Médico</small>
+                                        <span class="fs-5" id="resumenMedico">-</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted fw-bold d-block">Fecha</small>
+                                        <span class="fs-5" id="resumenFecha">-</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted fw-bold d-block">Hora</small>
+                                        <span class="fs-5" id="resumenHora">-</span>
+                                    </div>
+                                    <div class="col-12 mt-3 pt-3 border-top">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="fw-bold">Tarifa de Consulta:</span>
+                                            <span class="fw-bold fs-4 text-success">S/ 100.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-5">
+                                <button type="button" class="btn btn-outline-secondary px-4" onclick="prevStep(2)"><i class="bi bi-arrow-left me-2"></i> Atrás</button>
+                                <button type="submit" class="btn btn-reservar px-4 fw-bold">Confirmar Cita <i class="bi bi-check-circle-fill ms-2"></i></button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+
+    <script>
+        // Lógica simple del Wizard
+        let espName = "";
+        let medName = "";
+        let flatpickrInstance = null;
+
+        function selectEspecialidad(element) {
+            document.querySelectorAll('#step1 .card-selectable').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('inputEspecialidad').value = element.getAttribute('data-id');
+            espName = element.getAttribute('data-name');
+            document.getElementById('btnNext1').disabled = false;
+            
+            // Filtrar médicos visualmente
+            const idEsp = element.getAttribute('data-id');
+            document.querySelectorAll('.medico-card').forEach(c => {
+                if(c.getAttribute('data-esp') === idEsp) {
+                    c.style.display = 'block';
+                } else {
+                    c.style.display = 'none';
+                }
+            });
+            // Resetear médico seleccionado y horarios
+            document.querySelectorAll('#step2 .card-selectable').forEach(c => c.classList.remove('selected'));
+            document.getElementById('inputMedico').value = '';
+            document.getElementById('inputFecha').value = '';
+            document.getElementById('inputHoraHidden').value = '';
+            document.getElementById('contenedorHoras').innerHTML = '<div class="text-muted small w-100">Seleccione primero una fecha para ver los horarios.</div>';
+            
+            if (flatpickrInstance) {
+                flatpickrInstance.destroy();
+                document.getElementById('inputFecha').value = "";
+                document.getElementById('inputFecha').placeholder = "Selecciona un doctor primero...";
+            }
+            
+            document.getElementById('alertaHorario').style.display = 'none';
+            checkStep2();
+        }
+
+        function selectMedico(element) {
+            document.querySelectorAll('#step2 .card-selectable').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('inputMedico').value = element.getAttribute('data-id');
+            medName = element.getAttribute('data-name');
+            
+            // Configurar Flatpickr para este doctor
+            const diasJava = element.getAttribute('data-dias').split(',').map(Number);
+            // Flatpickr: 0 = Domingo, 1 = Lunes... Java: 7 = Domingo, 1 = Lunes
+            const diasFlat = diasJava.map(d => d === 7 ? 0 : d);
+            
+            document.getElementById('inputFecha').placeholder = "Elige un día en el calendario...";
+            
+            if (flatpickrInstance) {
+                flatpickrInstance.destroy();
+            }
+            
+            flatpickrInstance = flatpickr("#inputFecha", {
+                locale: "es",
+                minDate: "today",
+                disable: [
+                    function(date) {
+                        return !diasFlat.includes(date.getDay());
+                    }
+                ],
+                onChange: function(selectedDates, dateStr, instance) {
+                    cargarHorariosDisponibles();
+                }
+            });
+            
+            // Si ya hay una fecha, recargar (aunque al destruir flatpickr se borra)
+            if (document.getElementById('inputFecha').value !== '') {
+                cargarHorariosDisponibles();
+            }
+            checkStep2();
+        }
+
+        function seleccionarHora(btn, hora) {
+            document.querySelectorAll('.btn-hora').forEach(b => {
+                b.classList.remove('btn-success');
+                b.classList.add('btn-outline-success');
+            });
+            btn.classList.remove('btn-outline-success');
+            btn.classList.add('btn-success');
+            
+            document.getElementById('inputHoraHidden').value = hora;
+            checkStep2();
+        }
+
+        function cargarHorariosDisponibles() {
+            const idMedico = document.getElementById('inputMedico').value;
+            const fecha = document.getElementById('inputFecha').value;
+            const contenedorHoras = document.getElementById('contenedorHoras');
+            const alerta = document.getElementById('alertaHorario');
+            
+            document.getElementById('inputHoraHidden').value = '';
+            
+            if (!idMedico || !fecha) return;
+
+            // Mostrar estado de carga
+            contenedorHoras.innerHTML = '<div class="spinner-border spinner-border-sm text-success" role="status"></div> <span class="text-muted small ms-2">Cargando...</span>';
+            alerta.style.display = 'none';
+            document.getElementById('btnNext2').disabled = true;
+
+            fetch(`/api/citas/disponibles?idMedico=${idMedico}&fecha=${fecha}`)
+                .then(response => response.json())
+                .then(data => {
+                    contenedorHoras.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        contenedorHoras.innerHTML = '<div class="text-muted small w-100">No hay horarios disponibles para este día.</div>';
+                        alerta.style.display = 'block';
+                    } else {
+                        data.forEach(item => {
+                            let btn = document.createElement('button');
+                            btn.type = 'button';
+                            // Ajustar hora quitando segundos si los tiene, de "08:00:00" a "08:00"
+                            let horaCorta = item.hora.substring(0, 5);
+                            btn.innerText = horaCorta;
+                            
+                            if (!item.disponible) {
+                                btn.className = 'btn btn-sm btn-hora btn-secondary';
+                                btn.disabled = true;
+                                btn.style.opacity = '0.5';
+                                btn.title = 'No disponible';
+                            } else {
+                                btn.className = 'btn btn-sm btn-hora btn-outline-success fw-bold';
+                                btn.onclick = function() { seleccionarHora(this, item.hora); };
+                            }
+                            contenedorHoras.appendChild(btn);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar horarios:', error);
+                    contenedorHoras.innerHTML = '<div class="text-danger small w-100">Error de conexión</div>';
+                });
+        }
+
+        function checkStep2() {
+            const med = document.getElementById('inputMedico').value;
+            const date = document.getElementById('inputFecha').value;
+            const time = document.getElementById('inputHoraHidden').value;
+            document.getElementById('btnNext2').disabled = !(med && date && time);
+        }
+
+        function nextStep(step) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            
+            if(step === 2) {
+                document.getElementById('indicator-1').classList.add('completed');
+                document.getElementById('indicator-1').innerHTML = '<i class="bi bi-check"></i>';
+                document.getElementById('line-1').classList.add('active');
+                document.getElementById('indicator-2').classList.add('active');
+                document.getElementById('label-2').classList.remove('text-muted');
+                document.getElementById('label-2').classList.add('text-dark');
+            }
+            if(step === 3) {
+                document.getElementById('indicator-2').classList.add('completed');
+                document.getElementById('indicator-2').innerHTML = '<i class="bi bi-check"></i>';
+                document.getElementById('line-2').classList.add('active');
+                document.getElementById('indicator-3').classList.add('active');
+                document.getElementById('label-3').classList.remove('text-muted');
+                document.getElementById('label-3').classList.add('text-dark');
+                
+                // Llenar resumen
+                document.getElementById('resumenEspecialidad').innerText = espName;
+                document.getElementById('resumenMedico').innerText = medName;
+                
+                const fechaRaw = document.getElementById('inputFecha').value;
+                const partes = fechaRaw.split('-');
+                document.getElementById('resumenFecha').innerText = partes[2] + '/' + partes[1] + '/' + partes[0];
+                document.getElementById('resumenHora').innerText = document.getElementById('inputHoraHidden').value;
+            }
+        }
+
+        function prevStep(step) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+            
+            if(step === 1) {
+                document.getElementById('indicator-1').classList.remove('completed');
+                document.getElementById('indicator-1').innerHTML = '1';
+                document.getElementById('line-1').classList.remove('active');
+                document.getElementById('indicator-2').classList.remove('active');
+                document.getElementById('label-2').classList.add('text-muted');
+                document.getElementById('label-2').classList.remove('text-dark');
+            }
+            if(step === 2) {
+                document.getElementById('indicator-2').classList.remove('completed');
+                document.getElementById('indicator-2').innerHTML = '2';
+                document.getElementById('line-2').classList.remove('active');
+                document.getElementById('indicator-3').classList.remove('active');
+                document.getElementById('label-3').classList.add('text-muted');
+                document.getElementById('label-3').classList.remove('text-dark');
+            }
+        }
+    </script>
+</body>
+</html>
+
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
 <head>
@@ -58,8 +58,8 @@
             <div class="row g-4 mb-5">
                 <div class="col-md-3">
                     <div class="card border-0 border-start border-4 border-success shadow-sm p-3">
-                        <h6 class="text-muted small">Citas Hoy</h6>
-                        <h3 class="fw-bold">24</h3>
+                        <h6 class="text-muted small">Citas Programadas</h6>
+                        <h3 class="fw-bold" th:text="${totalCitas}">0</h3>
                     </div>
                 </div>
             </div>
@@ -76,10 +76,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>09:00</td>
-                                <td>María González</td>
-                                <td><span class="badge bg-success">Confirmada</span></td>
+                            <tr th:each="dto : ${citas}">
+                                <td th:text="${dto.cita.horaCita}">09:00</td>
+                                <td th:text="${dto.nombrePaciente}">María González</td>
+                                <td>
+                                    <span class="badge" 
+                                          th:classappend="${dto.cita.estado == 'Pendiente'} ? 'bg-warning text-dark' : 'bg-success'"
+                                          th:text="${dto.cita.estado}">Confirmada</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -92,3 +96,4 @@
 <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
+

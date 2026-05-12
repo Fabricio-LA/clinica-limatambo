@@ -1,4 +1,4 @@
-package com.clinica.limatambo.model;
+﻿package com.clinica.limatambo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -18,9 +18,11 @@ public class Cita {
     @Column(name = "id_medico")
     private Integer idMedico;
 
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_cita", nullable = false)
     private LocalDate fechaCita;
 
+    @org.springframework.format.annotation.DateTimeFormat(pattern = "HH:mm")
     @Column(name = "hora_cita", nullable = false)
     private LocalTime horaCita;
 
@@ -28,4 +30,22 @@ public class Cita {
     private String estado = "Pendiente";
 
     public Cita() {}
+
+    public Integer getIdCita() { return idCita; }
+    public void setIdCita(Integer idCita) { this.idCita = idCita; }
+
+    public Integer getIdPaciente() { return idPaciente; }
+    public void setIdPaciente(Integer idPaciente) { this.idPaciente = idPaciente; }
+
+    public Integer getIdMedico() { return idMedico; }
+    public void setIdMedico(Integer idMedico) { this.idMedico = idMedico; }
+
+    public LocalDate getFechaCita() { return fechaCita; }
+    public void setFechaCita(LocalDate fechaCita) { this.fechaCita = fechaCita; }
+
+    public LocalTime getHoraCita() { return horaCita; }
+    public void setHoraCita(LocalTime horaCita) { this.horaCita = horaCita; }
+
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

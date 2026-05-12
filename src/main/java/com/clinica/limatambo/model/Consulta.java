@@ -1,4 +1,4 @@
-package com.clinica.limatambo.model;
+﻿package com.clinica.limatambo.model;
 
 import jakarta.persistence.*;
 

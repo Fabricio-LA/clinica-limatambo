@@ -1,4 +1,4 @@
-package com.clinica.limatambo.repository;
+﻿package com.clinica.limatambo.repository;
 
 import com.clinica.limatambo.model.Historial;
 import org.springframework.data.jpa.repository.JpaRepository;

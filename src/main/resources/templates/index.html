@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" 
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
 <head>
@@ -14,8 +14,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <!-- Navegación -->
     <nav class="navbar navbar-expand-lg navbar-clinica sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
@@ -54,14 +52,12 @@
                     </li>
 
                     <li class="nav-item ms-lg-3">
-                        <button class="btn btn-reservar shadow-sm" data-bs-toggle="modal" data-bs-target="#modalRegistro">RESERVAR CITA</button>
+                        <a th:href="@{/paciente/reservar}" class="btn btn-reservar shadow-sm">RESERVAR CITA</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <!-- Sección Hero -->
     <header class="hero-section text-center">
         <div class="container">
             <span class="badge badge-matcha-light px-3 py-2 mb-4 shadow-sm">Atención 100% Segura</span>
@@ -71,17 +67,15 @@
                 de los peruanos, con calidad y profesionales comprometidos.
             </p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <button class="btn btn-reservar btn-lg shadow" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                <a th:href="@{/paciente/reservar}" class="btn btn-reservar btn-lg shadow">
                     Reservar Cita Online
-                </button>
+                </a>>
                 <a href="#especialidades" class="btn btn-outline-white btn-lg">
                     Ver Especialidades
                 </a>
             </div>
         </div>
     </header>
-
-    <!-- Sección Estadísticas -->
     <section class="stats-section py-4" style="background-color: var(--matcha-dark); color: white;">
         <div class="container">
             <div class="row text-center g-4">
@@ -104,8 +98,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Sección Especialidades -->
     <section id="especialidades" class="py-5 bg-light">
         <div class="container py-5">
             <div class="text-center mb-5">
@@ -140,8 +132,58 @@
             </div>
         </div>
     </section>
-
-    <!-- Sección Nosotros -->
+    <section id="especialistas" class="py-5 bg-white border-top">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="color: var(--matcha-dark)">Nuestros Especialistas</h2>
+                <hr class="mx-auto" style="width: 60px; height: 4px; background: var(--matcha-main); opacity: 1;">
+                <p class="text-muted">Conoce a nuestro equipo médico de primer nivel</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="dto : ${medicos}">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                                    <i class="bi bi-person-fill fs-2" style="color: var(--matcha-main);"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold mb-1" th:text="${'Dr. ' + dto.medico.nombre + ' ' + dto.medico.apellido}">Dr. Nombre</h5>
+                                    <span class="badge bg-light text-dark border" th:text="${dto.especialidadNombre}">Especialidad</span>
+                                </div>
+                            </div>
+                            
+                            <hr class="text-muted opacity-25">
+                            
+                            <div class="d-flex flex-column gap-2 mb-4">
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="bi bi-calendar-check me-2 text-success"></i>
+                                    <span>Ver días laborables en el Wizard</span>
+                                </div>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="bi bi-clock me-2 text-success"></i>
+                                    <span><span th:text="${dto.medico.horaInicio}">08:00</span> - <span th:text="${dto.medico.horaFin}">14:00</span></span>
+                                </div>
+                                <div class="d-flex align-items-center text-muted small">
+                                    <i class="bi bi-cash-coin me-2 text-success"></i>
+                                    <span>Tarifa de Consulta: S/ 100.00</span>
+                                </div>
+                            </div>
+                            
+                            <a th:href="@{/paciente/reservar}" class="btn btn-outline-success w-100 rounded-pill">
+                                Agendar con el Doctor
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(medicos)}" class="col-12 text-center text-muted">
+                    No hay médicos disponibles por el momento.
+                </div>
+            </div>
+        </div>
+    </section>
     <section id="nosotros" class="py-5 bg-white border-top">
         <div class="container py-5">
             <div class="row align-items-center">
@@ -173,8 +215,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Sección Sedes -->
     <section id="sedes" class="py-5" style="background-color: #f9fbf7;">
         <div class="container text-center">
             <h3 class="fw-bold mb-5" style="color: var(--matcha-dark)">Ubica nuestras Sedes</h3>
@@ -203,8 +243,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
     <footer class="bg-white border-top pt-5">
         <div class="container pb-4">
             <div class="row g-4">
@@ -231,3 +269,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

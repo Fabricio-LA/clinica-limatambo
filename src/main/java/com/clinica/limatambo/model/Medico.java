@@ -1,4 +1,4 @@
-package com.clinica.limatambo.model;
+﻿package com.clinica.limatambo.model;
 
 import jakarta.persistence.*;
 
@@ -23,6 +23,15 @@ public class Medico {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    @Column(name = "hora_inicio")
+    private java.time.LocalTime horaInicio;
+
+    @Column(name = "hora_fin")
+    private java.time.LocalTime horaFin;
+
+    @Column(name = "dias_laborables")
+    private String diasLaborables;
+
     public Medico() {}
 
     public Integer getIdMedico() { return idMedico; }
@@ -35,4 +44,25 @@ public class Medico {
     public void setIdEspecialidad(Integer idEspecialidad) { this.idEspecialidad = idEspecialidad; }
     public Integer getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
+
+    public java.time.LocalTime getHoraInicio() { return horaInicio; }
+    public void setHoraInicio(java.time.LocalTime horaInicio) { this.horaInicio = horaInicio; }
+
+    public java.time.LocalTime getHoraFin() { return horaFin; }
+    public void setHoraFin(java.time.LocalTime horaFin) { this.horaFin = horaFin; }
+
+    public String getDiasLaborables() { return diasLaborables; }
+    public void setDiasLaborables(String diasLaborables) { this.diasLaborables = diasLaborables; }
+
+    public String getDiasLaborablesTexto() {
+        if (this.diasLaborables == null || this.diasLaborables.isEmpty()) return "Días no definidos";
+        
+        if (this.diasLaborables.equals("1,2,3,4,5")) return "Lun a Vie";
+        if (this.diasLaborables.equals("6,7") || this.diasLaborables.equals("6")) return "Fines de Semana";
+        if (this.diasLaborables.equals("1,3,5")) return "Lun, Mie, Vie";
+        if (this.diasLaborables.equals("2,4")) return "Mar y Jue";
+        
+        return "Días variados";
+    }
 }
+

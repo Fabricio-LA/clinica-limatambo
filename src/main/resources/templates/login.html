@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
@@ -25,6 +25,9 @@
         <div th:if="${param.error}" class="alert alert-danger py-2 small text-center">
             Usuario o contraseña incorrectos.
         </div>
+        <div th:if="${param.resetSuccess}" class="alert alert-success py-2 small text-center">
+            Contraseña restablecida con éxito. Ya puedes ingresar.
+        </div>
 
         <form th:action="@{/login}" method="post">
             <div class="mb-3">
@@ -46,7 +49,13 @@
             <button type="submit" class="btn btn-reservar w-100 mb-3">INGRESAR</button>
             
             <div class="text-center">
-                <a th:href="@{/}" class="text-decoration-none small text-muted">
+                <a th:href="@{/forgot-password}" class="text-decoration-none small text-muted d-block mb-2">
+                    ¿Olvidaste tu contraseña?
+                </a>
+                <a th:href="@{/registro}" class="text-decoration-none small text-success fw-bold d-block mb-3">
+                    ¿No tienes cuenta? Regístrate aquí
+                </a>
+                <a th:href="@{/}" class="text-decoration-none small text-muted d-block">
                     <i class="bi bi-arrow-left me-1"></i> Volver al inicio
                 </a>
             </div>
@@ -55,3 +64,4 @@
 
 </body>
 </html>
+

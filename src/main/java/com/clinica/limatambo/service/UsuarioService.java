@@ -1,5 +1,10 @@
-package com.clinica.limatambo.service;
+﻿package com.clinica.limatambo.service;
 
+import com.clinica.limatambo.model.Rol;
+import com.clinica.limatambo.model.Usuario;
+import com.clinica.limatambo.repository.RolRepository;
+import com.clinica.limatambo.repository.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,22 +12,33 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioService implements UserDetailsService {
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private RolRepository rolRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if ("admin01".equals(username)) {
-            return new User("admin01", "admin123", 
-                List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
-        } else if ("medico01".equals(username)) {
-            return new User("medico01", "medico123", 
-                List.of(new SimpleGrantedAuthority("ROLE_MEDICO")));
-        } else if ("12345678".equals(username)) {
-            return new User("12345678", "123456", 
-                List.of(new SimpleGrantedAuthority("ROLE_PACIENTE")));
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+
+        if (usuario.getEstado() != null && !usuario.getEstado()) {
+            throw new UsernameNotFoundException("Usuario inactivo: " + username);
         }
-        throw new UsernameNotFoundException("Usuario no encontrado: " + username);
+
+        Rol rol = rolRepository.findById(usuario.getIdRol())
+                .orElseThrow(() -> new UsernameNotFoundException("Rol no encontrado para el usuario: " + username));
+
+        return new User(
+                usuario.getUsername(),
+                usuario.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombreRol()))
+        );
     }
 }

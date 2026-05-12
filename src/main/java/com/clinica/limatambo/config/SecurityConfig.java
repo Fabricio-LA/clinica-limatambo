@@ -1,4 +1,4 @@
-package com.clinica.limatambo.config;
+﻿package com.clinica.limatambo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.clinica.limatambo.service.UsuarioService;
@@ -27,9 +27,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/paciente/registro").permitAll()
+                .requestMatchers("/", "/login", "/css/**", "/js/**", "/img/**", "/registro", "/forgot-password", "/reset-password").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/medico/**").hasRole("MEDICO")
+                .requestMatchers("/paciente/**").hasRole("PACIENTE")
                 .anyRequest().authenticated()
             )
 
@@ -52,7 +53,7 @@ public class SecurityConfig {
     
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     }
 
     @Bean

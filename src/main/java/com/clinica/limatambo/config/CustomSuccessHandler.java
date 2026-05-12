@@ -1,4 +1,4 @@
-package com.clinica.limatambo.config;
+﻿package com.clinica.limatambo.config;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,6 +23,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("/admin/dashboard");
         } else if (roles.contains("ROLE_MEDICO")) {
             response.sendRedirect("/medico/dashboard");
+        } else if (roles.contains("ROLE_PACIENTE")) {
+            response.sendRedirect("/paciente/dashboard");
         } else {
             response.sendRedirect("/");
         }

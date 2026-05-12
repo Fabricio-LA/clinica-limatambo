@@ -1,4 +1,4 @@
-package com.clinica.limatambo.repository;
+﻿package com.clinica.limatambo.repository;
 
 import com.clinica.limatambo.model.Consulta;
 import org.springframework.data.jpa.repository.JpaRepository;
