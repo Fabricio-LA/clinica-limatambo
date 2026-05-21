@@ -37,11 +37,22 @@ public class RegistroController {
                 model.addAttribute("error", "Ya existe un usuario registrado con este DNI.");
                 return "registro";
             }
+
+            if (pacienteRepository.existsByDni(dto.getDni())) {
+                model.addAttribute("error", "Ya existe un paciente registrado con este DNI en nuestro sistema.");
+                return "registro";
+            }
+            
+            if (usuarioRepository.findByEmail(dto.getEmail()).isPresent()) {
+                model.addAttribute("error", "El correo electrónico ya está registrado en el sistema.");
+                return "registro";
+            }
+
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setUsername(username);
             nuevoUsuario.setPassword(passwordEncoder.encode(dto.getPassword()));
             nuevoUsuario.setEmail(dto.getEmail());
-            nuevoUsuario.setIdRol(3); // 3 es PACIENTE en la base de datos
+            nuevoUsuario.setIdRol(3);
             nuevoUsuario.setEstado(true);
             
             Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
