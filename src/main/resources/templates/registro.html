@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
@@ -49,6 +49,27 @@
                     <input type="date" name="fechaNacimiento" class="form-control bg-light border-0" required>
                 </div>
 
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">¿Cuenta con Seguro?</label>
+                        <select id="hasInsurance" class="form-select bg-light border-0" onchange="toggleInsuranceSelect()" required>
+                            <option value="no">No, soy Particular</option>
+                            <option value="si">Sí, tengo seguro de salud</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6" id="insuranceSelectContainer" style="display: none;">
+                        <label class="form-label small fw-bold">Seleccione Seguro</label>
+                        <select name="tipoSeguro" id="tipoSeguro" class="form-select bg-light border-0">
+                            <option value="Particular">Ninguno (Particular)</option>
+                            <option value="Rimac">Rímac Seguros (20% Desc.)</option>
+                            <option value="Interseguro">Interseguro (15% Desc.)</option>
+                            <option value="LaPositiva">La Positiva (15% Desc.)</option>
+                            <option value="Mapfre">Mapfre (10% Desc.)</option>
+                            <option value="Pacifico">Pacífico Seguros (15% Desc.)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label small fw-bold">Correo Electrónico</label>
                     <input type="email" name="email" class="form-control bg-light border-0" required>
@@ -69,6 +90,24 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function toggleInsuranceSelect() {
+            const hasInsurance = document.getElementById('hasInsurance').value;
+            const container = document.getElementById('insuranceSelectContainer');
+            const selectSeguro = document.getElementById('tipoSeguro');
+            
+            if (hasInsurance === 'si') {
+                container.style.display = 'block';
+                selectSeguro.value = 'Rimac';
+                selectSeguro.required = true;
+            } else {
+                container.style.display = 'none';
+                selectSeguro.value = 'Particular';
+                selectSeguro.required = false;
+            }
+        }
+    </script>
 </body>
 </html>
 

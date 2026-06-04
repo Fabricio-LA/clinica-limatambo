@@ -30,6 +30,9 @@ public class Paciente {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
+    @Column(name = "tipo_seguro", length = 50)
+    private String tipoSeguro;
+
     public Paciente() {}
 
     public Integer getIdPaciente() { return idPaciente; }
@@ -52,4 +55,7 @@ public class Paciente {
 
     public Integer getIdUsuario() { return idUsuario; }
     public void setIdUsuario(Integer idUsuario) { this.idUsuario = idUsuario; }
+
+    public String getTipoSeguro() { return tipoSeguro; }
+    public void setTipoSeguro(String tipoSeguro) { this.tipoSeguro = tipoSeguro; }
 }

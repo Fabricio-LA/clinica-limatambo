@@ -63,6 +63,7 @@ public class RegistroController {
             nuevoPaciente.setTelefono(dto.getTelefono());
             nuevoPaciente.setFechaNacimiento(dto.getFechaNacimiento());
             nuevoPaciente.setIdUsuario(usuarioGuardado.getIdUsuario());
+            nuevoPaciente.setTipoSeguro(dto.getTipoSeguro());
 
             pacienteRepository.save(nuevoPaciente);
 

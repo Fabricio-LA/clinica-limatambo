@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia en línea | Clínica Limatambo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #F9FBF7; }
+
+        /* NAVBAR */
+        .navbar-limatambo { background: #fff; border-bottom: 1px solid var(--matcha-soft); }
+        .navbar-limatambo .navbar-brand { font-weight: 700; color: var(--matcha-dark); font-size: 1.15rem; }
+        .navbar-limatambo .nav-link { color: #444; font-weight: 500; padding: 8px 16px; transition: color .2s; }
+        .navbar-limatambo .nav-link:hover, .navbar-limatambo .nav-link.active { color: var(--matcha-main); }
+        
+        /* FOOTER */
+        .footer-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-link:hover { color: #ffffff; }
+
+        /* FARMACIA HERO */
+        .farmacia-hero {
+            background-color: #5d812e; /* Verde sólido como en Figma */
+            padding: 4rem 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-tag {
+            background-color: rgba(255,255,255,0.15);
+            border-radius: 2rem;
+            padding: 0.35rem 1rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .upload-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.4);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .upload-card:hover { border-color: rgba(255,255,255,0.8); background: rgba(255, 255, 255, 0.15); }
+        .upload-btn {
+            background: #fff;
+            color: #5d812e;
+            font-weight: 600;
+            border-radius: 2rem;
+            padding: 0.6rem 1.5rem;
+            border: none;
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .upload-btn:hover { transform: scale(1.05); }
+
+        /* PILLS & SEARCH */
+        .search-container { max-width: 600px; }
+        .search-input {
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem 0.8rem 3rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .search-icon { position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%); color: #999; }
+        
+        .category-pill {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .category-pill:hover, .category-pill.active {
+            background: #8FB935;
+            border-color: #8FB935;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        /* WARNING BANNER */
+        .warning-banner {
+            background-color: #fff8e1;
+            border: 1px solid #ffecb3;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #b77b10;
+        }
+
+        /* PRODUCT CARD */
+        .product-card {
+            background: #fff;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.04);
+            padding: 1.5rem;
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .product-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            transform: translateY(-3px);
+        }
+        .product-tag {
+            position: absolute; top: 1.2rem; left: 1.2rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .tag-receta { background: #e8f0fe; color: #1a73e8; }
+        .tag-stock { background: #fce8e6; color: #d93025; top: 3.2rem; }
+        
+        .product-img-box {
+            background: #F9FBF7;
+            border-radius: 1rem;
+            height: 160px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.2rem;
+        }
+        .product-img-box i { font-size: 4rem; color: #99c24d; opacity: 0.5; }
+        .product-brand { color: #888; font-size: 0.8rem; margin-bottom: 0.2rem; }
+        .product-name { font-weight: 700; font-size: 1.1rem; color: #2C3E50; margin-bottom: 0.2rem; }
+        .product-presentation { color: #666; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .product-stars { color: #ffc107; font-size: 0.85rem; margin-bottom: 1rem; }
+        .product-price { font-weight: 800; font-size: 1.4rem; color: #8FB935; margin-bottom: 1rem; }
+        
+        .btn-add { background: #8FB935; color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; transition: background 0.2s; }
+        .btn-add:hover { background: #7a9e2d; color: white;}
+        .btn-locked { background: #f08b1a; color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; }
+        .btn-locked:hover { background: #d77914; color: white;}
+        .btn-nostock { background: #68d391; color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; }
+        
+        /* CART OFFCANVAS */
+        .cart-offcanvas { width: 450px; border-radius: 1.5rem 0 0 1.5rem; border: none; box-shadow: -5px 0 25px rgba(0,0,0,0.05); }
+        .step-indicator { display: flex; align-items: center; justify-content: space-between; position: relative; margin-bottom: 2rem; }
+        .step-indicator::before { content: ''; position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #eee; z-index: 1; }
+        .step-item { position: relative; z-index: 2; text-align: center; }
+        .step-circle { width: 32px; height: 32px; border-radius: 50%; background: #eee; color: #999; display: flex; align-items: center; justify-content: center; font-weight: 600; margin: 0 auto 0.5rem; font-size: 0.9rem; }
+        .step-item.active .step-circle { background: #8FB935; color: white; }
+        .step-item.done .step-circle { background: #8FB935; color: white; }
+        .step-label { font-size: 0.8rem; color: #777; font-weight: 500; }
+        .step-item.active .step-label { color: #2C3E50; }
+        
+        .cart-item { display: flex; align-items: center; gap: 1rem; border: 1px solid #eee; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; background: #fff; }
+        .cart-item-img { width: 48px; height: 48px; background: #F9FBF7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #99c24d; opacity: 0.6; }
+        .qty-controls { display: flex; align-items: center; background: #F9FBF7; border-radius: 2rem; padding: 0.2rem; }
+        .qty-btn { border: none; background: transparent; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; }
+        .qty-btn:hover { background: rgba(0,0,0,0.05); }
+        .qty-input { width: 30px; text-align: center; border: none; background: transparent; font-weight: 600; font-size: 0.95rem; pointer-events: none;}
+        
+        .delivery-option { border: 1px solid #ddd; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.2s; position: relative; }
+        .delivery-option:hover { border-color: #8FB935; }
+        .delivery-option.selected { border-color: #8FB935; background: #fdfefb; box-shadow: 0 4px 10px rgba(143,185,53,0.1); }
+        .delivery-icon { width: 40px; height: 40px; border-radius: 50%; background: #F2F6E8; color: #6a8f33; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-limatambo sticky-top shadow-sm">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
+            <i class="bi bi-heart-pulse-fill" style="color:var(--matcha-main); font-size:1.4rem;"></i>
+            Clínica Limatambo
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto align-items-center gap-1">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/#especialidades}">Especialidades</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/#especialistas}">Médicos</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/ayuda}">Ayuda</a></li>
+            </ul>
+            <ul class="navbar-nav align-items-center gap-3">
+                <li class="nav-item d-none d-lg-block">
+                    <a th:href="@{/farmacia}" class="btn rounded-pill d-flex align-items-center gap-2 px-3 fw-bold shadow-sm text-white" style="background-color: #5d812e; border: 2px solid #384e20;">
+                        <i class="bi bi-bag-check-fill"></i> Farmacia
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block">
+                    <a th:href="@{/paciente/reservar}" class="btn rounded-pill px-4 fw-semibold text-white shadow-sm" style="background-color: #8FB935; border-color: #8FB935;">
+                        Reservar Cita
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a th:href="@{/login}" class="nav-link fw-semibold ms-2" style="color:var(--matcha-main);">Iniciar Sesión</a>
+                </li>
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle fw-semibold" href="#" data-bs-toggle="dropdown">
+                        Hola, <span sec:authentication="name">Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                        <li><a class="dropdown-item" th:href="@{/paciente/panel}"><i class="bi bi-person-circle me-2"></i>Mi Panel</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="m-0 p-0">
+                                <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO SECTION -->
+<div class="farmacia-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 mb-4 mb-lg-0">
+                <span class="badge bg-light text-dark mb-3 rounded-pill px-3 py-2 fw-semibold" style="opacity: 0.9;">Farmacia en línea · Clínica Limatambo</span>
+                <h1 class="fw-bold mb-3" style="font-size: 2.8rem; letter-spacing: -1px;">Medicamentos al alcance de tu mano</h1>
+                <p class="fs-5 mb-4" style="color: rgba(255,255,255,0.9);">Compra con o sin receta. Delivery en Lima o recojo en sede el mismo día.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <div class="hero-tag"><i class="bi bi-truck"></i> Delivery 2-4h</div>
+                    <div class="hero-tag"><i class="bi bi-shop"></i> Recojo el mismo día</div>
+                    <div class="hero-tag"><i class="bi bi-shield-check"></i> Pago seguro</div>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-1">
+                <div class="upload-card shadow-lg">
+                    <div class="mb-3">
+                        <i class="bi bi-upload text-white" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <h4 class="fw-bold text-white mb-2">¿Tienes receta médica?</h4>
+                    <p class="small text-white mb-4" style="opacity: 0.8;">Cárgala para acceder a medicamentos controlados</p>
+                    <!-- File Input Hidden -->
+                    <input type="file" id="recetaInput" class="d-none" accept=".pdf,image/*">
+                    <button class="upload-btn shadow-sm" onclick="document.getElementById('recetaInput').click()">
+                        Subir receta (PDF / imagen)
+                    </button>
+                    <p id="recetaFilename" class="text-white mt-3 mb-0 small fw-semibold d-none"><i class="bi bi-check-circle-fill text-success me-1"></i> <span></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH & CATEGORIES -->
+<div class="container py-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+        <div class="position-relative search-container flex-grow-1">
+            <i class="bi bi-search search-icon"></i>
+            <input type="text" class="form-control search-input" id="searchInput" placeholder="Buscar por nombre o marca..." onkeyup="renderProducts()">
+        </div>
+        <button class="btn px-4 py-2 rounded-pill fw-bold text-white d-flex align-items-center gap-2 shadow-sm" 
+                style="background-color: #8FB935;" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+            <i class="bi bi-cart3 fs-5"></i> Mi carrito
+            <span class="badge bg-danger rounded-circle p-1 ms-1 d-none" id="cartCountBadge" style="font-size: 0.7rem; width: 20px; height: 20px;">0</span>
+        </button>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-4" id="categoryPills">
+        <button class="category-pill active" onclick="setCategory('Todos', this)">Todos</button>
+        <button class="category-pill" onclick="setCategory('Medicamentos', this)">Medicamentos</button>
+        <button class="category-pill" onclick="setCategory('Dermocosmética', this)">Dermocosmética</button>
+        <button class="category-pill" onclick="setCategory('Vitaminas y Nutrición', this)">Vitaminas y Nutrición</button>
+        <button class="category-pill" onclick="setCategory('Cuidado Personal', this)">Cuidado Personal</button>
+        <button class="category-pill" onclick="setCategory('Mamá y Bebé', this)">Mamá y Bebé</button>
+        <button class="category-pill" onclick="setCategory('Botiquín y Equipos', this)">Botiquín y Equipos</button>
+    </div>
+
+    <!-- WARNING BANNER -->
+    <div class="warning-banner shadow-sm mb-4">
+        <i class="bi bi-exclamation-circle-fill fs-4"></i>
+        <div class="flex-grow-1">
+            <h6 class="fw-bold mb-1">Algunos productos requieren receta médica</h6>
+            <p class="mb-0 small" style="opacity: 0.9;">Carga tu receta en el banner de arriba para poder añadir estos productos al carrito.</p>
+        </div>
+        <button class="btn btn-warning text-white fw-bold rounded-pill px-4" style="background: #e9941a; border: none;" onclick="window.scrollTo(0,0);">
+            Cargar receta
+        </button>
+    </div>
+
+    <!-- PRODUCTS GRID -->
+    <p class="text-muted fw-semibold mb-3"><span id="productCount">0</span> productos encontrados</p>
+    <div class="row g-4" id="productGrid">
+        <!-- Generado por JS -->
+    </div>
+    
+    <!-- CTA INFERIOR -->
+    <div class="mt-5 rounded-4 p-4 text-white shadow-sm d-flex flex-wrap align-items-center justify-content-between" style="background-color: #384e20;">
+        <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
+            <div style="width: 50px; height: 50px; background: rgba(255,255,255,0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-chat-dots fs-3 text-white"></i>
+            </div>
+            <div>
+                <h5 class="fw-bold mb-1">¿No encontraste lo que buscas?</h5>
+                <p class="mb-0 small" style="color: rgba(255,255,255,0.8);">Escríbenos por WhatsApp al <strong>+51 914 870 501</strong> y te ayudamos a encontrar tu medicamento.</p>
+            </div>
+        </div>
+        <a href="#" class="btn rounded-pill px-4 fw-bold" style="background: #23d160; color: white; border: none;">Consultar ahora <i class="bi bi-arrow-right ms-1"></i></a>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer style="background-color: #3e5429; padding: 40px 0;">
+    <div class="container mt-3">
+        <div class="row g-5 pb-4 align-items-start justify-content-between">
+            <div class="col-lg-4 col-md-12">
+                <div class="d-flex align-items-center gap-4 mb-3">
+                    <div style="width: 48px; height: 48px; background-color: #8db55b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-white mb-0" style="letter-spacing: -0.5px;">Clínica Limatambo</h4>
+                        <span style="color: #8db55b; font-size: 0.95rem;">Salud con confianza</span>
+                    </div>
+                </div>
+                <p class="lh-lg mt-4" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
+                    Más de 20 años brindando atención médica de excelencia a nuestros pacientes y sus familias.
+                </p>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">SERVICIOS</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><a href="#" class="footer-link">Reservar cita</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Farmacia en línea</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Centro de Ayuda</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Panel del paciente</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">CONTACTO</h6>
+                <ul class="list-unstyled" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
+                    <li class="d-flex align-items-center mb-3">
+                        <i class="bi bi-whatsapp fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <span>WhatsApp: 927 872 904</span>
+                    </li>
+                    <li class="d-flex align-items-center mb-3">
+                        <i class="bi bi-envelope fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <span>contacto@limatambo.pe</span>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-geo-alt fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <div>
+                            <span class="d-block mb-1"><strong>San Isidro:</strong> Av. República de Panamá 3606</span>
+                            <span class="d-block mb-1"><strong>S.J.L.:</strong> Av. Próceres de la Independencia</span>
+                            <span class="d-block"><strong>Callao:</strong> C.C. Minka</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-clock fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <div>
+                            <span class="d-block mb-1">Lun-Sáb: 7:00 AM – 9:00 PM</span>
+                            <span class="d-block">Emergencias: 24/7</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center pt-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
+            <small style="color: rgba(255, 255, 255, 0.5);">&copy; 2026 Clínica Limatambo &mdash; Todos los derechos reservados.</small>
+        </div>
+    </div>
+</footer>
+
+<!-- OFFCANVAS CARRITO -->
+<div class="offcanvas offcanvas-end cart-offcanvas" tabindex="-1" id="cartOffcanvas">
+    <div class="offcanvas-header border-bottom">
+        <div>
+            <h5 class="fw-bold mb-0">Tu pedido</h5>
+            <small class="text-muted" id="cartItemCount">0 productos</small>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    
+    <div class="offcanvas-body d-flex flex-column p-0">
+        <!-- STEPS INDICATOR -->
+        <div class="p-4 pb-0">
+            <div class="step-indicator">
+                <div class="step-item active" id="step1-indicator">
+                    <div class="step-circle"><i class="bi bi-check-lg d-none"></i><span>1</span></div>
+                    <div class="step-label">Carrito</div>
+                </div>
+                <div class="step-item" id="step2-indicator">
+                    <div class="step-circle"><i class="bi bi-check-lg d-none"></i><span>2</span></div>
+                    <div class="step-label">Entrega</div>
+                </div>
+                <div class="step-item" id="step3-indicator">
+                    <div class="step-circle"><span>3</span></div>
+                    <div class="step-label">Pago</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: CART ITEMS -->
+        <div class="flex-grow-1 overflow-auto p-4 pt-0 step-content" id="step1-content">
+            <div id="cartItemsContainer">
+                <div class="text-center text-muted my-5">Tu carrito está vacío</div>
+            </div>
+        </div>
+
+        <!-- STEP 2: DELIVERY -->
+        <div class="flex-grow-1 overflow-auto p-4 pt-0 step-content d-none" id="step2-content">
+            <h6 class="fw-bold mb-3">¿Cómo deseas recibir tu pedido?</h6>
+            
+            <div class="delivery-option selected" id="opt-recojo" onclick="selectDelivery('recojo')">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="delivery-icon"><i class="bi bi-shop"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-dark">Recoger en sede</span>
+                            <span class="fw-bold" style="color: #8FB935;">Gratis <i class="bi bi-check-circle" id="check-recojo"></i></span>
+                        </div>
+                        <small class="text-muted d-block mb-1">Av. Javier Prado Este 1234, San Isidro</small>
+                        <small style="color: #8FB935;"><i class="bi bi-clock"></i> Disponible hoy · Sin costo adicional</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delivery-option" id="opt-delivery" onclick="selectDelivery('delivery')">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="delivery-icon"><i class="bi bi-truck"></i></div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold text-dark">Delivery a domicilio</span>
+                            <span class="fw-bold" style="color: #e67e22;">+ S/. 8.00 <i class="bi bi-check-circle d-none" id="check-delivery"></i></span>
+                        </div>
+                        <small class="text-muted d-block mb-1">Lima Metropolitana</small>
+                        <small style="color: #8FB935;"><i class="bi bi-clock"></i> Tiempo estimado: 2-4 horas</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="direccionBox" class="mt-4 d-none">
+                <h6 class="fw-bold mb-2">Dirección de entrega</h6>
+                <input type="text" class="form-control rounded-pill" placeholder="Ej: Av. Larco 1234, Miraflores">
+            </div>
+        </div>
+
+        <!-- STEP 3: PAYMENT -->
+        <div class="flex-grow-1 overflow-auto p-4 pt-0 step-content d-none" id="step3-content">
+            <div class="card border-0 bg-light rounded-4 p-4 mb-4">
+                <h6 class="fw-bold mb-3">Resumen del pedido</h6>
+                <div id="resumenItems"></div>
+                <div class="d-flex justify-content-between mb-2 small text-muted">
+                    <span>Subtotal</span><span id="resumenSubtotal">S/. 0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2 small" style="color: #e67e22;" id="resumenDescuentoBox">
+                    <span>Descuento EPS (<span th:text="${descuentoSeguro * 100}">0</span>%)</span><span id="resumenDescuento">- S/. 0.00</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3 small text-muted">
+                    <span>Delivery</span><span id="resumenDelivery">Gratis</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between fw-bold text-dark fs-5">
+                    <span>Total a pagar</span><span id="resumenTotal">S/. 0.00</span>
+                </div>
+            </div>
+
+            <h6 class="fw-bold mb-3">Método de pago</h6>
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-outline-success rounded-pill flex-grow-1 active">Tarjeta</button>
+                <button class="btn btn-outline-secondary rounded-pill flex-grow-1">Niubiz</button>
+                <button class="btn btn-outline-secondary rounded-pill flex-grow-1">Culqi</button>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label small text-muted mb-1">Número de tarjeta</label>
+                <div class="position-relative">
+                    <i class="bi bi-credit-card position-absolute" style="left: 1rem; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                    <input type="text" class="form-control rounded-pill" style="padding-left: 2.5rem;" placeholder="0000 0000 0000 0000">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label small text-muted mb-1">Nombre en la tarjeta</label>
+                <input type="text" class="form-control rounded-pill" placeholder="Como aparece en la tarjeta">
+            </div>
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <label class="form-label small text-muted mb-1">Vencimiento</label>
+                    <input type="text" class="form-control rounded-pill text-center" placeholder="MM/AA">
+                </div>
+                <div class="col-6">
+                    <label class="form-label small text-muted mb-1">CVV</label>
+                    <input type="password" class="form-control rounded-pill text-center" placeholder="•••">
+                </div>
+            </div>
+            <div class="text-center small text-muted"><i class="bi bi-shield-lock text-success"></i> Cifrado SSL 256-bit · PCI DSS Compliant</div>
+        </div>
+
+        <!-- FOOTER OFFCANVAS -->
+        <div class="border-top p-4 bg-white" style="box-shadow: 0 -10px 20px rgba(0,0,0,0.02);">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small">Total a pagar</span>
+                <span class="fw-bold fs-4" style="color: #8FB935;" id="cartTotalFooter">S/. 0.00</span>
+            </div>
+            <button class="btn btn-add fs-6" id="btnNextStep" onclick="nextStep()">
+                <i class="bi bi-bag-check me-2"></i> Confirmar y elegir entrega
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- VARIABLES THYMELEAF -->
+<script th:inline="javascript">
+    const EPS_DESCUENTO = /*[[${descuentoSeguro}]]*/ 0.0;
+</script>
+
+<script>
+    // DATA
+    const products = [
+        { id: 1, name: 'Metformina 500mg', brand: 'TEVA', pack: 'Caja × 30 tabletas', price: 25.90, requiresRx: true, stock: 50, rating: 4, reviews: 142, category: 'Medicamentos' },
+        { id: 2, name: 'Ibuprofeno 400mg', brand: 'Genérico', pack: 'Caja × 20 tabletas', price: 8.50, requiresRx: false, stock: 100, rating: 4.5, reviews: 89, category: 'Medicamentos' },
+        { id: 3, name: 'Amoxicilina 500mg', brand: 'Genérico', pack: 'Caja × 21 cápsulas', price: 18.00, requiresRx: true, stock: 30, rating: 4, reviews: 67, category: 'Medicamentos' },
+        { id: 4, name: 'Losartán 50mg', brand: 'Merck', pack: 'Caja × 30 tabletas', price: 22.50, requiresRx: true, stock: 0, rating: 4, reviews: 54, category: 'Medicamentos' },
+        { id: 5, name: 'Loratadina 10mg', brand: 'Claritin', pack: 'Caja × 10 tabletas', price: 15.00, requiresRx: false, stock: 40, rating: 4, reviews: 76, category: 'Medicamentos' },
+        { id: 6, name: 'Omeprazol 20mg', brand: 'Genérico', pack: 'Caja × 14 cápsulas', price: 12.00, requiresRx: false, stock: 80, rating: 4.5, reviews: 98, category: 'Medicamentos' },
+        { id: 7, name: 'Paracetamol 500mg', brand: 'Genérico', pack: 'Caja × 20 tabletas', price: 5.50, requiresRx: false, stock: 200, rating: 5, reviews: 312, category: 'Medicamentos' },
+        { id: 8, name: 'Atorvastatina 20mg', brand: 'Lipitor', pack: 'Caja × 30 tabletas', price: 38.00, requiresRx: true, stock: 25, rating: 4.5, reviews: 91, category: 'Medicamentos' },
+        { id: 9, name: 'Eucerin Ph5', brand: 'Eucerin', pack: 'Tubo × 40ml', price: 85.00, requiresRx: false, stock: 15, rating: 4.5, reviews: 98, category: 'Dermocosmética' },
+        { id: 10, name: 'Vitamina C 1g', brand: 'Redoxon', pack: 'Caja × 10 tabletas', price: 32.00, requiresRx: false, stock: 60, rating: 4, reviews: 215, category: 'Vitaminas y Nutrición' },
+        { id: 11, name: 'Colágeno Hidrolizado', brand: 'Nature\'s Best', pack: 'Frasco × 60 cápsulas', price: 45.00, requiresRx: false, stock: 40, rating: 4, reviews: 183, category: 'Vitaminas y Nutrición' },
+        { id: 12, name: 'Magnesio', brand: 'Solgar', pack: 'Frasco × 60 cápsulas', price: 68.00, requiresRx: false, stock: 35, rating: 4.5, reviews: 164, category: 'Vitaminas y Nutrición' },
+        { id: 13, name: 'Multivitamínico Completo', brand: 'Centrum', pack: 'Frasco × 100 tabletas', price: 55.00, requiresRx: false, stock: 80, rating: 4, reviews: 241, category: 'Vitaminas y Nutrición' },
+        { id: 14, name: 'Suplemento Proteico en Polvo', brand: 'Ensure', pack: 'Lata × 400g', price: 95.00, requiresRx: false, stock: 20, rating: 4.5, reviews: 87, category: 'Vitaminas y Nutrición' },
+        { id: 15, name: 'Alcohol en Gel Antibacterial', brand: 'Dento', pack: 'Frasco × 250ml', price: 12.50, requiresRx: false, stock: 150, rating: 4.5, reviews: 312, category: 'Cuidado Personal' },
+        { id: 16, name: 'Pasta Dental Sensibilidad', brand: 'Sensodyne', pack: 'Tubo × 75ml', price: 18.00, requiresRx: false, stock: 90, rating: 4.5, reviews: 198, category: 'Cuidado Personal' },
+        { id: 17, name: 'Enjuague Bucal', brand: 'Listerine', pack: 'Frasco × 500ml', price: 22.00, requiresRx: false, stock: 110, rating: 4.5, reviews: 145, category: 'Cuidado Personal' },
+        { id: 18, name: 'Jabón Líquido Antibacterial', brand: 'Protex', pack: 'Frasco × 300ml', price: 15.00, requiresRx: false, stock: 200, rating: 4.5, reviews: 267, category: 'Cuidado Personal' },
+        { id: 19, name: 'Pañales Desechables Talla M', brand: 'Huggies', pack: 'Paquete × 40 unidades', price: 45.00, requiresRx: false, stock: 60, rating: 4, reviews: 421, category: 'Mamá y Bebé' },
+        { id: 20, name: 'Toallitas Húmedas para Bebé', brand: 'Johnsons', pack: 'Paquete × 80 unidades', price: 18.00, requiresRx: false, stock: 130, rating: 4.5, reviews: 298, category: 'Mamá y Bebé' },
+        { id: 21, name: 'Tensiómetro Digital', brand: 'Omron', pack: 'Unidad', price: 145.00, requiresRx: false, stock: 15, rating: 4.5, reviews: 98, category: 'Botiquín y Equipos' },
+        { id: 22, name: 'Oxímetro de Pulso', brand: 'Beurer', pack: 'Unidad', price: 85.00, requiresRx: false, stock: 25, rating: 4, reviews: 134, category: 'Botiquín y Equipos' },
+        { id: 23, name: 'Vendas Elásticas 10cm', brand: '3M', pack: 'Rollo × 4.5m', price: 12.00, requiresRx: false, stock: 200, rating: 4.5, reviews: 87, category: 'Botiquín y Equipos' },
+        { id: 24, name: 'Botiquín de Primeros Auxilios', brand: 'Medic', pack: 'Kit completo', price: 65.00, requiresRx: false, stock: 40, rating: 4.5, reviews: 124, category: 'Botiquín y Equipos' },
+        { id: 25, name: 'Mascarillas Desechables KN95', brand: 'Protec', pack: 'Caja × 10 unidades', price: 25.00, requiresRx: false, stock: 300, rating: 4, reviews: 256, category: 'Botiquín y Equipos' }
+    ];
+
+    let unlockedMeds = [];
+    let cart = {};
+    let currentCategory = 'Todos';
+    let deliveryCost = 0.00;
+    let currentStep = 1;
+
+    function renderProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const grid = document.getElementById('productGrid');
+        grid.innerHTML = '';
+        let count = 0;
+
+        products.forEach(p => {
+            if (currentCategory !== 'Todos' && p.category !== currentCategory) return;
+            if (query && !p.name.toLowerCase().includes(query) && !p.brand.toLowerCase().includes(query)) return;
+            
+            count++;
+            
+            let isUnlocked = !p.requiresRx || unlockedMeds.includes(p.name.toLowerCase());
+            
+            let tagHTML = '';
+            if (p.requiresRx) tagHTML += `<span class="product-tag tag-receta">Con receta</span>`;
+            if (p.stock === 0) tagHTML += `<span class="product-tag tag-stock">Sin stock</span>`;
+
+            let starsHTML = '';
+            for(let i=1; i<=5; i++) {
+                if(i <= p.rating) starsHTML += '<i class="bi bi-star-fill"></i>';
+                else if(i - 0.5 === p.rating) starsHTML += '<i class="bi bi-star-half"></i>';
+                else starsHTML += '<i class="bi bi-star"></i>';
+            }
+
+            let btnHTML = '';
+            if (p.stock === 0) {
+                btnHTML = `<button class="btn-nostock"><i class="bi bi-bell"></i> Avisar cuando haya stock</button>`;
+            } else if (!isUnlocked) {
+                btnHTML = `<button class="btn-locked" onclick="document.getElementById('recetaInput').click()"><i class="bi bi-upload"></i> Cargar receta para comprar</button>`;
+            } else if (cart[p.id]) {
+                btnHTML = `
+                <div class="d-flex align-items-center justify-content-between px-3" style="background:#eaf3d8; border-radius: 2rem; padding: 0.5rem;">
+                    <button class="btn border-0 rounded-circle text-success fw-bold" onclick="updateQty(${p.id}, -1)">-</button>
+                    <span class="fw-bold fs-5 text-dark">${cart[p.id].qty}</span>
+                    <button class="btn border-0 rounded-circle text-success fw-bold" onclick="updateQty(${p.id}, 1)">+</button>
+                </div>`;
+            } else {
+                btnHTML = `<button class="btn-add" onclick="addToCart(${p.id})">+ Añadir al carrito</button>`;
+            }
+
+            grid.innerHTML += `
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="product-card">
+                    ${tagHTML}
+                    <div class="product-img-box">
+                        <i class="bi bi-capsule"></i>
+                    </div>
+                    <div class="product-brand">${p.brand}</div>
+                    <div class="product-name">${p.name}</div>
+                    <div class="product-presentation">${p.pack}</div>
+                    <div class="product-stars">${starsHTML} <span class="text-muted ms-1 small">(${p.reviews})</span></div>
+                    <div class="mt-auto">
+                        <div class="product-price">S/. ${p.price.toFixed(2)}</div>
+                        ${btnHTML}
+                    </div>
+                </div>
+            </div>`;
+        });
+        
+        document.getElementById('productCount').innerText = count;
+    }
+
+    function setCategory(cat, btn) {
+        currentCategory = cat;
+        document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderProducts();
+    }
+
+    // FILE UPLOAD UNLOCK LOGIC
+    document.getElementById('recetaInput').addEventListener('change', function(e) {
+        if(e.target.files.length > 0) {
+            let filename = e.target.files[0].name.toLowerCase();
+            document.getElementById('recetaFilename').classList.remove('d-none');
+            document.getElementById('recetaFilename').querySelector('span').innerText = e.target.files[0].name;
+            
+            // Check which meds unlock
+            products.forEach(p => {
+                if (p.requiresRx && filename.includes(p.name.split(' ')[0].toLowerCase())) {
+                    if(!unlockedMeds.includes(p.name.toLowerCase())) {
+                        unlockedMeds.push(p.name.toLowerCase());
+                    }
+                }
+            });
+            renderProducts();
+        }
+    });
+
+    // CART LOGIC
+    function addToCart(id) {
+        let p = products.find(x => x.id === id);
+        if(!cart[id]) cart[id] = { product: p, qty: 1 };
+        renderProducts();
+        updateCartUI();
+        
+        // Show Toast / Notification manually or via custom code
+        // For simplicity, we just trigger the cart update
+    }
+
+    function updateQty(id, change) {
+        if(cart[id]) {
+            cart[id].qty += change;
+            if(cart[id].qty <= 0) delete cart[id];
+        }
+        renderProducts();
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        let itemsContainer = document.getElementById('cartItemsContainer');
+        let resumenItems = document.getElementById('resumenItems');
+        itemsContainer.innerHTML = '';
+        resumenItems.innerHTML = '';
+        
+        let subtotal = 0;
+        let count = 0;
+
+        for (let id in cart) {
+            let item = cart[id];
+            subtotal += item.product.price * item.qty;
+            count += item.qty;
+            
+            itemsContainer.innerHTML += `
+            <div class="cart-item">
+                <div class="cart-item-img"><i class="bi bi-capsule"></i></div>
+                <div class="flex-grow-1">
+                    <div class="fw-bold text-dark" style="font-size: 0.95rem;">${item.product.name}</div>
+                    <div class="small text-muted mb-1">${item.product.pack}</div>
+                    <div class="fw-bold" style="color: #8FB935;">S/. ${(item.product.price * item.qty).toFixed(2)}</div>
+                </div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="updateQty(${id}, -1)">-</button>
+                    <input type="text" class="qty-input" value="${item.qty}" readonly>
+                    <button class="qty-btn" onclick="updateQty(${id}, 1)">+</button>
+                </div>
+                <button class="btn text-danger p-1 border-0 ms-2" onclick="updateQty(${id}, -999)"><i class="bi bi-trash"></i></button>
+            </div>`;
+            
+            resumenItems.innerHTML += `
+            <div class="d-flex justify-content-between mb-2 small">
+                <span class="text-muted">${item.product.name} <span class="fw-bold text-dark">×${item.qty}</span></span>
+                <span class="text-dark">S/. ${(item.product.price * item.qty).toFixed(2)}</span>
+            </div>`;
+        }
+
+        if (count === 0) {
+            itemsContainer.innerHTML = '<div class="text-center text-muted my-5">Tu carrito está vacío</div>';
+        }
+
+        let discountAmt = subtotal * EPS_DESCUENTO;
+        let total = subtotal - discountAmt + deliveryCost;
+
+        document.getElementById('cartItemCount').innerText = `${count} productos`;
+        let badge = document.getElementById('cartCountBadge');
+        if (count > 0) { badge.classList.remove('d-none'); badge.innerText = count; } else badge.classList.add('d-none');
+
+        document.getElementById('resumenSubtotal').innerText = `S/. ${subtotal.toFixed(2)}`;
+        
+        if (EPS_DESCUENTO > 0) {
+            document.getElementById('resumenDescuentoBox').classList.remove('d-none');
+            document.getElementById('resumenDescuento').innerText = `- S/. ${discountAmt.toFixed(2)}`;
+        } else {
+            document.getElementById('resumenDescuentoBox').classList.add('d-none');
+        }
+
+        document.getElementById('resumenDelivery').innerText = deliveryCost > 0 ? `S/. ${deliveryCost.toFixed(2)}` : 'Gratis';
+        document.getElementById('resumenTotal').innerText = `S/. ${total.toFixed(2)}`;
+        
+        if(currentStep === 1) document.getElementById('cartTotalFooter').innerText = `S/. ${subtotal.toFixed(2)}`;
+        else document.getElementById('cartTotalFooter').innerText = `S/. ${total.toFixed(2)}`;
+    }
+
+    function selectDelivery(opt) {
+        document.getElementById('opt-recojo').classList.remove('selected');
+        document.getElementById('opt-delivery').classList.remove('selected');
+        document.getElementById('check-recojo').classList.add('d-none');
+        document.getElementById('check-delivery').classList.add('d-none');
+        
+        if (opt === 'recojo') {
+            document.getElementById('opt-recojo').classList.add('selected');
+            document.getElementById('check-recojo').classList.remove('d-none');
+            document.getElementById('direccionBox').classList.add('d-none');
+            deliveryCost = 0;
+        } else {
+            document.getElementById('opt-delivery').classList.add('selected');
+            document.getElementById('check-delivery').classList.remove('d-none');
+            document.getElementById('direccionBox').classList.remove('d-none');
+            deliveryCost = 8.00;
+        }
+        updateCartUI();
+    }
+
+    function nextStep() {
+        if (Object.keys(cart).length === 0) return;
+        
+        if (currentStep === 1) {
+            currentStep = 2;
+            document.getElementById('step1-content').classList.add('d-none');
+            document.getElementById('step2-content').classList.remove('d-none');
+            document.getElementById('step1-indicator').classList.remove('active');
+            document.getElementById('step1-indicator').classList.add('done');
+            document.getElementById('step1-indicator').querySelector('span').classList.add('d-none');
+            document.getElementById('step1-indicator').querySelector('i').classList.remove('d-none');
+            document.getElementById('step2-indicator').classList.add('active');
+            document.getElementById('btnNextStep').innerHTML = 'Ir al pago';
+        } else if (currentStep === 2) {
+            currentStep = 3;
+            document.getElementById('step2-content').classList.add('d-none');
+            document.getElementById('step3-content').classList.remove('d-none');
+            document.getElementById('step2-indicator').classList.remove('active');
+            document.getElementById('step2-indicator').classList.add('done');
+            document.getElementById('step2-indicator').querySelector('span').classList.add('d-none');
+            document.getElementById('step2-indicator').querySelector('i').classList.remove('d-none');
+            document.getElementById('step3-indicator').classList.add('active');
+            document.getElementById('btnNextStep').innerHTML = 'Confirmar pedido';
+            updateCartUI();
+        } else {
+            // Confirm Order
+            alert('¡Pedido confirmado! Serás redirigido al panel del paciente.');
+            window.location.href = '/';
+        }
+    }
+
+    // Modal behavior on open
+    const cartOffcanvas = document.getElementById('cartOffcanvas')
+    cartOffcanvas.addEventListener('show.bs.offcanvas', event => {
+        // Reset to step 1
+        currentStep = 1;
+        document.getElementById('step1-content').classList.remove('d-none');
+        document.getElementById('step2-content').classList.add('d-none');
+        document.getElementById('step3-content').classList.add('d-none');
+        
+        document.getElementById('step1-indicator').className = 'step-item active';
+        document.getElementById('step1-indicator').querySelector('span').classList.remove('d-none');
+        document.getElementById('step1-indicator').querySelector('i').classList.add('d-none');
+        
+        document.getElementById('step2-indicator').className = 'step-item';
+        document.getElementById('step2-indicator').querySelector('span').classList.remove('d-none');
+        document.getElementById('step2-indicator').querySelector('i').classList.add('d-none');
+        
+        document.getElementById('step3-indicator').className = 'step-item';
+        
+        document.getElementById('btnNextStep').innerHTML = '<i class="bi bi-bag-check me-2"></i> Confirmar y elegir entrega';
+        selectDelivery('recojo');
+    });
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+        renderProducts();
+    });
+</script>
+</body>
+</html>

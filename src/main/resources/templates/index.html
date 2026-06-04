@@ -178,11 +178,21 @@
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link" href="#especialidades">Especialidades</a></li>
                 <li class="nav-item"><a class="nav-link" href="#especialistas">Médicos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#sedes">Contacto</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/ayuda}">Ayuda</a></li>
             </ul>
-            <ul class="navbar-nav align-items-center gap-2">
+            <ul class="navbar-nav align-items-center gap-3">
+                <li class="nav-item d-none d-lg-block">
+                    <a th:href="@{/farmacia}" class="btn bg-white rounded-pill d-flex align-items-center gap-2 px-3 fw-semibold shadow-sm" style="border: 1px solid rgba(143,185,53,0.3); color: #2C3E50;">
+                        <i class="bi bi-bag"></i> Farmacia
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block">
+                    <a th:href="@{/paciente/reservar}" class="btn rounded-pill px-4 fw-semibold text-white shadow-sm" style="background-color: #8FB935; border-color: #8FB935;">
+                        Reservar Cita
+                    </a>
+                </li>
                 <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a th:href="@{/login}" class="nav-link fw-semibold" style="color:var(--matcha-main);">Iniciar Sesión</a>
+                    <a th:href="@{/login}" class="nav-link fw-semibold ms-2" style="color:var(--matcha-main);">Iniciar Sesión</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                     <a class="nav-link dropdown-toggle fw-semibold" href="#" data-bs-toggle="dropdown">
@@ -197,11 +207,6 @@
                             </form>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item">
-                    <a th:href="@{/paciente/reservar}" class="btn btn-nav-reservar">
-                        <i class="bi bi-calendar2-check me-1"></i> Reservar Cita
-                    </a>
                 </li>
             </ul>
         </div>
@@ -250,6 +255,47 @@
             <div class="col-6 col-md-3">
                 <h3 class="fw-bold mb-0">100%</h3>
                 <small>Calidad Humana</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONVENIOS -->
+<section id="convenios" class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-start mb-5">
+            <h2 class="section-title text-dark fs-1">Nuestros convenios</h2>
+            <div style="width: 80px; height: 3px; background: red; margin: 15px 0 25px;"></div>
+            <p class="text-dark fs-5 mb-0" style="max-width: 600px;">
+                Amplias opciones de seguros se convierten en diversas opciones de salud para nuestros pacientes.
+            </p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-4 mt-5">
+            <!-- Logos representados con texto estilizado por no contar con la imagen -->
+            <div class="text-center" style="opacity: 0.7; filter: grayscale(100%); transition: 0.3s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.filter='none';" onmouseout="this.style.opacity='0.7'; this.style.filter='grayscale(100%)';">
+                <h3 class="fw-bold fst-italic mb-0" style="color: #666; font-family: sans-serif; letter-spacing: -1px;">RIMAC</h3>
+            </div>
+            <div class="text-center d-flex align-items-center gap-2" style="opacity: 0.7; filter: grayscale(100%); transition: 0.3s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.filter='none';" onmouseout="this.style.opacity='0.7'; this.style.filter='grayscale(100%)';">
+                <div style="width: 20px; height: 20px; border: 3px solid #333; border-radius: 2px;"></div>
+                <h5 class="fw-bold mb-0" style="color: #444;">Interseguro</h5>
+            </div>
+            <div class="text-center" style="opacity: 0.7; filter: grayscale(100%); transition: 0.3s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.filter='none';" onmouseout="this.style.opacity='0.7'; this.style.filter='grayscale(100%)';">
+                <h5 class="fw-bold mb-0 fst-italic" style="color: #d15000;">La Positiva</h5>
+                <small class="fst-italic fw-bold" style="font-size: 0.7rem; color: #555;">Seguros</small>
+            </div>
+            <div class="text-center" style="opacity: 0.7; filter: grayscale(100%); transition: 0.3s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.filter='none';" onmouseout="this.style.opacity='0.7'; this.style.filter='grayscale(100%)';">
+                <div style="width: 28px; height: 28px; border: 2px solid #555; border-radius: 50%; margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <div style="width: 2px; height: 18px; background: #555;"></div>
+                    <div style="width: 14px; height: 2px; background: #555; position: absolute; top: 13px;"></div>
+                </div>
+                <h5 class="fw-bold mb-0" style="color: #444; letter-spacing: 1px;">MAPFRE</h5>
+            </div>
+            <div class="text-center d-flex align-items-center gap-2" style="opacity: 0.7; filter: grayscale(100%); transition: 0.3s; cursor: pointer;" onmouseover="this.style.opacity='1'; this.style.filter='none';" onmouseout="this.style.opacity='0.7'; this.style.filter='grayscale(100%)';">
+                <div style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, #eee 0%, #666 100%);"></div>
+                <div class="text-start">
+                    <h5 class="fw-bold mb-0" style="color: #555;">pacifico</h5>
+                    <small class="d-block" style="font-size: 0.7rem; color: #777; margin-top: -3px;">seguros</small>
+                </div>
             </div>
         </div>
     </div>
@@ -453,37 +499,81 @@
 </section>
 
 <!-- FOOTER -->
-<footer class="pt-4 pb-2 bg-white border-top">
-    <div class="container">
-        <div class="row g-4 pb-3 align-items-start">
-            <div class="col-lg-4">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <i class="bi bi-heart-pulse-fill text-success fs-4"></i>
-                    <span class="fw-bold" style="color:var(--matcha-dark); font-size:1.05rem;">CLÍNICA LIMATAMBO</span>
+<footer class="pt-5 pb-4" style="background-color: #3e5429;">
+    <style>
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-link:hover {
+            color: #ffffff;
+        }
+    </style>
+    <div class="container mt-3">
+        <div class="row g-5 pb-4 align-items-start justify-content-between">
+            <div class="col-lg-4 col-md-12">
+                <div class="d-flex align-items-center gap-4 mb-3">
+                    <div style="width: 48px; height: 48px; background-color: #8db55b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-white mb-0" style="letter-spacing: -0.5px;">Clínica Limatambo</h4>
+                        <span style="color: #8db55b; font-size: 0.95rem;">Salud con confianza</span>
+                    </div>
                 </div>
-                <p class="small text-muted mb-0">Comprometidos con tu salud y bienestar desde 1990.</p>
+                <p class="lh-lg mt-4" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
+                    Más de 20 años brindando atención médica de excelencia a nuestros pacientes y sus familias.
+                </p>
             </div>
-            <div class="col-lg-4 text-center">
-                <h6 class="fw-bold mb-1">Emergencias 24 horas</h6>
-                <p class="text-danger fw-bold fs-5 mb-0"><i class="bi bi-telephone-fill me-1"></i>(01) 610-3333</p>
+            
+            <div class="col-lg-3 col-md-6">
+                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">SERVICIOS</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-3"><a href="#" class="footer-link">Reservar cita</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Farmacia en línea</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Centro de Ayuda</a></li>
+                    <li class="mb-3"><a href="#" class="footer-link">Panel del paciente</a></li>
+                </ul>
             </div>
-            <div class="col-lg-4 text-lg-end">
-                <h6 class="fw-bold mb-2">Síguenos</h6>
-                <div class="d-flex gap-3 justify-content-lg-end">
-                    <a href="#" class="text-muted fs-5"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-muted fs-5"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-muted fs-5"><i class="bi bi-youtube"></i></a>
-                </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">CONTACTO</h6>
+                <ul class="list-unstyled" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
+                    <li class="d-flex align-items-center mb-3">
+                        <i class="bi bi-whatsapp fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <span>WhatsApp: 927 872 904</span>
+                    </li>
+                    <li class="d-flex align-items-center mb-3">
+                        <i class="bi bi-envelope fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <span>contacto@limatambo.pe</span>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-geo-alt fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <div>
+                            <span class="d-block mb-1"><strong>San Isidro:</strong> Av. República de Panamá 3606</span>
+                            <span class="d-block mb-1"><strong>S.J.L.:</strong> Av. Próceres de la Independencia</span>
+                            <span class="d-block"><strong>Callao:</strong> C.C. Minka</span>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-clock fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <div>
+                            <span class="d-block mb-1">Lun-Sáb: 7:00 AM – 9:00 PM</span>
+                            <span class="d-block">Emergencias: 24/7</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
-        <div class="text-center pt-3 border-top">
-            <small class="text-muted">&copy; 2026 Clínica Limatambo &mdash; Todos los derechos reservados.</small>
+        <div class="text-center pt-4" style="border-top: 1px solid rgba(255,255,255,0.1);">
+            <small style="color: rgba(255, 255, 255, 0.5);">&copy; 2026 Clínica Limatambo &mdash; Todos los derechos reservados.</small>
         </div>
     </div>
 </footer>
 
 <!-- BOTÓN FLOTANTE WHATSAPP -->
-<a href="https://wa.me/+51927872904" target="_blank" class="whatsapp-float" title="Chatea con nosotros en WhatsApp">
+<a href="https://wa.me/51927872904?text=Hola,%20deseo%20realizar%20una%20consulta%20en%20la%20Cl%C3%ADnica%20Limatambo" target="_blank" class="whatsapp-float" title="Chatea con nosotros en WhatsApp">
     <i class="bi bi-whatsapp"></i>
 </a>
 

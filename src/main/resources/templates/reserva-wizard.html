@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
@@ -160,9 +160,17 @@
                                         <span class="fs-5" id="resumenHora">-</span>
                                     </div>
                                     <div class="col-12 mt-3 pt-3 border-top">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <span class="fw-bold">Tarifa de Consulta:</span>
-                                            <span class="fw-bold fs-4 text-success">S/ 100.00</span>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="text-muted">Tarifa de Consulta:</span>
+                                            <span class="fw-bold">S/ 100.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2" id="coberturaSeguroContainer" style="display: none;">
+                                            <span class="text-muted">Cobertura Seguro (<span id="nombreSeguroLabel" th:text="${tipoSeguro}">Ninguno</span>):</span>
+                                            <span class="fw-bold text-danger" id="montoDescuento">- S/ 0.00</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                            <span class="fw-bold fs-5">Total a Pagar:</span>
+                                            <span class="fw-bold fs-3 text-success" id="totalPagar">S/ 100.00</span>
                                         </div>
                                     </div>
                                 </div>
@@ -185,7 +193,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
 
-    <script>
+    <script th:inline="javascript">
         // Lógica simple del Wizard
         let espName = "";
         let medName = "";
@@ -358,6 +366,23 @@
                 const partes = fechaRaw.split('-');
                 document.getElementById('resumenFecha').innerText = partes[2] + '/' + partes[1] + '/' + partes[0];
                 document.getElementById('resumenHora').innerText = document.getElementById('inputHoraHidden').value;
+                
+                // Calcular y mostrar costo final
+                const tarifaBase = 100.00;
+                const porcentajeDescuento = [[${descuentoSeguro}]];
+                const tipoSeguroStr = '[[${tipoSeguro}]]';
+                
+                if (porcentajeDescuento > 0) {
+                    const montoDescuento = tarifaBase * porcentajeDescuento;
+                    const costoFinal = tarifaBase - montoDescuento;
+                    
+                    document.getElementById('coberturaSeguroContainer').style.display = 'flex';
+                    document.getElementById('montoDescuento').innerText = '- S/ ' + montoDescuento.toFixed(2);
+                    document.getElementById('totalPagar').innerText = 'S/ ' + costoFinal.toFixed(2);
+                } else {
+                    document.getElementById('coberturaSeguroContainer').style.display = 'none';
+                    document.getElementById('totalPagar').innerText = 'S/ ' + tarifaBase.toFixed(2);
+                }
             }
         }
 

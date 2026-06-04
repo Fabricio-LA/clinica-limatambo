@@ -10,6 +10,7 @@ public class RegistroPacienteDTO {
     private LocalDate fechaNacimiento;
     private String email;
     private String password;
+    private String tipoSeguro;
 
     public RegistroPacienteDTO() {}
 
@@ -27,5 +28,7 @@ public class RegistroPacienteDTO {
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+    public String getTipoSeguro() { return tipoSeguro; }
+    public void setTipoSeguro(String tipoSeguro) { this.tipoSeguro = tipoSeguro; }
 }
 
