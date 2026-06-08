@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Clínica Limatambo</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="login-body py-5">
+    <div class="container d-flex justify-content-center">
+        <div class="card border-0 shadow-lg p-4" style="border-radius: 15px; width: 100%; max-width: 600px;">
+            <div class="text-center mb-4">
+                <i class="bi bi-hospital-fill fs-1" style="color: var(--matcha-main);"></i>
+                <h4 class="fw-bold mt-2">Crear Cuenta</h4>
+                <p class="text-muted small">Ingresa tus datos para registrarte como paciente</p>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger py-2 small" th:text="${error}"></div>
+            <div th:if="${param.exito}" class="alert alert-success py-2 small">Cuenta creada exitosamente. Ya puedes iniciar sesión.</div>
+
+            <form th:action="@{/registro}" method="post">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Nombres</label>
+                        <input type="text" name="nombre" class="form-control bg-light border-0" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Apellidos</label>
+                        <input type="text" name="apellido" class="form-control bg-light border-0" required>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">DNI</label>
+                        <input type="text" name="dni" class="form-control bg-light border-0" maxlength="8" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">Teléfono</label>
+                        <input type="text" name="telefono" class="form-control bg-light border-0" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Fecha de Nacimiento</label>
+                    <input type="date" name="fechaNacimiento" class="form-control bg-light border-0" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold">¿Cuenta con Seguro?</label>
+                        <select id="hasInsurance" class="form-select bg-light border-0" onchange="toggleInsuranceSelect()" required>
+                            <option value="no">No, soy Particular</option>
+                            <option value="si">Sí, tengo seguro de salud</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6" id="insuranceSelectContainer" style="display: none;">
+                        <label class="form-label small fw-bold">Seleccione Seguro</label>
+                        <select name="tipoSeguro" id="tipoSeguro" class="form-select bg-light border-0">
+                            <option value="Particular">Ninguno (Particular)</option>
+                            <option value="Rimac">Rímac Seguros (20% Desc.)</option>
+                            <option value="Interseguro">Interseguro (15% Desc.)</option>
+                            <option value="LaPositiva">La Positiva (15% Desc.)</option>
+                            <option value="Mapfre">Mapfre (10% Desc.)</option>
+                            <option value="Pacifico">Pacífico Seguros (15% Desc.)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold">Correo Electrónico</label>
+                    <input type="email" name="email" class="form-control bg-light border-0" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label small fw-bold">Contraseña</label>
+                    <input type="password" name="password" class="form-control bg-light border-0" required>
+                </div>
+
+                <button type="submit" class="btn btn-reservar w-100 mb-3">Registrarse</button>
+                
+                <div class="text-center">
+                    <a th:href="@{/login}" class="text-decoration-none small text-muted">
+                        <i class="bi bi-arrow-left me-1"></i> Volver al login
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleInsuranceSelect() {
+            const hasInsurance = document.getElementById('hasInsurance').value;
+            const container = document.getElementById('insuranceSelectContainer');
+            const selectSeguro = document.getElementById('tipoSeguro');
+            
+            if (hasInsurance === 'si') {
+                container.style.display = 'block';
+                selectSeguro.value = 'Rimac';
+                selectSeguro.required = true;
+            } else {
+                container.style.display = 'none';
+                selectSeguro.value = 'Particular';
+                selectSeguro.required = false;
+            }
+        }
+    </script>
+</body>
+</html>
+
+

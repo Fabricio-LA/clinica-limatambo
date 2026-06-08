@@ -1,0 +1,261 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel | Clínica Limatambo</title>
+    
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-clinica sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+                <i class="bi bi-hospital-fill me-2" style="color: var(--matcha-main);"></i>
+                <span>LIMATAMBO</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <span class="nav-link text-dark fw-bold">
+                            <i class="bi bi-person-circle me-1 text-success"></i> 
+                            Hola, <span th:text="${paciente != null ? paciente.nombre : 'Paciente'}">Paciente</span>
+                        </span>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm">Cerrar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 text-center p-4 mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3 mx-auto" style="width: 80px; height: 80px;">
+                        <i class="bi bi-person-fill fs-1" style="color: var(--matcha-main);"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1" th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Mi Perfil'}">Mi Perfil</h5>
+                    <p class="text-muted small mb-0" th:text="${paciente != null ? 'DNI: ' + paciente.dni : ''}">DNI</p>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4 p-4 text-center" style="background-color: #fcfdfa; border: 2px dashed var(--matcha-main) !important;">
+                    <i class="bi bi-calendar2-plus fs-1 text-success mb-2"></i>
+                    <h6 class="fw-bold text-success mb-3">¿Necesitas una consulta?</h6>
+                    <a th:href="@{/paciente/reservar}" class="btn btn-reservar w-100">Nueva Reserva</a>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <h4 class="fw-bold mb-4" style="color: var(--matcha-dark)">Mis Citas Médicas</h4>
+
+                <div th:if="${#lists.isEmpty(citas)}" class="alert alert-light border border-success border-opacity-25 rounded-4 p-5 text-center shadow-sm">
+                    <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                    <h5 class="fw-bold text-secondary">No tienes citas programadas</h5>
+                    <p class="text-muted small">Tus próximas reservas aparecerán aquí.</p>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12" th:each="dto : ${citas}">
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                            <div class="card-body p-4 position-relative">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
+                                            <i class="bi bi-person-fill fs-3" style="color: var(--matcha-main);"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="fw-bold mb-0" th:text="${dto.nombreMedico}">Dr. Nombre</h5>
+                                            <small class="text-muted">Consulta Médica</small>
+                                        </div>
+                                    </div>
+                                    <div class="ms-3 flex-shrink-0">
+                                        <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge bg-warning text-dark border shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i>Pendiente</span>
+                                        <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge bg-success shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i>Confirmada</span>
+                                        <span th:if="${dto.cita.estado == 'Cancelada'}" class="badge bg-danger shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i>Cancelada</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3 bg-light p-3 rounded-3 mb-3">
+                                    <div class="col-sm-6 d-flex align-items-center">
+                                        <i class="bi bi-calendar3 text-success me-2"></i>
+                                        <span class="fw-bold" th:text="${dto.cita.fechaCita}">2026-05-15</span>
+                                    </div>
+                                    <div class="col-sm-6 d-flex align-items-center">
+                                        <i class="bi bi-clock text-success me-2"></i>
+                                        <span class="fw-bold" th:text="${dto.cita.horaCita}">10:00:00</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2" th:if="${dto.cita.estado != 'Cancelada'}">
+                                    <button type="button" class="btn btn-outline-success btn-sm px-3" data-bs-toggle="modal" th:data-bs-target="'#modificarModal' + ${dto.cita.idCita}">
+                                        <i class="bi bi-pencil-square me-1"></i> Modificar
+                                    </button>
+                                    <form th:action="@{/citas/cancelar/{id}(id=${dto.cita.idCita})}" method="post" onsubmit="return confirm('¿Estás seguro de cancelar esta cita?');">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                                        </button>
+                                    </form>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div th:if="${dto.cita.estado != 'Cancelada'}" class="modal fade" th:id="'modificarModal' + ${dto.cita.idCita}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0 shadow-lg">
+                                    <div class="modal-header bg-light">
+                                        <h5 class="modal-title fw-bold"><i class="bi bi-calendar-event me-2"></i>Reprogramar Cita</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form th:action="@{/citas/modificar/{id}(id=${dto.cita.idCita})}" method="post">
+                                        <div class="modal-body p-4">
+                                            <p class="small text-muted mb-4">Selecciona la nueva fecha y hora para tu cita con <strong th:text="${dto.nombreMedico}">Dr.</strong></p>
+                                            <input type="hidden" th:id="'idMedicoModal' + ${dto.cita.idCita}" th:value="${dto.cita.idMedico}">
+                                            <input type="hidden" th:id="'diasMedicoModal' + ${dto.cita.idCita}" th:value="${dto.medico.diasLaborables}">
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold small">Nueva Fecha</label>
+                                                <input type="text" class="form-control bg-white input-fecha-modal" 
+                                                       name="nuevaFecha" 
+                                                       th:id="'inputFechaModal' + ${dto.cita.idCita}"
+                                                       th:value="${dto.cita.fechaCita}" required readonly>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold small">Nueva Hora</label>
+                                                <input type="hidden" name="nuevaHora" th:id="'inputHoraHiddenModal' + ${dto.cita.idCita}" th:value="${dto.cita.horaCita}" required>
+                                                <div th:id="'contenedorHorasModal' + ${dto.cita.idCita}" class="d-flex flex-wrap gap-2 mb-2">
+                                                </div>
+                                                <small th:id="'alertaHorarioModal' + ${dto.cita.idCita}" class="text-danger fw-bold" style="display: none;">Este doctor no atiende en el día seleccionado o ya no tiene turnos.</small>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-reservar">Guardar Cambios</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar Flatpickr cuando el modal se muestra para que calcule bien su tamaño y posición
+            document.querySelectorAll('.modal').forEach(function(modal) {
+                modal.addEventListener('shown.bs.modal', function() {
+                    const idCita = modal.id.replace('modificarModal', '');
+                    const inputFecha = document.getElementById('inputFechaModal' + idCita);
+                    if (!inputFecha) return;
+                    
+                    const idMedico = document.getElementById('idMedicoModal' + idCita).value;
+                    const diasJava = document.getElementById('diasMedicoModal' + idCita).value.split(',').map(Number);
+                    const diasFlat = diasJava.map(d => d === 7 ? 0 : d);
+                    
+                    if (!inputFecha._flatpickr) {
+                        flatpickr(inputFecha, {
+                            locale: "es",
+                            minDate: "today",
+                            disable: [
+                                function(date) {
+                                    return !diasFlat.includes(date.getDay());
+                                }
+                            ],
+                            onChange: function(selectedDates, dateStr, instance) {
+                                cargarHorariosModal(idCita, idMedico, dateStr);
+                            }
+                        });
+                        // Cargar las horas iniciales
+                        cargarHorariosModal(idCita, idMedico, inputFecha.value);
+                    }
+                });
+            });
+        });
+
+        function seleccionarHoraModal(btn, hora, idCita) {
+            document.querySelectorAll('#contenedorHorasModal' + idCita + ' .btn-hora').forEach(b => {
+                b.classList.remove('btn-success');
+                b.classList.add('btn-outline-success');
+            });
+            btn.classList.remove('btn-outline-success');
+            btn.classList.add('btn-success');
+            
+            document.getElementById('inputHoraHiddenModal' + idCita).value = hora;
+        }
+
+        function cargarHorariosModal(idCita, idMedico, fecha) {
+            const contenedorHoras = document.getElementById('contenedorHorasModal' + idCita);
+            const alerta = document.getElementById('alertaHorarioModal' + idCita);
+            const horaActualGuardada = document.getElementById('inputHoraHiddenModal' + idCita).value;
+            
+            document.getElementById('inputHoraHiddenModal' + idCita).value = '';
+            
+            contenedorHoras.innerHTML = '<div class="spinner-border spinner-border-sm text-success" role="status"></div> <span class="text-muted small ms-2">Cargando...</span>';
+            alerta.style.display = 'none';
+
+            fetch(`/api/citas/disponibles?idMedico=${idMedico}&fecha=${fecha}`)
+                .then(response => response.json())
+                .then(data => {
+                    contenedorHoras.innerHTML = '';
+                    
+                    if (data.length === 0) {
+                        contenedorHoras.innerHTML = '<div class="text-muted small w-100">No hay horarios disponibles.</div>';
+                        alerta.style.display = 'block';
+                    } else {
+                        data.forEach(item => {
+                            let btn = document.createElement('button');
+                            btn.type = 'button';
+                            let horaCorta = item.hora.substring(0, 5);
+                            btn.innerText = horaCorta;
+                            
+                            // Permitir la hora si es exactamente la misma que ya tiene la cita actual (porque el backend la reportará ocupada)
+                            let esLaHoraActual = (horaCorta + ':00' === horaActualGuardada || horaCorta === horaActualGuardada.substring(0,5));
+                            
+                            if (!item.disponible && !esLaHoraActual) {
+                                btn.className = 'btn btn-sm btn-hora btn-secondary';
+                                btn.disabled = true;
+                                btn.style.opacity = '0.5';
+                                btn.title = 'No disponible';
+                            } else {
+                                btn.className = 'btn btn-sm btn-hora btn-outline-success fw-bold';
+                                if (esLaHoraActual) {
+                                    btn.classList.remove('btn-outline-success');
+                                    btn.classList.add('btn-success');
+                                    document.getElementById('inputHoraHiddenModal' + idCita).value = item.hora;
+                                }
+                                btn.onclick = function() { seleccionarHoraModal(this, item.hora, idCita); };
+                            }
+                            contenedorHoras.appendChild(btn);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar horarios:', error);
+                    contenedorHoras.innerHTML = '<div class="text-danger small w-100">Error de conexión</div>';
+                });
+        }
+    </script>
+</body>
+</html>
+
+
