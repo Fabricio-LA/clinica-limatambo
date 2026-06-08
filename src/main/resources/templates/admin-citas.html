@@ -153,7 +153,8 @@
                                 <span class="badge rounded-pill px-3 py-2" 
                                       th:classappend="${dto.cita.estado == 'Pendiente'} ? 'bg-warning text-dark' : (${dto.cita.estado == 'Completada'} ? 'bg-success' : 'bg-danger')"
                                       th:text="${dto.cita.estado}"></span>
-                                                      <td class="text-end">
+                            </td>
+                            <td class="text-end">
                                 <button class="btn btn-sm btn-light text-primary rounded-circle me-1"
                                         title="Editar"
                                         data-bs-toggle="modal"
