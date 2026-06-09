@@ -3,6 +3,7 @@
     --matcha-main: #8FB935;
     --matcha-dark: #3E5622;
     --matcha-soft: #DDEBBE;
+    --matcha-light: #A8CC6A;
     --text-dark: #2C3E50;
     --white: #FFFFFF;
 }
@@ -14,6 +15,7 @@ body {
     line-height: 1.6;
 }
 
+/* NAVBAR */
 .navbar-clinica {
     background-color: var(--white);
     border-bottom: 3px solid var(--matcha-soft);
@@ -25,6 +27,7 @@ body {
     font-size: 1.5rem;
 }
 
+/* BUTTONS */
 .btn-reservar {
     background-color: var(--matcha-main);
     color: white !important;
@@ -32,22 +35,42 @@ body {
     padding: 12px 25px;
     border-radius: 30px;
     border: none;
-    transition: 0.3s all ease;
+    transition: all 0.3s ease-in-out;
 }
 
 .btn-reservar:hover {
-    background-color: var(--matcha-dark);
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(143, 185, 53, 0.3);
+    background-color: var(--matcha-dark) !important;
+    color: var(--white) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
 
+.btn-outline-white {
+    color: #FFFFFF !important;
+    border: 2px solid #FFFFFF !important;
+    background-color: transparent;
+    font-weight: 700;
+    padding: 12px 25px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-white:hover {
+    background-color: #FFFFFF !important;
+    color: var(--matcha-dark) !important;
+    border-color: var(--white) !important;
+    transform: translateY(-3px);
+}
+
+.btn, .card-specialty {
+    transition: all 0.3s ease-in-out;
+}
+
+/* HERO SECTION */
 .hero-section {
-    background: linear-gradient(rgba(143, 185, 53, 0.95), rgba(62, 86, 34, 0.8)), 
-                url('../img/hero-bg.jpg'); /* Opcional: imagen de fondo */
-    background-size: cover;
-    color: white;
-    padding: 120px 0;
-    text-align: center;
+    background: linear-gradient(135deg, rgba(62, 86, 34, 0.95) 0%, rgba(143, 185, 53, 0.9) 100%);
+    color: var(--white);
+    padding: 100px 0;
 }
 
 .hero-title {
@@ -55,6 +78,15 @@ body {
     font-weight: 800;
 }
 
+.hero-section .lead {
+    color: #FFFFFF !important;
+    font-weight: 500;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    max-width: 800px;
+    margin: 0 auto 2.5rem auto;
+}
+
+/* CARDS */
 .card-specialty {
     transition: transform 0.3s;
     border-radius: 20px;
@@ -81,6 +113,52 @@ body {
     font-size: 2rem;
 }
 
+/* BADGES */
+.badge-matcha-light {
+    background-color: var(--matcha-soft);
+    color: var(--matcha-dark);
+    font-weight: 700;
+    padding: 8px 15px;
+    border-radius: 8px;
+}
+
+/* STATS SECTION */
+.stats-section {
+    background-color: var(--matcha-dark);
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--white);
+    display: block;
+}
+
+.stat-text {
+    font-size: 0.9rem;
+    color: var(--matcha-soft);
+    text-transform: uppercase;
+}
+
+/* DROPDOWN */
+.dropdown-item-button {
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    padding: 0.25rem 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.dropdown-item-button:hover {
+    background-color: #f8f9fa;
+    color: #dc3545;
+}
+
+/* WHATSAPP FLOAT */
 .whatsapp-float {
     position: fixed;
     width: 60px;
@@ -104,114 +182,13 @@ body {
     transform: scale(1.1);
 }
 
-.hero-section {
-    background: linear-gradient(rgba(143, 185, 53, 0.9), rgba(62, 86, 34, 0.85));
-    color: var(--white);
-    padding: 100px 0;
-}
-
-.hero-section .lead {
-    color: #FFFFFF !important; 
-    font-weight: 500;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); 
-    max-width: 800px;
-    margin: 0 auto 2.5rem auto;
-}
-
-.btn-outline-white {
-    color: #FFFFFF !important;
-    border: 2px solid #FFFFFF !important;
-    background-color: transparent;
-    font-weight: 700;
-    padding: 12px 25px;
-    border-radius: 30px;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-white:hover {
-    background-color: #FFFFFF;
-    color: var(--matcha-dark) !important;
-    transform: scale(1.05);
-}
-
-.badge-matcha-light {
-    background-color: var(--matcha-soft);
-    color: var(--matcha-dark);
-    font-weight: 700;
-    padding: 8px 15px;
-    border-radius: 8px;
-}
-
-.btn-reservar:hover {
-    background-color: var(--matcha-dark) !important;
-    color: var(--white) !important;
-    transform: translateY(-3px); 
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-}
-
-
-.btn-outline-white:hover {
-    background-color: var(--white) !important;
-    color: var(--matcha-dark) !important;
-    border-color: var(--white) !important;
-    transform: translateY(-3px);
-}
-
-
-.btn, .card-specialty {
-    transition: all 0.3s ease-in-out;
-}
-
-.stats-section {
-    background-color: var(--matcha-dark);
-    padding: 30px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.stat-number {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--white);
-    display: block;
-}
-
-.stat-text {
-    font-size: 0.9rem;
-    color: var(--matcha-soft);
-    text-transform: uppercase;
-}
-
-.dropdown-item-button {
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            padding: 0.25rem 1rem;
-            transition: all 0.2s ease;
-            cursor: pointer; 
-}    
-
-
-.dropdown-item-button:hover {
-     background-color: #f8f9fa; 
-     color: #dc3545; 
-}
-
-
-/* Variables Globales (Asegúrate de que estén al inicio de tu CSS) */
-:root {
-    --matcha-main: #86ab4d;
-    --matcha-dark: #3e5622;
-    --matcha-soft: #e9f0df;
-}
-
-/* Estilos específicos para la página de Login */
+/* LOGIN / AUTH PAGES */
 .login-body {
     background-color: #f9fbf7;
-    display: flex !important; /* Forzamos el uso de Flexbox */
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
 }
@@ -224,6 +201,12 @@ body {
     width: 100%;
     max-width: 400px;
     border-bottom: 5px solid var(--matcha-main);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(62, 86, 34, 0.15);
 }
 
 .logo-login {
@@ -232,4 +215,48 @@ body {
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 1.5rem;
+}
+
+/* FORM INPUTS */
+.form-control:focus, .form-select:focus {
+    border-color: var(--matcha-main) !important;
+    box-shadow: 0 0 0 0.2rem rgba(143, 185, 53, 0.25) !important;
+}
+
+.input-group-text {
+    transition: background-color 0.2s ease;
+}
+
+.input-group:focus-within .input-group-text {
+    background-color: var(--matcha-soft) !important;
+    color: var(--matcha-dark);
+}
+
+/* FOOTER */
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #ffffff;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--matcha-main);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--matcha-dark);
 }
