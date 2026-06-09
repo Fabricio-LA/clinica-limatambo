@@ -18,10 +18,6 @@
         .navbar-limatambo .nav-link { color: #444; font-weight: 500; padding: 8px 16px; transition: color .2s; }
         .navbar-limatambo .nav-link:hover, .navbar-limatambo .nav-link.active { color: var(--matcha-main); }
         
-        /* FOOTER */
-        .footer-link { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
-        .footer-link:hover { color: #ffffff; }
-
         /* FARMACIA HERO */
         .farmacia-hero {
             background-color: #5d812e; /* Verde sólido como en Figma */
@@ -86,8 +82,8 @@
             cursor: pointer;
         }
         .category-pill:hover, .category-pill.active {
-            background: #8FB935;
-            border-color: #8FB935;
+            background: var(--matcha-main);
+            border-color: var(--matcha-main);
             color: #fff;
             font-weight: 500;
         }
@@ -143,9 +139,9 @@
         .product-name { font-weight: 700; font-size: 1.1rem; color: #2C3E50; margin-bottom: 0.2rem; }
         .product-presentation { color: #666; font-size: 0.85rem; margin-bottom: 0.8rem; }
         .product-stars { color: #ffc107; font-size: 0.85rem; margin-bottom: 1rem; }
-        .product-price { font-weight: 800; font-size: 1.4rem; color: #8FB935; margin-bottom: 1rem; }
+        .product-price { font-weight: 800; font-size: 1.4rem; color: var(--matcha-main); margin-bottom: 1rem; }
         
-        .btn-add { background: #8FB935; color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; transition: background 0.2s; }
+        .btn-add { background: var(--matcha-main); color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; transition: background 0.2s; }
         .btn-add:hover { background: #7a9e2d; color: white;}
         .btn-locked { background: #f08b1a; color: white; border: none; border-radius: 2rem; padding: 0.6rem; font-weight: 600; width: 100%; }
         .btn-locked:hover { background: #d77914; color: white;}
@@ -157,8 +153,8 @@
         .step-indicator::before { content: ''; position: absolute; top: 15px; left: 10%; right: 10%; height: 2px; background: #eee; z-index: 1; }
         .step-item { position: relative; z-index: 2; text-align: center; }
         .step-circle { width: 32px; height: 32px; border-radius: 50%; background: #eee; color: #999; display: flex; align-items: center; justify-content: center; font-weight: 600; margin: 0 auto 0.5rem; font-size: 0.9rem; }
-        .step-item.active .step-circle { background: #8FB935; color: white; }
-        .step-item.done .step-circle { background: #8FB935; color: white; }
+        .step-item.active .step-circle { background: var(--matcha-main); color: white; }
+        .step-item.done .step-circle { background: var(--matcha-main); color: white; }
         .step-label { font-size: 0.8rem; color: #777; font-weight: 500; }
         .step-item.active .step-label { color: #2C3E50; }
         
@@ -170,8 +166,8 @@
         .qty-input { width: 30px; text-align: center; border: none; background: transparent; font-weight: 600; font-size: 0.95rem; pointer-events: none;}
         
         .delivery-option { border: 1px solid #ddd; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; cursor: pointer; transition: all 0.2s; position: relative; }
-        .delivery-option:hover { border-color: #8FB935; }
-        .delivery-option.selected { border-color: #8FB935; background: #fdfefb; box-shadow: 0 4px 10px rgba(143,185,53,0.1); }
+        .delivery-option:hover { border-color: var(--matcha-main); }
+        .delivery-option.selected { border-color: var(--matcha-main); background: #fdfefb; box-shadow: 0 4px 10px rgba(143,185,53,0.1); }
         .delivery-icon { width: 40px; height: 40px; border-radius: 50%; background: #F2F6E8; color: #6a8f33; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
         
     </style>
@@ -202,7 +198,7 @@
                     </a>
                 </li>
                 <li class="nav-item d-none d-lg-block">
-                    <a th:href="@{/paciente/reservar}" class="btn rounded-pill px-4 fw-semibold text-white shadow-sm" style="background-color: #8FB935; border-color: #8FB935;">
+                    <a th:href="@{/paciente/reservar}" class="btn rounded-pill px-4 fw-semibold text-white shadow-sm" style="background-color: var(--matcha-main); border-color: var(--matcha-main);">
                         Reservar Cita
                     </a>
                 </li>
@@ -269,7 +265,7 @@
             <input type="text" class="form-control search-input" id="searchInput" placeholder="Buscar por nombre o marca..." onkeyup="renderProducts()">
         </div>
         <button class="btn px-4 py-2 rounded-pill fw-bold text-white d-flex align-items-center gap-2 shadow-sm" 
-                style="background-color: #8FB935;" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
+                style="background-color: var(--matcha-main);" data-bs-toggle="offcanvas" data-bs-target="#cartOffcanvas">
             <i class="bi bi-cart3 fs-5"></i> Mi carrito
             <span class="badge bg-danger rounded-circle p-1 ms-1 d-none" id="cartCountBadge" style="font-size: 0.7rem; width: 20px; height: 20px;">0</span>
         </button>
@@ -324,12 +320,12 @@
         <div class="row g-5 pb-4 align-items-start justify-content-between">
             <div class="col-lg-4 col-md-12">
                 <div class="d-flex align-items-center gap-4 mb-3">
-                    <div style="width: 48px; height: 48px; background-color: #8db55b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <div style="width: 48px; height: 48px; background-color: var(--matcha-main); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                         <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
                     </div>
                     <div>
                         <h4 class="fw-bold text-white mb-0" style="letter-spacing: -0.5px;">Clínica Limatambo</h4>
-                        <span style="color: #8db55b; font-size: 0.95rem;">Salud con confianza</span>
+                        <span style="color: var(--matcha-main); font-size: 0.95rem;">Salud con confianza</span>
                     </div>
                 </div>
                 <p class="lh-lg mt-4" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
@@ -338,7 +334,7 @@
             </div>
             
             <div class="col-lg-3 col-md-6">
-                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">SERVICIOS</h6>
+                <h6 class="fw-bold mb-4" style="color: var(--matcha-main); letter-spacing: 1px;">SERVICIOS</h6>
                 <ul class="list-unstyled">
                     <li class="mb-3"><a href="#" class="footer-link">Reservar cita</a></li>
                     <li class="mb-3"><a href="#" class="footer-link">Farmacia en línea</a></li>
@@ -348,18 +344,18 @@
             </div>
             
             <div class="col-lg-4 col-md-6">
-                <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">CONTACTO</h6>
+                <h6 class="fw-bold mb-4" style="color: var(--matcha-main); letter-spacing: 1px;">CONTACTO</h6>
                 <ul class="list-unstyled" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
                     <li class="d-flex align-items-center mb-3">
-                        <i class="bi bi-whatsapp fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <i class="bi bi-whatsapp fs-5" style="color: var(--matcha-main); margin-right: 12px;"></i>
                         <span>WhatsApp: 927 872 904</span>
                     </li>
                     <li class="d-flex align-items-center mb-3">
-                        <i class="bi bi-envelope fs-5" style="color: #8db55b; margin-right: 12px;"></i>
+                        <i class="bi bi-envelope fs-5" style="color: var(--matcha-main); margin-right: 12px;"></i>
                         <span>contacto@limatambo.pe</span>
                     </li>
                     <li class="d-flex align-items-start mb-3">
-                        <i class="bi bi-geo-alt fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <i class="bi bi-geo-alt fs-5" style="color: var(--matcha-main); margin-right: 12px; margin-top: 2px;"></i>
                         <div>
                             <span class="d-block mb-1"><strong>San Isidro:</strong> Av. República de Panamá 3606</span>
                             <span class="d-block mb-1"><strong>S.J.L.:</strong> Av. Próceres de la Independencia</span>
@@ -367,7 +363,7 @@
                         </div>
                     </li>
                     <li class="d-flex align-items-start mb-3">
-                        <i class="bi bi-clock fs-5" style="color: #8db55b; margin-right: 12px; margin-top: 2px;"></i>
+                        <i class="bi bi-clock fs-5" style="color: var(--matcha-main); margin-right: 12px; margin-top: 2px;"></i>
                         <div>
                             <span class="d-block mb-1">Lun-Sáb: 7:00 AM – 9:00 PM</span>
                             <span class="d-block">Emergencias: 24/7</span>
@@ -428,10 +424,10 @@
                     <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <span class="fw-bold text-dark">Recoger en sede</span>
-                            <span class="fw-bold" style="color: #8FB935;">Gratis <i class="bi bi-check-circle" id="check-recojo"></i></span>
+                            <span class="fw-bold" style="color: var(--matcha-main);">Gratis <i class="bi bi-check-circle" id="check-recojo"></i></span>
                         </div>
                         <small class="text-muted d-block mb-1">Av. Javier Prado Este 1234, San Isidro</small>
-                        <small style="color: #8FB935;"><i class="bi bi-clock"></i> Disponible hoy · Sin costo adicional</small>
+                        <small style="color: var(--matcha-main);"><i class="bi bi-clock"></i> Disponible hoy · Sin costo adicional</small>
                     </div>
                 </div>
             </div>
@@ -445,7 +441,7 @@
                             <span class="fw-bold" style="color: #e67e22;">+ S/. 8.00 <i class="bi bi-check-circle d-none" id="check-delivery"></i></span>
                         </div>
                         <small class="text-muted d-block mb-1">Lima Metropolitana</small>
-                        <small style="color: #8FB935;"><i class="bi bi-clock"></i> Tiempo estimado: 2-4 horas</small>
+                        <small style="color: var(--matcha-main);"><i class="bi bi-clock"></i> Tiempo estimado: 2-4 horas</small>
                     </div>
                 </div>
             </div>
@@ -511,7 +507,7 @@
         <div class="border-top p-4 bg-white" style="box-shadow: 0 -10px 20px rgba(0,0,0,0.02);">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-muted small">Total a pagar</span>
-                <span class="fw-bold fs-4" style="color: #8FB935;" id="cartTotalFooter">S/. 0.00</span>
+                <span class="fw-bold fs-4" style="color: var(--matcha-main);" id="cartTotalFooter">S/. 0.00</span>
             </div>
             <button class="btn btn-add fs-6" id="btnNextStep" onclick="nextStep()">
                 <i class="bi bi-bag-check me-2"></i> Confirmar y elegir entrega
@@ -692,7 +688,7 @@
                 <div class="flex-grow-1">
                     <div class="fw-bold text-dark" style="font-size: 0.95rem;">${item.product.name}</div>
                     <div class="small text-muted mb-1">${item.product.pack}</div>
-                    <div class="fw-bold" style="color: #8FB935;">S/. ${(item.product.price * item.qty).toFixed(2)}</div>
+                    <div class="fw-bold" style="color: var(--matcha-main);">S/. ${(item.product.price * item.qty).toFixed(2)}</div>
                 </div>
                 <div class="qty-controls">
                     <button class="qty-btn" onclick="updateQty(${id}, -1)">-</button>

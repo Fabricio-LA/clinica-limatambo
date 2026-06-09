@@ -188,7 +188,7 @@ body {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     font-family: 'Poppins', sans-serif;
 }
@@ -201,6 +201,12 @@ body {
     width: 100%;
     max-width: 400px;
     border-bottom: 5px solid var(--matcha-main);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 40px rgba(62, 86, 34, 0.15);
 }
 
 .logo-login {
@@ -209,4 +215,48 @@ body {
     font-size: 1.8rem;
     text-align: center;
     margin-bottom: 1.5rem;
+}
+
+/* FORM INPUTS */
+.form-control:focus, .form-select:focus {
+    border-color: var(--matcha-main) !important;
+    box-shadow: 0 0 0 0.2rem rgba(143, 185, 53, 0.25) !important;
+}
+
+.input-group-text {
+    transition: background-color 0.2s ease;
+}
+
+.input-group:focus-within .input-group-text {
+    background-color: var(--matcha-soft) !important;
+    color: var(--matcha-dark);
+}
+
+/* FOOTER */
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #ffffff;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--matcha-main);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--matcha-dark);
 }
