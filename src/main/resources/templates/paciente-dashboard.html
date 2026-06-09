@@ -54,7 +54,7 @@
         </div>
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 text-center p-4 mb-4">
+                <div class="modern-card border-0 shadow-sm rounded-4 text-center p-4 mb-4">
                     <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3 mx-auto overflow-hidden" style="width: 100px; height: 100px;">
                         <img th:if="${paciente.fotoPerfil != null}" th:src="@{${paciente.fotoPerfil}}" class="w-100 h-100 object-fit-cover" alt="Foto de perfil">
                         <i th:unless="${paciente.fotoPerfil != null}" class="bi bi-person-fill fs-1" style="color: var(--matcha-main);"></i>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm rounded-4 p-4 text-center" style="background-color: #fcfdfa; border: 2px dashed var(--matcha-main) !important;">
+                <div class="modern-card border-0 shadow-sm rounded-4 p-4 text-center" style="background-color: #fcfdfa; border: 2px dashed var(--matcha-main) !important;">
                     <i class="bi bi-calendar2-plus fs-1 text-success mb-2"></i>
                     <h6 class="fw-bold text-success mb-3">¿Necesitas una consulta?</h6>
                     <a th:href="@{/paciente/reservar}" class="btn btn-reservar w-100">Nueva Reserva</a>
@@ -90,7 +90,7 @@
 
                 <div class="row g-3">
                     <div class="col-12" th:each="dto : ${citas}">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden">
                             <div class="card-body p-4 position-relative">
                                 <div class="d-flex justify-content-between align-items-start mb-3">
                                     <div class="d-flex align-items-center">

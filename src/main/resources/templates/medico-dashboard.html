@@ -32,7 +32,7 @@
     <div class="container py-5">
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 text-center">
+                <div class="modern-card border-0 shadow-sm rounded-4 p-4 mb-4 text-center">
                     <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle mb-3 mx-auto" style="width: 80px; height: 80px;">
                         <i class="bi bi-journal-medical fs-1 text-success"></i>
                     </div>
@@ -40,7 +40,7 @@
                     <h2 class="fw-bold text-dark mb-0" th:text="${totalCitasHoy}">0</h2>
                 </div>
                 
-                <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="modern-card border-0 shadow-sm rounded-4 p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="fw-bold text-muted mb-0"><i class="bi bi-clock-history me-2"></i>Mi Horario</h6>
                         <button class="btn btn-sm btn-outline-success rounded-pill" data-bs-toggle="modal" data-bs-target="#modalHorario"><i class="bi bi-pencil-square"></i></button>
@@ -54,7 +54,7 @@
                         <span class="small fw-bold text-success" th:text="${medico.horaInicio + ' - ' + medico.horaFin}">08:00 - 14:00</span>
                     </div>
                 </div>
-                <div class="card border-0 shadow-sm rounded-4 p-0 overflow-hidden">
+                <div class="modern-card border-0 shadow-sm rounded-4 p-0 overflow-hidden">
                     <div class="bg-warning bg-opacity-25 p-3 border-bottom border-warning border-opacity-50">
                         <h6 class="fw-bold text-dark mb-0">
                             <i class="bi bi-bell-fill text-warning me-2"></i>Alertas Recientes
@@ -108,7 +108,7 @@
 
                 <div class="row g-3">
                     <div class="col-12" th:each="dto : ${citasHoy}">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden" th:classappend="${dto.cita.estado == 'Atendida' || dto.cita.estado == 'Ausente'} ? 'opacity-50' : ''">
+                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden" th:classappend="${dto.cita.estado == 'Atendida' || dto.cita.estado == 'Ausente'} ? 'opacity-50' : ''">
                             <div class="card-body p-4 position-relative">
                                 
                                 <div class="d-flex justify-content-between align-items-start mb-3">
@@ -199,7 +199,7 @@
                 
                 <div class="row g-3">
                     <div class="col-12" th:each="dto : ${citasProximas}">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden">
                             <div class="card-body p-4 position-relative">
                                 
                                 <div class="d-flex justify-content-between align-items-start mb-3">
@@ -257,7 +257,7 @@
                 
                 <div class="row g-3" id="listaAtendidas">
                     <div class="col-12 cita-atendida-item" th:each="dto : ${citasAtendidas}">
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden opacity-75" th:data-busqueda="${#strings.toLowerCase(dto.nombrePaciente + ' ' + (dto.paciente != null ? dto.paciente.dni : ''))}">
+                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden opacity-75" th:data-busqueda="${#strings.toLowerCase(dto.nombrePaciente + ' ' + (dto.paciente != null ? dto.paciente.dni : ''))}">
                             <div class="card-body p-3 position-relative">
                                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                     <div class="d-flex align-items-center">

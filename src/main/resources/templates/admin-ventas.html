@@ -96,19 +96,19 @@
             <!-- Resumen Financiero -->
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                    <div class="modern-card border-0 shadow-sm rounded-4 p-4 text-center">
                         <h6 class="text-muted text-uppercase fw-bold small">Ingresos del Mes</h6>
                         <h2 class="fw-bold text-success mb-0" th:text="'S/ ' + ${ingresosMes != null ? ingresosMes : '0.00'}">S/ 0.00</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                    <div class="modern-card border-0 shadow-sm rounded-4 p-4 text-center">
                         <h6 class="text-muted text-uppercase fw-bold small">Ventas Realizadas</h6>
                         <h2 class="fw-bold text-dark mb-0" th:text="${ventasMes}">0</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                    <div class="modern-card border-0 shadow-sm rounded-4 p-4 text-center">
                         <h6 class="text-muted text-uppercase fw-bold small">Pagos Pendientes</h6>
                         <h2 class="fw-bold text-danger mb-0" th:text="${pagosPendientes}">0</h2>
                     </div>
@@ -118,7 +118,7 @@
             <!-- Tabla de Pagos Recientes -->
             <h5 class="fw-bold mt-5 mb-3 text-dark">Historial de Pagos</h5>
             <div class="table-responsive">
-                <table class="table table-custom">
+                <table class="table table-custom table-custom">
                     <thead>
                         <tr>
                             <th>Recibo / ID Pago</th>
