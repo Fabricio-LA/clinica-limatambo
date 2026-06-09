@@ -14,7 +14,7 @@ public class Pago {
     private Integer idPago;
 
     @ManyToOne
-    @JoinColumn(name = "id_cita", nullable = false)
+    @JoinColumn(name = "id_cita", nullable = true)
     private Cita cita;
 
     @Column(nullable = false, precision = 10, scale = 2)

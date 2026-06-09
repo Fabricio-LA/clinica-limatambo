@@ -29,6 +29,12 @@ public class Cita {
     @Column(length = 20)
     private String estado = "Pendiente";
 
+    @Column(name = "detalle_consulta", length = 1000)
+    private String detalleConsulta;
+
+    @Column(name = "notificacion_medico")
+    private Boolean notificacionMedico = false;
+
     public Cita() {}
 
     public Integer getIdCita() { return idCita; }
@@ -48,4 +54,10 @@ public class Cita {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getDetalleConsulta() { return detalleConsulta; }
+    public void setDetalleConsulta(String detalleConsulta) { this.detalleConsulta = detalleConsulta; }
+
+    public Boolean getNotificacionMedico() { return notificacionMedico; }
+    public void setNotificacionMedico(Boolean notificacionMedico) { this.notificacionMedico = notificacionMedico; }
 }

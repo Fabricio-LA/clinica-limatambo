@@ -4,15 +4,30 @@ import com.clinica.limatambo.repository.EspecialidadRepository;
 import com.clinica.limatambo.repository.MedicoRepository;
 import com.clinica.limatambo.repository.UsuarioRepository;
 import com.clinica.limatambo.repository.PacienteRepository;
+import com.clinica.limatambo.repository.InsumoRepository;
+import com.clinica.limatambo.repository.PagoRepository;
 import com.clinica.limatambo.model.Usuario;
 import com.clinica.limatambo.model.Paciente;
+import com.clinica.limatambo.model.Pago;
 import com.clinica.limatambo.service.DescuentoService;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.ResponseEntity;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.util.List;
+import java.util.Map;
+import com.clinica.limatambo.model.Insumo;
 
 @Controller
 public class HomeController {
@@ -31,6 +46,15 @@ public class HomeController {
 
     @Autowired
     private DescuentoService descuentoService;
+
+    @Autowired
+    private com.clinica.limatambo.service.EmailService emailService;
+
+    @Autowired
+    private InsumoRepository insumoRepository;
+
+    @Autowired
+    private PagoRepository pagoRepository;
 
     @GetMapping("/")
     public String inicio(Model model) {
@@ -52,6 +76,18 @@ public class HomeController {
         
         model.addAttribute("medicos", medicos);
         return "index";
+    }
+
+    @GetMapping("/dashboard-router")
+    public String dashboardRouter(Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            boolean isPaciente = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_PACIENTE"));
+            boolean isMedico = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_MEDICO"));
+            if (isPaciente) return "redirect:/paciente/dashboard";
+            if (isMedico) return "redirect:/medico/dashboard";
+            return "redirect:/admin/dashboard";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/ayuda")
@@ -78,8 +114,64 @@ public class HomeController {
         
         model.addAttribute("tipoSeguro", tipoSeguro);
         model.addAttribute("descuentoSeguro", descuento);
+        model.addAttribute("insumos", insumoRepository.findAll());
         
         return "farmacia";
+    }
+
+    @PostMapping("/api/enviar-boleta")
+    @ResponseBody
+    public ResponseEntity<?> enviarBoleta(
+            @RequestParam("boletaFile") MultipartFile file,
+            @RequestParam("boletaNumber") String boletaNumber,
+            @RequestParam(value = "total", required = false) BigDecimal total,
+            @RequestParam(value = "cartItems", required = false) String cartItemsJson,
+            Authentication authentication) {
+        
+        try {
+            // Create Pago record
+            Pago nuevoPago = new Pago();
+            nuevoPago.setMonto(total != null ? total : BigDecimal.ZERO);
+            nuevoPago.setMetodoPago("Tarjeta (Farmacia)");
+            nuevoPago.setEstado("Pagado");
+            nuevoPago.setFechaPago(LocalDateTime.now());
+            pagoRepository.save(nuevoPago);
+
+            // Deduct stock
+            if (cartItemsJson != null && !cartItemsJson.isEmpty()) {
+                ObjectMapper mapper = new ObjectMapper();
+                List<Map<String, Object>> cartItems = mapper.readValue(cartItemsJson, new TypeReference<List<Map<String, Object>>>() {});
+                for (Map<String, Object> item : cartItems) {
+                    String idStr = item.get("idInsumo").toString();
+                    int cantidad = Integer.parseInt(item.get("cantidad").toString());
+                    Optional<Insumo> insumoOpt = insumoRepository.findById(Integer.parseInt(idStr));
+                    if (insumoOpt.isPresent()) {
+                        Insumo insumo = insumoOpt.get();
+                        int nuevoStock = insumo.getStockActual() - cantidad;
+                        if (nuevoStock < 0) nuevoStock = 0;
+                        insumo.setStockActual(nuevoStock);
+                        insumoRepository.save(insumo);
+                    }
+                }
+            }
+
+            // Attempt to send email only if authenticated and has a valid email
+            if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
+                Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(authentication.getName());
+                if (usuarioOpt.isPresent()) {
+                    Usuario u = usuarioOpt.get();
+                    String email = u.getEmail();
+                    if (email != null && email.contains("@")) {
+                        emailService.enviarBoletaConAdjunto(email, file.getBytes(), boletaNumber);
+                    }
+                }
+            }
+            
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error procesando pago");
+        }
     }
 
     @GetMapping("/paciente/reservar")

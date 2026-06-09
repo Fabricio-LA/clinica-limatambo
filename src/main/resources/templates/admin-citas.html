@@ -98,20 +98,18 @@
                 <div class="row g-3">
                     <div class="col-md-3">
                         <label class="form-label small fw-bold text-muted">Fecha</label>
-                        <input type="date" class="form-control bg-light border-0">
+                        <input type="date" id="filtroFecha" class="form-control bg-light border-0">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small fw-bold text-muted">Médico</label>
-                        <select class="form-select bg-light border-0">
-                            <option>Todos los médicos</option>
-                        </select>
+                        <input type="text" id="filtroMedico" class="form-control bg-light border-0" placeholder="Nombre del Médico...">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label small fw-bold text-muted">Buscar Paciente</label>
-                        <input type="text" class="form-control bg-light border-0" placeholder="Nombre o DNI...">
+                        <input type="text" id="filtroPaciente" class="form-control bg-light border-0" placeholder="Nombre o DNI...">
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
-                        <button class="btn btn-outline-success w-100">Filtrar</button>
+                        <button class="btn btn-outline-secondary w-100" id="btnLimpiar">Limpiar</button>
                     </div>
                 </div>
             </div>
@@ -134,6 +132,7 @@
                             <th>ID</th>
                             <th>Fecha y Hora</th>
                             <th>Paciente</th>
+                            <th>Médico</th>
                             <th>Estado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -150,10 +149,14 @@
                                 <div class="small text-muted" th:if="${dto.paciente != null}">DNI: <span th:text="${dto.paciente.dni}"></span></div>
                             </td>
                             <td>
+                                <div class="fw-bold text-dark" th:text="${dto.nombreMedico}"></div>
+                            </td>
+                            <td>
                                 <span class="badge rounded-pill px-3 py-2" 
-                                      th:classappend="${dto.cita.estado == 'Pendiente'} ? 'bg-warning text-dark' : (${dto.cita.estado == 'Completada'} ? 'bg-success' : 'bg-danger')"
+                                      th:classappend="${dto.cita.estado == 'Pendiente'} ? 'bg-warning text-dark' : (${dto.cita.estado == 'Completada' || dto.cita.estado == 'Atendida' || dto.cita.estado == 'Confirmada'} ? 'bg-success' : 'bg-danger')"
                                       th:text="${dto.cita.estado}"></span>
-                                                      <td class="text-end">
+                            </td>
+                            <td class="text-end">
                                 <button class="btn btn-sm btn-light text-primary rounded-circle me-1"
                                         title="Editar"
                                         data-bs-toggle="modal"
@@ -223,6 +226,49 @@
         document.getElementById('editCitaPaciente').textContent = btn.getAttribute('data-paciente');
         document.getElementById('editCitaFecha').value = btn.getAttribute('data-fecha');
         document.getElementById('editCitaHora').value = btn.getAttribute('data-hora');
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const filtroFecha = document.getElementById('filtroFecha');
+        const filtroMedico = document.getElementById('filtroMedico');
+        const filtroPaciente = document.getElementById('filtroPaciente');
+        const btnLimpiar = document.getElementById('btnLimpiar');
+
+        function filtrarCitas() {
+            const valFecha = filtroFecha.value;
+            const valMedico = filtroMedico.value.toLowerCase().trim();
+            const valPaciente = filtroPaciente.value.toLowerCase().trim();
+            
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                if(row.children.length === 1) return; // Skip empty message row
+
+                const fechaTexto = row.children[1].querySelector('.fw-bold').textContent;
+                const pacienteTexto = row.children[2].textContent.toLowerCase();
+                const medicoTexto = row.children[3].textContent.toLowerCase();
+                
+                let matchFecha = valFecha === '' || fechaTexto.includes(valFecha);
+                let matchMedico = valMedico === '' || medicoTexto.includes(valMedico);
+                let matchPaciente = valPaciente === '' || pacienteTexto.includes(valPaciente);
+
+                if (matchFecha && matchMedico && matchPaciente) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        filtroFecha.addEventListener('change', filtrarCitas);
+        filtroMedico.addEventListener('input', filtrarCitas);
+        filtroPaciente.addEventListener('input', filtrarCitas);
+        
+        btnLimpiar.addEventListener('click', function() {
+            filtroFecha.value = '';
+            filtroMedico.value = '';
+            filtroPaciente.value = '';
+            filtrarCitas();
+        });
     });
 </script>
 </body>

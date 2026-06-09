@@ -8,6 +8,10 @@ import com.clinica.limatambo.repository.CitaRepository;
 import com.clinica.limatambo.repository.MedicoRepository;
 import com.clinica.limatambo.repository.PacienteRepository;
 import com.clinica.limatambo.repository.UsuarioRepository;
+import com.clinica.limatambo.repository.PagoRepository;
+import com.clinica.limatambo.model.Pago;
+import com.clinica.limatambo.service.DescuentoService;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -29,10 +33,20 @@ public class CitaController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private PagoRepository pagoRepository;
+
+    @Autowired
+    private DescuentoService descuentoService;
+
+    @Autowired
     private PacienteRepository pacienteRepository;
 
     @Autowired
     private MedicoRepository medicoRepository;
+    
+    @Autowired
+    private com.clinica.limatambo.service.EmailService emailService;
+    
     private boolean esHorarioValido(Integer idMedico, LocalDate fecha, LocalTime hora) {
         Optional<Medico> medicoOpt = medicoRepository.findById(idMedico);
         if (!medicoOpt.isPresent()) return false;
@@ -68,9 +82,26 @@ public class CitaController {
             if (usuarioOpt.isPresent()) {
                 Optional<Paciente> pacienteOpt = pacienteRepository.findByIdUsuario(usuarioOpt.get().getIdUsuario());
                 if (pacienteOpt.isPresent()) {
-                    cita.setIdPaciente(pacienteOpt.get().getIdPaciente());
+                    Paciente p = pacienteOpt.get();
+                    cita.setIdPaciente(p.getIdPaciente());
                     cita.setEstado("Pendiente");
                     citaRepository.save(cita);
+
+                    // Create Pago for the appointment
+                    double tarifaBase = 100.0;
+                    double desc = 0.0;
+                    if (p.getTipoSeguro() != null && !p.getTipoSeguro().isEmpty()) {
+                        desc = descuentoService.obtenerPorcentajeDescuento(p.getTipoSeguro().toUpperCase());
+                    }
+                    double total = tarifaBase - (tarifaBase * desc);
+
+                    Pago pago = new Pago();
+                    pago.setCita(cita);
+                    pago.setMonto(BigDecimal.valueOf(total));
+                    pago.setMetodoPago("Tarjeta (Reserva web)");
+                    pago.setEstado("Pagado");
+                    pagoRepository.save(pago);
+
                     return "redirect:/paciente/dashboard?reservaExito=true";
                 }
             }
@@ -85,6 +116,7 @@ public class CitaController {
             if (citaOpt.isPresent()) {
                 Cita cita = citaOpt.get();
                 cita.setEstado("Cancelada");
+                cita.setNotificacionMedico(true);
                 citaRepository.save(cita);
                 return "redirect:/paciente/dashboard?cancelada=true";
             }
@@ -109,6 +141,8 @@ public class CitaController {
 
                 cita.setFechaCita(nuevaFecha);
                 cita.setHoraCita(nuevaHora);
+                cita.setEstado("Pendiente");
+                cita.setNotificacionMedico(true);
                 citaRepository.save(cita);
                 return "redirect:/paciente/dashboard?modificada=true";
             }
@@ -119,19 +153,47 @@ public class CitaController {
     @PostMapping("/estado/{id}")
     public String cambiarEstadoCita(@org.springframework.web.bind.annotation.PathVariable("id") Integer idCita, 
                                     @org.springframework.web.bind.annotation.RequestParam("nuevoEstado") String nuevoEstado,
+                                    @org.springframework.web.bind.annotation.RequestParam(value = "detalleConsulta", required = false) String detalleConsulta,
                                     Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
             Optional<Cita> citaOpt = citaRepository.findById(idCita);
             if (citaOpt.isPresent()) {
                 Cita cita = citaOpt.get();
                 cita.setEstado(nuevoEstado);
+                if ("Atendida".equals(nuevoEstado) && detalleConsulta != null) {
+                    cita.setDetalleConsulta(detalleConsulta);
+                }
                 citaRepository.save(cita);
                 
                 if ("Atendida".equals(nuevoEstado)) {
                     return "redirect:/medico/dashboard?atendida=true";
                 } else if ("Ausente".equals(nuevoEstado)) {
                     return "redirect:/medico/dashboard?ausente=true";
+                } else if ("Cancelada_Medico".equals(nuevoEstado)) {
+                    // Send email if it's Cancelada_Medico (doctor urgency)
+                    Optional<Paciente> pacOpt = pacienteRepository.findById(cita.getIdPaciente());
+                    if (pacOpt.isPresent()) {
+                        Optional<Usuario> usuOpt = usuarioRepository.findById(pacOpt.get().getIdUsuario());
+                        if (usuOpt.isPresent()) {
+                            emailService.enviarCorreoCancelacionCita(usuOpt.get().getEmail() != null ? usuOpt.get().getEmail() : usuOpt.get().getUsername(), pacOpt.get().getNombre(), cita.getFechaCita().toString(), cita.getHoraCita().toString());
+                        }
+                    }
+                    return "redirect:/medico/dashboard?canceladaUrgencia=true";
                 }
+                return "redirect:/medico/dashboard";
+            }
+        }
+        return "redirect:/?error=true";
+    }
+
+    @PostMapping("/descartar-alerta/{id}")
+    public String descartarAlerta(@org.springframework.web.bind.annotation.PathVariable("id") Integer idCita, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            Optional<Cita> citaOpt = citaRepository.findById(idCita);
+            if (citaOpt.isPresent()) {
+                Cita cita = citaOpt.get();
+                cita.setNotificacionMedico(false);
+                citaRepository.save(cita);
                 return "redirect:/medico/dashboard";
             }
         }

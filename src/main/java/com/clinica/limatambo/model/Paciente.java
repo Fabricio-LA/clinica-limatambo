@@ -33,6 +33,12 @@ public class Paciente {
     @Column(name = "tipo_seguro", length = 50)
     private String tipoSeguro;
 
+    @Column(length = 255)
+    private String direccion;
+
+    @Column(name = "foto_perfil", length = 255)
+    private String fotoPerfil;
+
     public Paciente() {}
 
     public Integer getIdPaciente() { return idPaciente; }
@@ -58,4 +64,10 @@ public class Paciente {
 
     public String getTipoSeguro() { return tipoSeguro; }
     public void setTipoSeguro(String tipoSeguro) { this.tipoSeguro = tipoSeguro; }
+
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getFotoPerfil() { return fotoPerfil; }
+    public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
 }

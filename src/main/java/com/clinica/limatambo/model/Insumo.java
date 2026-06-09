@@ -21,6 +21,15 @@ public class Insumo {
     @Column(name = "stock_actual")
     private Integer stockActual;
 
+    @Column(name = "precio_unitario", precision = 10, scale = 2)
+    private java.math.BigDecimal precioUnitario;
+
+    @Column(name = "requiere_receta")
+    private Boolean requiereReceta = false;
+
+    @Column(name = "categoria", length = 50)
+    private String categoria;
+
     @Column(name = "stock_minimo")
     private Integer stockMinimo;
 
@@ -45,6 +54,15 @@ public class Insumo {
 
     public Integer getStockMinimo() { return stockMinimo; }
     public void setStockMinimo(Integer stockMinimo) { this.stockMinimo = stockMinimo; }
+
+    public java.math.BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(java.math.BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+
+    public Boolean getRequiereReceta() { return requiereReceta; }
+    public void setRequiereReceta(Boolean requiereReceta) { this.requiereReceta = requiereReceta; }
+
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria) { this.categoria = categoria; }
 
     public String getUnidadMedida() { return unidadMedida; }
     public void setUnidadMedida(String unidadMedida) { this.unidadMedida = unidadMedida; }

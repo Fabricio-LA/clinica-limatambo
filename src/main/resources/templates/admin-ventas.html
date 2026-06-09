@@ -89,7 +89,7 @@
                     <p class="text-muted small mb-0">Gestión de ingresos, pagos de citas y facturación</p>
                 </div>
                 <div>
-                    <button class="btn btn-outline-primary px-4 rounded-pill"><i class="bi bi-printer-fill me-2"></i> Cierre de Caja</button>
+                    <a href="/admin/cierre-caja.csv" class="btn btn-outline-primary px-4 rounded-pill"><i class="bi bi-printer-fill me-2"></i> Cierre de Caja</a>
                 </div>
             </div>
 
@@ -97,26 +97,26 @@
             <div class="row g-4 mb-4">
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
-                        <h6 class="text-muted text-uppercase fw-bold small">Ingresos de Hoy</h6>
-                        <h2 class="fw-bold text-success mb-0">S/ 4,250.00</h2>
+                        <h6 class="text-muted text-uppercase fw-bold small">Ingresos del Mes</h6>
+                        <h2 class="fw-bold text-success mb-0" th:text="'S/ ' + ${ingresosMes != null ? ingresosMes : '0.00'}">S/ 0.00</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
-                        <h6 class="text-muted text-uppercase fw-bold small">Citas Pagadas</h6>
-                        <h2 class="fw-bold text-dark mb-0">34</h2>
+                        <h6 class="text-muted text-uppercase fw-bold small">Ventas Realizadas</h6>
+                        <h2 class="fw-bold text-dark mb-0" th:text="${ventasMes}">0</h2>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
                         <h6 class="text-muted text-uppercase fw-bold small">Pagos Pendientes</h6>
-                        <h2 class="fw-bold text-danger mb-0">3</h2>
+                        <h2 class="fw-bold text-danger mb-0" th:text="${pagosPendientes}">0</h2>
                     </div>
                 </div>
             </div>
 
             <!-- Tabla de Pagos Recientes -->
-            <h5 class="fw-bold mt-5 mb-3 text-dark">Historial de Pagos (Hoy)</h5>
+            <h5 class="fw-bold mt-5 mb-3 text-dark">Historial de Pagos</h5>
             <div class="table-responsive">
                 <table class="table table-custom">
                     <thead>
@@ -130,39 +130,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Datos estáticos de demostración, ya que el módulo está recién creado -->
-                        <tr>
-                            <td class="fw-bold text-muted">#REC-1001</td>
+                        <tr th:each="info : ${pagosInfo}">
+                            <td class="fw-bold text-muted">#REC-<span th:text="${info.pago.idPago}">1001</span></td>
                             <td>
-                                <div class="fw-bold text-dark">Cita #45 (Cardiología)</div>
-                                <div class="small text-muted">María González</div>
+                                <div class="fw-bold text-dark" th:if="${info.pago.cita != null}">Cita #<span th:text="${info.pago.cita.idCita}"></span></div>
+                                <div class="fw-bold text-primary" th:if="${info.pago.cita == null}">Venta Farmacia</div>
+                                <div class="small text-muted" th:text="${info.nombrePaciente}">Paciente</div>
                             </td>
-                            <td class="fw-bold text-success">S/ 120.00</td>
-                            <td><i class="bi bi-credit-card-fill text-primary me-2"></i> Tarjeta Visa</td>
-                            <td><span class="badge bg-success rounded-pill px-3 py-2">Pagado</span></td>
-                            <td class="text-end"><button class="btn btn-sm btn-light text-secondary rounded-circle"><i class="bi bi-file-earmark-pdf"></i></button></td>
+                            <td class="fw-bold text-success">S/ <span th:text="${info.pago.monto}"></span></td>
+                            <td>
+                                <i class="bi bi-credit-card-fill text-primary me-2" th:if="${info.pago.metodoPago == 'Tarjeta' || info.pago.metodoPago == 'tarjeta'}"></i>
+                                <i class="bi bi-cash text-success me-2" th:if="${info.pago.metodoPago == 'Efectivo' || info.pago.metodoPago == 'efectivo'}"></i>
+                                <span th:text="${info.pago.metodoPago}">Método</span>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill px-3 py-2"
+                                      th:classappend="${info.pago.estado == 'Pagado'} ? 'bg-success' : 'bg-warning text-dark'"
+                                      th:text="${info.pago.estado}">Pagado</span>
+                            </td>
+                            <td class="text-end">
+                                <a th:href="@{/admin/recibo/{id}(id=${info.pago.idPago})}" target="_blank" class="btn btn-sm btn-light text-secondary rounded-circle" th:if="${info.pago.estado == 'Pagado'}" title="Ver Recibo"><i class="bi bi-file-earmark-pdf"></i></a>
+                                <button class="btn btn-sm btn-success rounded-pill px-3" th:if="${info.pago.estado != 'Pagado'}">Cobrar</button>
+                            </td>
                         </tr>
-                        <tr>
-                            <td class="fw-bold text-muted">#REC-1002</td>
-                            <td>
-                                <div class="fw-bold text-dark">Cita #46 (Pediatría)</div>
-                                <div class="small text-muted">Carlos Ruiz</div>
-                            </td>
-                            <td class="fw-bold text-success">S/ 100.00</td>
-                            <td><i class="bi bi-cash text-success me-2"></i> Efectivo</td>
-                            <td><span class="badge bg-success rounded-pill px-3 py-2">Pagado</span></td>
-                            <td class="text-end"><button class="btn btn-sm btn-light text-secondary rounded-circle"><i class="bi bi-file-earmark-pdf"></i></button></td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold text-muted">#REC-1003</td>
-                            <td>
-                                <div class="fw-bold text-dark">Cita #48 (Dermatología)</div>
-                                <div class="small text-muted">Lucía Fernández</div>
-                            </td>
-                            <td class="fw-bold text-secondary">S/ 150.00</td>
-                            <td>--</td>
-                            <td><span class="badge bg-warning text-dark rounded-pill px-3 py-2">Pendiente</span></td>
-                            <td class="text-end"><button class="btn btn-sm btn-success rounded-pill px-3">Cobrar</button></td>
+                        <tr th:if="${#lists.isEmpty(pagosInfo)}">
+                            <td colspan="6" class="text-center py-5 text-muted">No hay pagos registrados.</td>
                         </tr>
                     </tbody>
                 </table>

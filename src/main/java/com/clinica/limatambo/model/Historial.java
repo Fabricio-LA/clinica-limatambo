@@ -18,4 +18,13 @@ public class Historial {
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     public Historial() {}
+
+    public Integer getIdHistorial() { return idHistorial; }
+    public void setIdHistorial(Integer idHistorial) { this.idHistorial = idHistorial; }
+
+    public Integer getIdPaciente() { return idPaciente; }
+    public void setIdPaciente(Integer idPaciente) { this.idPaciente = idPaciente; }
+
+    public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 }

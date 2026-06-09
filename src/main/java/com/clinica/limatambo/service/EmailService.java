@@ -25,6 +25,36 @@ public class EmailService {
 
         mailSender.send(mensaje);
     }
+
+    public void enviarCorreoCancelacionCita(String destinatario, String nombrePaciente, String fecha, String hora) {
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setTo(destinatario);
+        mensaje.setSubject("Aviso Importante: Cancelación de Cita Médica - Clínica Limatambo");
+        mensaje.setText("Hola " + nombrePaciente + ",\n\n" +
+                "Lamentamos informarte que tu cita médica programada para el día " + fecha + " a las " + hora + " ha sido cancelada por el médico debido a una urgencia médica inesperada.\n\n" +
+                "Por favor, ingresa a nuestro portal para reprogramar tu cita lo antes posible.\n\n" +
+                "Pedimos disculpas por los inconvenientes generados.\n\n" +
+                "Atentamente,\n" +
+                "Clínica Limatambo");
+        mailSender.send(mensaje);
+    }
+
+    public void enviarBoletaConAdjunto(String destinatario, byte[] pdfAdjunto, String numeroBoleta) {
+        try {
+            jakarta.mail.internet.MimeMessage mensaje = mailSender.createMimeMessage();
+            org.springframework.mail.javamail.MimeMessageHelper helper = new org.springframework.mail.javamail.MimeMessageHelper(mensaje, true);
+            
+            helper.setTo(destinatario);
+            helper.setSubject("Tu Boleta Electrónica - Clínica Limatambo");
+            helper.setText("Hola,\n\nGracias por tu compra en la farmacia en línea de Clínica Limatambo. Adjunto encontrarás tu boleta electrónica (" + numeroBoleta + ").\n\nSaludos,\nClínica Limatambo.");
+            
+            helper.addAttachment(numeroBoleta + ".pdf", new org.springframework.core.io.ByteArrayResource(pdfAdjunto));
+            
+            mailSender.send(mensaje);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 

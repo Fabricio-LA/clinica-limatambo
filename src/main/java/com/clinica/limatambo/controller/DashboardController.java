@@ -13,8 +13,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +45,9 @@ public class DashboardController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @GetMapping("/medico/dashboard")
     public String medicoPanel(Authentication authentication, Model model) {
@@ -51,6 +64,7 @@ public class DashboardController {
                 List<CitaDTO> citasHoy = new ArrayList<>();
                 List<CitaDTO> alertasHoy = new ArrayList<>();
                 List<CitaDTO> citasProximas = new ArrayList<>();
+                List<CitaDTO> citasAtendidas = new ArrayList<>();
                 
                 for (Cita cita : citas) {
                     Paciente pacienteObj = null;
@@ -70,27 +84,54 @@ public class DashboardController {
                     
                     CitaDTO dto = new CitaDTO(cita, nombrePaciente, pacienteObj, edad);
                     
-                    if (cita.getFechaCita().equals(hoy)) {
-                        if ("Cancelada".equals(cita.getEstado())) {
-                            alertasHoy.add(dto);
-                        } else {
+                    if (Boolean.TRUE.equals(cita.getNotificacionMedico())) {
+                        alertasHoy.add(dto);
+                    }
+                    
+                    if ("Atendida".equals(cita.getEstado())) {
+                        citasAtendidas.add(dto);
+                    } else if (cita.getFechaCita().equals(hoy)) {
+                        if (!"Cancelada".equals(cita.getEstado()) && !"Cancelada_Medico".equals(cita.getEstado())) {
                             citasHoy.add(dto);
                         }
                     } else if (cita.getFechaCita().isAfter(hoy)) {
-                        if (!"Cancelada".equals(cita.getEstado())) {
+                        if (!"Cancelada".equals(cita.getEstado()) && !"Cancelada_Medico".equals(cita.getEstado())) {
                             citasProximas.add(dto);
                         }
                     }
                 }
                 
+                java.util.Collections.reverse(citasAtendidas);
                 model.addAttribute("medico", medico);
                 model.addAttribute("citasHoy", citasHoy);
                 model.addAttribute("citasProximas", citasProximas);
+                model.addAttribute("citasAtendidas", citasAtendidas);
                 model.addAttribute("alertasHoy", alertasHoy);
                 model.addAttribute("totalCitasHoy", citasHoy.size());
             }
         }
         return "medico-dashboard";
+    }
+
+    @PostMapping("/medico/horario")
+    public String actualizarHorario(@RequestParam("dias") String dias,
+                                    @RequestParam("horaInicio") String horaInicio,
+                                    @RequestParam("horaFin") String horaFin,
+                                    Authentication authentication) {
+        String username = authentication.getName();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        if (usuarioOpt.isPresent()) {
+            Optional<Medico> medicoOpt = medicoRepository.findByIdUsuario(usuarioOpt.get().getIdUsuario());
+            if (medicoOpt.isPresent()) {
+                Medico medico = medicoOpt.get();
+                medico.setDiasLaborables(dias);
+                medico.setHoraInicio(LocalTime.parse(horaInicio));
+                medico.setHoraFin(LocalTime.parse(horaFin));
+                medicoRepository.save(medico);
+                return "redirect:/medico/dashboard?horarioActualizado=true";
+            }
+        }
+        return "redirect:/medico/dashboard?error=true";
     }
 
     @GetMapping("/paciente/dashboard")
@@ -119,10 +160,76 @@ public class DashboardController {
                 }
                 
                 model.addAttribute("paciente", paciente);
+                model.addAttribute("usuario", usuarioOpt.get());
                 model.addAttribute("citas", citasDTO);
             }
         }
         return "paciente-dashboard";
+    }
+
+    @PostMapping("/paciente/perfil")
+    public String actualizarPerfilPaciente(
+            @RequestParam("telefono") String telefono,
+            @RequestParam("direccion") String direccion,
+            @RequestParam("email") String email,
+            @RequestParam(value = "foto", required = false) MultipartFile foto,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            usuario.setEmail(email);
+            usuarioRepository.save(usuario);
+            
+            Optional<Paciente> pacienteOpt = pacienteRepository.findByIdUsuario(usuario.getIdUsuario());
+            if (pacienteOpt.isPresent()) {
+                Paciente paciente = pacienteOpt.get();
+                paciente.setTelefono(telefono);
+                paciente.setDireccion(direccion);
+                
+                if (foto != null && !foto.isEmpty()) {
+                    try {
+                        String uploadDir = "uploads/";
+                        Path uploadPath = Paths.get(uploadDir);
+                        if (!Files.exists(uploadPath)) {
+                            Files.createDirectories(uploadPath);
+                        }
+                        String fileName = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
+                        Path filePath = uploadPath.resolve(fileName);
+                        Files.copy(foto.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                        paciente.setFotoPerfil("/uploads/" + fileName);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return "redirect:/paciente/dashboard?errorUpload=true";
+                    }
+                }
+                pacienteRepository.save(paciente);
+                return "redirect:/paciente/dashboard?perfilActualizado=true";
+            }
+        }
+        return "redirect:/paciente/dashboard?error=true";
+    }
+
+    @PostMapping("/paciente/password")
+    public String actualizarPasswordPaciente(
+            @RequestParam("currentPassword") String currentPassword,
+            @RequestParam("newPassword") String newPassword,
+            Authentication authentication) {
+        String username = authentication.getName();
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
+        
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            if (passwordEncoder.matches(currentPassword, usuario.getPassword())) {
+                usuario.setPassword(passwordEncoder.encode(newPassword));
+                usuarioRepository.save(usuario);
+                return "redirect:/paciente/dashboard?passwordActualizado=true";
+            } else {
+                return "redirect:/paciente/dashboard?errorPassword=true";
+            }
+        }
+        return "redirect:/paciente/dashboard?error=true";
     }
 
     public static class CitaDTO {

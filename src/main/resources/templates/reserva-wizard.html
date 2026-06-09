@@ -164,8 +164,8 @@
                                             <span class="text-muted">Tarifa de Consulta:</span>
                                             <span class="fw-bold">S/ 100.00</span>
                                         </div>
-                                        <div class="d-flex justify-content-between align-items-center mb-2" id="coberturaSeguroContainer" style="display: none;">
-                                            <span class="text-muted">Cobertura Seguro (<span id="nombreSeguroLabel" th:text="${tipoSeguro}">Ninguno</span>):</span>
+                                        <div class="justify-content-between align-items-center mb-2 d-none" id="coberturaSeguroContainer">
+                                            <span class="text-muted">Cobertura Seguro (<span id="nombreSeguroLabel" th:text="${tipoSeguro} + ' ' + ${#numbers.formatDecimal(descuentoSeguro * 100, 0, 0)} + '%'">Ninguno</span>):</span>
                                             <span class="fw-bold text-danger" id="montoDescuento">- S/ 0.00</span>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
@@ -369,18 +369,20 @@
                 
                 // Calcular y mostrar costo final
                 const tarifaBase = 100.00;
-                const porcentajeDescuento = [[${descuentoSeguro}]];
-                const tipoSeguroStr = '[[${tipoSeguro}]]';
+                const porcentajeDescuento = /*[[${descuentoSeguro}]]*/ 0;
+                const tipoSeguroStr = /*[[${tipoSeguro}]]*/ 'Ninguno';
                 
                 if (porcentajeDescuento > 0) {
                     const montoDescuento = tarifaBase * porcentajeDescuento;
                     const costoFinal = tarifaBase - montoDescuento;
                     
-                    document.getElementById('coberturaSeguroContainer').style.display = 'flex';
+                    document.getElementById('coberturaSeguroContainer').classList.remove('d-none');
+                    document.getElementById('coberturaSeguroContainer').classList.add('d-flex');
                     document.getElementById('montoDescuento').innerText = '- S/ ' + montoDescuento.toFixed(2);
                     document.getElementById('totalPagar').innerText = 'S/ ' + costoFinal.toFixed(2);
                 } else {
-                    document.getElementById('coberturaSeguroContainer').style.display = 'none';
+                    document.getElementById('coberturaSeguroContainer').classList.remove('d-flex');
+                    document.getElementById('coberturaSeguroContainer').classList.add('d-none');
                     document.getElementById('totalPagar').innerText = 'S/ ' + tarifaBase.toFixed(2);
                 }
             }

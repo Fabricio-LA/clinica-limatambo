@@ -199,7 +199,7 @@
                         Hola, <span sec:authentication="name">Usuario</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                        <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dashboard-router}">Mi Perfil</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form th:action="@{/logout}" method="post">
