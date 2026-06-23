@@ -95,17 +95,28 @@ public class HomeController {
         return "ayuda";
     }
 
+    @GetMapping("/terminos")
+    public String mostrarTerminos() {
+        return "terminos";
+    }
+
     @GetMapping("/farmacia")
     public String mostrarFarmacia(Model model, Authentication authentication) {
         String tipoSeguro = "PARTICULAR";
         double descuento = 0.0;
+        String clienteNombre = "Público en General";
         
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getName().equals("anonymousUser")) {
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(authentication.getName());
             if (usuarioOpt.isPresent()) {
                 Optional<Paciente> pacienteOpt = pacienteRepository.findByIdUsuario(usuarioOpt.get().getIdUsuario());
-                if (pacienteOpt.isPresent() && pacienteOpt.get().getTipoSeguro() != null && !pacienteOpt.get().getTipoSeguro().isEmpty()) {
-                    tipoSeguro = pacienteOpt.get().getTipoSeguro().toUpperCase();
+                if (pacienteOpt.isPresent()) {
+                    clienteNombre = pacienteOpt.get().getNombre() + " " + pacienteOpt.get().getApellido();
+                    if (pacienteOpt.get().getTipoSeguro() != null && !pacienteOpt.get().getTipoSeguro().isEmpty()) {
+                        tipoSeguro = pacienteOpt.get().getTipoSeguro().toUpperCase();
+                    }
+                } else {
+                    clienteNombre = usuarioOpt.get().getUsername();
                 }
             }
         }
@@ -114,6 +125,7 @@ public class HomeController {
         
         model.addAttribute("tipoSeguro", tipoSeguro);
         model.addAttribute("descuentoSeguro", descuento);
+        model.addAttribute("clienteNombre", clienteNombre);
         model.addAttribute("insumos", insumoRepository.findAll());
         
         return "farmacia";
@@ -126,6 +138,7 @@ public class HomeController {
             @RequestParam("boletaNumber") String boletaNumber,
             @RequestParam(value = "total", required = false) BigDecimal total,
             @RequestParam(value = "cartItems", required = false) String cartItemsJson,
+            @RequestParam(value = "clienteNombre", required = false) String clienteNombre,
             Authentication authentication) {
         
         try {
@@ -135,6 +148,11 @@ public class HomeController {
             nuevoPago.setMetodoPago("Tarjeta (Farmacia)");
             nuevoPago.setEstado("Pagado");
             nuevoPago.setFechaPago(LocalDateTime.now());
+            if (clienteNombre != null && !clienteNombre.trim().isEmpty()) {
+                nuevoPago.setNombreClienteFarmacia(clienteNombre);
+            } else {
+                nuevoPago.setNombreClienteFarmacia("Público en General");
+            }
             pagoRepository.save(nuevoPago);
 
             // Deduct stock

@@ -32,6 +32,31 @@ public class RegistroController {
     @PostMapping("/registro")
     public String registrarPaciente(RegistroPacienteDTO dto, Model model) {
         try {
+            if (dto.getDni() == null || !dto.getDni().matches("\\d{8}")) {
+                model.addAttribute("error", "El DNI debe tener exactamente 8 números.");
+                return "registro";
+            }
+            if (dto.getPassword() == null || !dto.getPassword().matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W_]).{8,}$")) {
+                model.addAttribute("error", "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y un carácter especial.");
+                return "registro";
+            }
+            if (dto.getNombre() == null || !dto.getNombre().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$") || 
+                dto.getApellido() == null || !dto.getApellido().matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑ\\s]+$")) {
+                model.addAttribute("error", "Los nombres y apellidos solo pueden contener letras y espacios.");
+                return "registro";
+            }
+            
+            if (dto.getFechaNacimiento() != null) {
+                int edad = java.time.Period.between(dto.getFechaNacimiento(), java.time.LocalDate.now()).getYears();
+                if (edad < 18 || edad > 100) {
+                    model.addAttribute("error", "Debe tener entre 18 y 100 años para registrarse.");
+                    return "registro";
+                }
+            } else {
+                model.addAttribute("error", "La fecha de nacimiento es obligatoria.");
+                return "registro";
+            }
+
             String username = dto.getDni();
             if (usuarioRepository.findByUsername(username).isPresent()) {
                 model.addAttribute("error", "Ya existe un usuario registrado con este DNI.");

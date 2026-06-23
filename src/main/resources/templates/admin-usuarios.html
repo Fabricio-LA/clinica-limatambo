@@ -36,14 +36,23 @@
             <i class="bi bi-heart-pulse-fill text-white fs-3 me-2"></i>
             <span class="fw-bold text-white tracking-wide">LIMATAMBO <span style="color: var(--matcha-light);">ADMIN</span></span>
         </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item text-light me-4">
+            <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
+                <li class="nav-item"><a class="nav-link text-white opacity-75" th:href="@{/}">Inicio</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+                <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-white fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
+                <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-white fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                
+                <li class="nav-item text-light me-lg-4">
                     <i class="bi bi-person-circle me-1"></i> <span sec:authentication="name">admin</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mt-2 mt-lg-0">
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill">Salir</button>
+                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill w-100">Salir</button>
                     </form>
                 </li>
             </ul>
@@ -93,6 +102,35 @@
                 </div>
             </div>
 
+            <!-- Filtros de Búsqueda -->
+            <div class="card filter-panel mb-4">
+                <div class="card-body p-3">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                <input type="text" id="filterUsername" class="form-control bg-light border-0" placeholder="Buscar por código/DNI (Username)..." onkeyup="filterUsuarios()">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="filterRol" class="form-select bg-light border-0" onchange="filterUsuarios()">
+                                <option value="todos">Todos los Roles</option>
+                                <option value="1">Administrador</option>
+                                <option value="2">Médico</option>
+                                <option value="3">Paciente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="filterEstado" class="form-select bg-light border-0" onchange="filterUsuarios()">
+                                <option value="todos">Cualquier Estado</option>
+                                <option value="activo">Activos</option>
+                                <option value="inactivo">Inactivos</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Alertas de éxito y error -->
             <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-pill" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i><span th:text="${success}"></span>
@@ -116,7 +154,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="usuario : ${usuarios}">
+                        <tr th:each="usuario : ${usuarios}" 
+                            class="usuario-row"
+                            th:data-username="${usuario.username.toLowerCase()}"
+                            th:data-rol="${usuario.idRol}"
+                            th:data-estado="${usuario.estado ? 'activo' : 'inactivo'}">
                             <td class="fw-bold text-dark">
                                 <i class="bi bi-person-circle text-muted me-2"></i>
                                 <span th:text="${usuario.username}"></span>
@@ -257,6 +299,30 @@
         document.getElementById('editUserEmail').value = btn.getAttribute('data-email') || '';
         document.getElementById('editUserRol').value = btn.getAttribute('data-rol') || '3';
     });
+
+    function filterUsuarios() {
+        const fUsername = document.getElementById('filterUsername').value.toLowerCase();
+        const fRol = document.getElementById('filterRol').value;
+        const fEstado = document.getElementById('filterEstado').value;
+        
+        const rows = document.querySelectorAll('.usuario-row');
+        
+        rows.forEach(row => {
+            const username = row.getAttribute('data-username');
+            const rol = row.getAttribute('data-rol');
+            const estado = row.getAttribute('data-estado');
+            
+            let matchUsername = username.includes(fUsername);
+            let matchRol = fRol === 'todos' || rol === fRol;
+            let matchEstado = fEstado === 'todos' || estado === fEstado;
+            
+            if (matchUsername && matchRol && matchEstado) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
 </script>
 </body>
 </html>

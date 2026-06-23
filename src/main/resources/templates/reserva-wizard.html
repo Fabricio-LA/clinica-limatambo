@@ -96,10 +96,12 @@
                             
                             <input type="hidden" name="idMedico" id="inputMedico" required>
                             <div class="row g-3 mb-4" id="medicosContainer">
-                                <div class="col-md-6 medico-card" th:each="med : ${medicos}" th:data-esp="${med.idEspecialidad}">
+                                <div class="col-md-6 medico-card" th:each="med, iterStat : ${medicos}" th:data-esp="${med.idEspecialidad}">
                                     <div class="card card-selectable p-3" th:data-id="${med.idMedico}" th:data-name="${'Dr. ' + med.nombre + ' ' + med.apellido}" th:data-dias="${med.diasLaborables}" onclick="selectMedico(this)">
                                         <div class="d-flex align-items-center">
-                                            <i class="bi bi-person-circle fs-3 text-success me-3"></i>
+                                            <div class="doc-avatar p-0 overflow-hidden me-3 shadow-sm" style="width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--matcha-main); flex-shrink: 0; background: #fff;">
+                                                <img th:src="@{/images/doctores/} + ${med.fotoPerfil != null ? med.fotoPerfil : 'default-doctor.png'}" alt="Doctor" style="width:100%; height:100%; object-fit:cover; border-radius: 50%;">
+                                            </div>
                                             <div>
                                                 <h6 class="fw-bold mb-0" th:text="${'Dr. ' + med.nombre + ' ' + med.apellido}">Dr. Nombre</h6>
                                                 <small class="text-muted" th:text="${med.diasLaborablesTexto + ' | ' + med.horaInicio + ' - ' + med.horaFin}">Lun a Vie | 08:00 - 14:00</small>

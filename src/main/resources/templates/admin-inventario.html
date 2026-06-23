@@ -36,14 +36,23 @@
             <i class="bi bi-heart-pulse-fill text-white fs-3 me-2"></i>
             <span class="fw-bold text-white tracking-wide">LIMATAMBO <span style="color: var(--matcha-light);">ADMIN</span></span>
         </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item text-light me-4">
+            <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
+                <li class="nav-item"><a class="nav-link text-white opacity-75" th:href="@{/}">Inicio</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+                <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-white fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
+                <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-white fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                
+                <li class="nav-item text-light me-lg-4">
                     <i class="bi bi-person-circle me-1"></i> <span sec:authentication="name">admin</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mt-2 mt-lg-0">
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill">Salir</button>
+                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill w-100">Salir</button>
                     </form>
                 </li>
             </ul>
@@ -95,6 +104,37 @@
                 </div>
             </div>
 
+            <!-- Filtros de Búsqueda -->
+            <div class="card filter-panel mb-4">
+                <div class="card-body p-3">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                <input type="text" id="filterName" class="form-control bg-light border-0" placeholder="Buscar insumo por nombre..." onkeyup="filterInventario()">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="filterCategory" class="form-select bg-light border-0" onchange="filterInventario()">
+                                <option value="todos">Todas las Categorías</option>
+                                <option value="medicamentos">Medicamentos</option>
+                                <option value="material">Materiales Médicos</option>
+                                <option value="equipos">Equipos / Instrumentos</option>
+                                <option value="otros">Otros Insumos</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select id="filterStock" class="form-select bg-light border-0" onchange="filterInventario()">
+                                <option value="todos">Cualquier nivel de stock</option>
+                                <option value="suficiente">Stock Alto / Suficiente</option>
+                                <option value="bajo">Stock Bajo</option>
+                                <option value="agotado">Agotado</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Alertas de éxito/error -->
             <div th:if="${param.exito}" class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> Operación realizada correctamente.
@@ -112,25 +152,33 @@
                         <tr>
                             <th>Insumo</th>
                             <th>Descripción</th>
+                            <th>Categoría</th>
                             <th>Stock Actual</th>
                             <th>Estado</th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="insumo : ${insumos}">
+                        <tr th:each="insumo : ${insumos}" 
+                            class="insumo-row"
+                            th:data-name="${insumo.nombreInsumo.toLowerCase()}"
+                            th:data-category="${insumo.categoria != null ? insumo.categoria.toLowerCase() : ''}"
+                            th:data-stock="${insumo.stockActual == 0 ? 'agotado' : (insumo.stockActual <= insumo.stockMinimo ? 'bajo' : 'suficiente')}">
                             <td>
                                 <div class="fw-bold text-dark" th:text="${insumo.nombreInsumo}"></div>
                                 <div class="small text-muted" th:text="${insumo.unidadMedida} + ' | S/ ' + ${insumo.precioUnitario}"></div>
                             </td>
                             <td class="text-muted" th:text="${insumo.descripcion}"></td>
+                            <td class="text-secondary">
+                                <span class="badge bg-light text-dark border" th:text="${insumo.categoria}"></span>
+                            </td>
                             <td>
                                 <span class="fs-5 fw-bold" th:text="${insumo.stockActual}"></span>
                                 <small class="text-muted d-block">Mín: <span th:text="${insumo.stockMinimo}"></span></small>
                             </td>
                             <td>
-                                <span class="badge rounded-pill px-3 py-2 bg-success" th:if="${insumo.stockActual > insumo.stockMinimo}">Suficiente</span>
-                                <span class="badge rounded-pill px-3 py-2 bg-warning text-dark" th:if="${insumo.stockActual <= insumo.stockMinimo && insumo.stockActual > 0}">Stock Bajo</span>
+                                <span class="badge rounded-pill px-3 py-2 bg-success" th:if="${insumo.stockActual > 0 and (insumo.stockMinimo == null or insumo.stockActual > insumo.stockMinimo)}">Suficiente</span>
+                                <span class="badge rounded-pill px-3 py-2 bg-warning text-dark" th:if="${insumo.stockActual > 0 and insumo.stockMinimo != null and insumo.stockActual <= insumo.stockMinimo}">Stock Bajo</span>
                                 <span class="badge rounded-pill px-3 py-2 bg-danger" th:if="${insumo.stockActual == 0}">Agotado</span>
                             </td>
                             <td class="text-end">
@@ -307,6 +355,30 @@
         document.getElementById('edit_unidadMedida').value = unidad;
         var modal = new bootstrap.Modal(document.getElementById('editarInsumoModal'));
         modal.show();
+    }
+
+    function filterInventario() {
+        const fName = document.getElementById('filterName').value.toLowerCase();
+        const fCat = document.getElementById('filterCategory').value;
+        const fStock = document.getElementById('filterStock').value;
+        
+        const rows = document.querySelectorAll('.insumo-row');
+        
+        rows.forEach(row => {
+            const name = row.getAttribute('data-name') || '';
+            const category = row.getAttribute('data-category') || '';
+            const stock = row.getAttribute('data-stock') || '';
+            
+            let matchName = name.includes(fName);
+            let matchCat = fCat === 'todos' || category.includes(fCat) || (fCat === 'otros' && !category.includes('medicamentos') && !category.includes('material') && !category.includes('equipo'));
+            let matchStock = fStock === 'todos' || stock === fStock;
+            
+            if (matchName && matchCat && matchStock) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
     }
 </script>
 </body>

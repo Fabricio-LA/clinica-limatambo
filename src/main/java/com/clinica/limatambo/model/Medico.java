@@ -32,6 +32,9 @@ public class Medico {
     @Column(name = "dias_laborables")
     private String diasLaborables;
 
+    @Column(name = "foto_perfil")
+    private String fotoPerfil;
+
     public Medico() {}
 
     public Integer getIdMedico() { return idMedico; }
@@ -53,6 +56,9 @@ public class Medico {
 
     public String getDiasLaborables() { return diasLaborables; }
     public void setDiasLaborables(String diasLaborables) { this.diasLaborables = diasLaborables; }
+
+    public String getFotoPerfil() { return fotoPerfil; }
+    public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
 
     public String getDiasLaborablesTexto() {
         if (this.diasLaborables == null || this.diasLaborables.isEmpty()) return "Días no definidos";

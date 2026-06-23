@@ -140,7 +140,7 @@ public class AdminController {
                 String id = p.getIdPago() != null ? p.getIdPago().toString() : "";
                 String fecha = p.getFechaPago().toString();
                 String tipo = p.getCita() != null ? "Cita #" + p.getCita().getIdCita() : "Venta Farmacia";
-                String paciente = "Desconocido";
+                String paciente = p.getCita() != null ? "Público en General" : (p.getNombreClienteFarmacia() != null ? p.getNombreClienteFarmacia() : "Público en General");
                 if (p.getCita() != null && p.getCita().getIdPaciente() != null) {
                     java.util.Optional<com.clinica.limatambo.model.Paciente> pac = pacienteRepository.findById(p.getCita().getIdPaciente());
                     if (pac.isPresent()) {
@@ -186,7 +186,7 @@ public class AdminController {
                 String id = p.getIdPago() != null ? p.getIdPago().toString() : "";
                 String hora = p.getFechaPago().toLocalTime().toString();
                 String tipo = p.getCita() != null ? "Cita #" + p.getCita().getIdCita() : "Venta Farmacia";
-                String paciente = "Desconocido";
+                String paciente = p.getCita() != null ? "Público en General" : (p.getNombreClienteFarmacia() != null ? p.getNombreClienteFarmacia() : "Público en General");
                 if (p.getCita() != null && p.getCita().getIdPaciente() != null) {
                     java.util.Optional<com.clinica.limatambo.model.Paciente> pac = pacienteRepository.findById(p.getCita().getIdPaciente());
                     if (pac.isPresent()) {
@@ -255,7 +255,7 @@ public class AdminController {
         List<AdminCitaDTO> citasDTO = new ArrayList<>();
         
         for (Cita cita : todasLasCitas) {
-            String nombrePaciente = "Desconocido";
+            String nombrePaciente = "Público en General";
             String nombreMedico = "No Asignado";
             com.clinica.limatambo.model.Paciente pacienteObj = null;
             Integer edad = null;
@@ -279,7 +279,33 @@ public class AdminController {
         }
 
         model.addAttribute("citas", citasDTO);
+        model.addAttribute("medicos", medicoRepository.findAll());
+        model.addAttribute("pacientes", pacienteRepository.findAll());
         return "admin-citas";
+    }
+
+    @PostMapping("/citas/nueva")
+    public String nuevaCitaAdmin(
+            @RequestParam Integer idPaciente,
+            @RequestParam Integer idMedico,
+            @RequestParam String fechaCita,
+            @RequestParam String horaCita,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            Cita nuevaCita = new Cita();
+            nuevaCita.setIdPaciente(idPaciente);
+            nuevaCita.setIdMedico(idMedico);
+            nuevaCita.setFechaCita(java.time.LocalDate.parse(fechaCita));
+            nuevaCita.setHoraCita(java.time.LocalTime.parse(horaCita));
+            nuevaCita.setEstado("Pendiente");
+            nuevaCita.setNotificacionMedico(true);
+            citaRepository.save(nuevaCita);
+            
+            redirectAttributes.addFlashAttribute("success", "Nueva cita (presencial) agendada correctamente.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al crear la cita: " + e.getMessage());
+        }
+        return "redirect:/admin/citas";
     }
 
     @GetMapping("/inventario")
@@ -386,7 +412,7 @@ public class AdminController {
         List<PagoInfoDTO> pagosInfo = new ArrayList<>();
         
         for (Pago p : pagos) {
-            String nombrePaciente = "Desconocido";
+            String nombrePaciente = p.getCita() != null ? "Público en General" : (p.getNombreClienteFarmacia() != null ? p.getNombreClienteFarmacia() : "Público en General");
             if (p.getCita() != null && p.getCita().getIdPaciente() != null) {
                 java.util.Optional<com.clinica.limatambo.model.Paciente> pac = pacienteRepository.findById(p.getCita().getIdPaciente());
                 if (pac.isPresent()) {

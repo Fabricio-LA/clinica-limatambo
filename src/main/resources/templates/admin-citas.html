@@ -8,6 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/estilos-clinica.css}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .admin-sidebar { 
             background: linear-gradient(180deg, var(--matcha-dark) 0%, #1a251c 100%);
@@ -36,14 +37,23 @@
             <i class="bi bi-heart-pulse-fill text-white fs-3 me-2"></i>
             <span class="fw-bold text-white tracking-wide">LIMATAMBO <span style="color: var(--matcha-light);">ADMIN</span></span>
         </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item text-light me-4">
+            <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
+                <li class="nav-item"><a class="nav-link text-white opacity-75" th:href="@{/}">Inicio</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+                <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-white fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
+                <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-white fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                
+                <li class="nav-item text-light me-lg-4">
                     <i class="bi bi-person-circle me-1"></i> <span sec:authentication="name">admin</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mt-2 mt-lg-0">
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill">Salir</button>
+                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill w-100">Salir</button>
                     </form>
                 </li>
             </ul>
@@ -89,7 +99,7 @@
                     <p class="text-muted small mb-0">Gestiona las reservas de todos los médicos</p>
                 </div>
                 <div>
-                    <button class="btn btn-reservar px-4 rounded-pill"><i class="bi bi-plus-lg me-2"></i> Nueva Cita (Presencial)</button>
+                    <button class="btn btn-reservar px-4 rounded-pill" data-bs-toggle="modal" data-bs-target="#nuevaCitaModal"><i class="bi bi-plus-lg me-2"></i> Nueva Cita (Presencial)</button>
                 </div>
             </div>
 
@@ -186,6 +196,52 @@
     </div>
 </div>
 
+<!-- Modal Nueva Cita (Presencial) -->
+<div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-header bg-light border-0 p-4">
+        <h5 class="modal-title fw-bold text-dark fs-4"><i class="bi bi-calendar-plus text-success me-2"></i>Agendar Nueva Cita</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form th:action="@{/admin/citas/nueva}" method="post">
+          <div class="modal-body p-5">
+            <div class="mb-4">
+                <label class="form-label fw-bold text-muted">Paciente</label>
+                <select class="form-select form-select-lg bg-light border-0" name="idPaciente" required>
+                    <option value="" selected disabled>Seleccione un paciente...</option>
+                    <option th:each="p : ${pacientes}" th:value="${p.idPaciente}" th:text="${p.nombre + ' ' + p.apellido + ' (DNI: ' + p.dni + ')'}"></option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="form-label fw-bold text-muted">Médico</label>
+                <select class="form-select form-select-lg bg-light border-0" name="idMedico" id="nuevaCitaMedico" required>
+                    <option value="" selected disabled>Seleccione un médico...</option>
+                    <option th:each="m : ${medicos}" th:value="${m.idMedico}" th:data-dias="${m.diasLaborables}" th:text="${'Dr. ' + m.nombre + ' ' + m.apellido}"></option>
+                </select>
+            </div>
+            <div class="row g-4 mt-1">
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold text-muted">Fecha</label>
+                    <input type="text" class="form-control form-control-lg bg-light border-0" name="fechaCita" id="nuevaCitaFecha" placeholder="Seleccione un médico primero..." required readonly>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <label class="form-label fw-bold text-muted">Hora</label>
+                    <select class="form-select form-select-lg bg-light border-0" name="horaCita" id="nuevaCitaHora" required disabled>
+                        <option value="">Seleccione una fecha primero...</option>
+                    </select>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer border-0 bg-light p-4">
+            <button type="button" class="btn btn-light btn-lg rounded-pill px-5" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-reservar btn-lg rounded-pill px-5">Agendar Cita</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Modal único de Reprogramación (reutilizable) -->
 <div class="modal fade" id="editCitaModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
@@ -268,6 +324,68 @@
             filtroMedico.value = '';
             filtroPaciente.value = '';
             filtrarCitas();
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+<script>
+    let fpInstance = null;
+    document.getElementById('nuevaCitaMedico').addEventListener('change', function() {
+        const option = this.options[this.selectedIndex];
+        const diasStr = option.getAttribute('data-dias');
+        const fechaInput = document.getElementById('nuevaCitaFecha');
+        const horaSelect = document.getElementById('nuevaCitaHora');
+        
+        fechaInput.value = '';
+        horaSelect.innerHTML = '<option value="">Seleccione una fecha primero...</option>';
+        horaSelect.disabled = true;
+        
+        if (!diasStr || diasStr === 'null') {
+            fechaInput.placeholder = "Médico sin horarios configurados";
+            if(fpInstance) fpInstance.destroy();
+            return;
+        }
+        
+        const diasJava = diasStr.split(',').map(Number);
+        const diasFlat = diasJava.map(d => d === 7 ? 0 : d);
+        
+        fechaInput.placeholder = "Seleccione una fecha...";
+        
+        if (fpInstance) fpInstance.destroy();
+        fpInstance = flatpickr("#nuevaCitaFecha", {
+            locale: "es",
+            minDate: "today",
+            disable: [
+                function(date) {
+                    return !diasFlat.includes(date.getDay());
+                }
+            ],
+            onChange: function(selectedDates, dateStr, instance) {
+                horaSelect.innerHTML = '<option value="">Cargando horarios...</option>';
+                horaSelect.disabled = true;
+                
+                fetch(`/api/citas/disponibles?idMedico=${option.value}&fecha=${dateStr}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        horaSelect.innerHTML = '<option value="">Seleccione una hora...</option>';
+                        if (data.length === 0) {
+                            horaSelect.innerHTML = '<option value="">No hay horarios disponibles</option>';
+                        } else {
+                            data.forEach(item => {
+                                let opt = document.createElement('option');
+                                opt.value = item.hora.substring(0, 5);
+                                opt.text = item.hora.substring(0, 5) + (item.disponible ? '' : ' (Ocupado)');
+                                opt.disabled = !item.disponible;
+                                horaSelect.appendChild(opt);
+                            });
+                            horaSelect.disabled = false;
+                        }
+                    })
+                    .catch(e => {
+                        horaSelect.innerHTML = '<option value="">Error de conexión</option>';
+                    });
+            }
         });
     });
 </script>

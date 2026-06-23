@@ -69,4 +69,10 @@ public class Insumo {
 
     public List<MovimientoInventario> getMovimientos() { return movimientos; }
     public void setMovimientos(List<MovimientoInventario> movimientos) { this.movimientos = movimientos; }
+
+    @Column(name = "imagen", length = 255)
+    private String imagen;
+
+    public String getImagen() { return imagen; }
+    public void setImagen(String imagen) { this.imagen = imagen; }
 }

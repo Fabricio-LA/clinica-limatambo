@@ -216,6 +216,11 @@ public class DashboardController {
             @RequestParam("currentPassword") String currentPassword,
             @RequestParam("newPassword") String newPassword,
             Authentication authentication) {
+        
+        if (newPassword == null || !newPassword.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W_]).{8,}$")) {
+            return "redirect:/paciente/dashboard?error=La contraseña no cumple con los requisitos de seguridad.";
+        }
+
         String username = authentication.getName();
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
         

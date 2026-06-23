@@ -327,3 +327,107 @@ body {
 .bg-gradient-matcha .text-muted {
     color: rgba(255,255,255,0.7) !important;
 }
+
+/* FILTER PANELS */
+.filter-panel {
+    background: #ffffff;
+    border: 1px solid rgba(143, 185, 53, 0.1) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--matcha-main);
+    transition: all 0.3s ease;
+}
+
+.filter-panel:hover {
+    box-shadow: 0 8px 25px rgba(143, 185, 53, 0.12) !important;
+    transform: translateY(-2px);
+}
+
+.filter-panel:hover::before {
+    width: 6px;
+    background: var(--matcha-dark);
+}
+
+.filter-panel .input-group-text {
+    background-color: #ffffff !important;
+    color: var(--matcha-main);
+    border: 1px solid #e0e0e0 !important;
+    border-right: none !important;
+    border-radius: 8px 0 0 8px !important;
+    padding: 0.8rem 1.2rem;
+}
+
+.filter-panel .form-control {
+    background-color: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-left: none !important;
+    border-radius: 0 8px 8px 0 !important;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    padding: 0.8rem 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.filter-panel .form-select {
+    background-color: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    font-size: 0.95rem;
+    color: var(--matcha-dark);
+    padding: 0.8rem 1.2rem;
+    transition: all 0.3s ease;
+    width: 100% !important;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.01);
+}
+
+.filter-panel .form-select option {
+    padding: 12px 15px;
+    background-color: #ffffff;
+    color: var(--matcha-dark);
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.filter-panel .form-control:focus, .filter-panel .form-select:focus {
+    background-color: #ffffff !important;
+    border-color: var(--matcha-main) !important;
+    box-shadow: 0 0 0 0.2rem rgba(143, 185, 53, 0.15) !important;
+    outline: none;
+}
+
+.filter-panel .input-group:focus-within .input-group-text {
+    background-color: #ffffff !important;
+    border-color: var(--matcha-main) !important;
+}
+
+/* MODAL CLOSE BUTTONS (POLYFILL + ENLARGED) */
+.btn-close {
+    box-sizing: content-box;
+    width: 1.5em;
+    height: 1.5em;
+    padding: .35em .35em;
+    color: #000;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1.2em auto no-repeat;
+    border: 0;
+    border-radius: .25rem;
+    opacity: .5;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-close:hover {
+    color: #000;
+    text-decoration: none;
+    opacity: .8;
+    transform: scale(1.1);
+}

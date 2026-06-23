@@ -180,7 +180,7 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-limatambo sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
             <i class="bi bi-heart-pulse-fill" style="color:var(--matcha-main); font-size:1.4rem;"></i>
@@ -192,9 +192,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto align-items-center gap-1">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#especialidades">Especialidades</a></li>
-                <li class="nav-item"><a class="nav-link" href="#especialistas">Médicos</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/#especialidades}">Especialidades</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/#especialistas}">Médicos</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/ayuda}" style="color: #8FB935;">Ayuda</a></li>
+                
+                <!-- Opciones visibles solo en móvil -->
+                <li class="nav-item d-lg-none mt-2 w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                <li class="nav-item d-lg-none mb-2 w-100 text-center"><a class="nav-link fw-bold" style="color: var(--matcha-main);" th:href="@{/paciente/reservar}"><i class="bi bi-calendar2-plus me-1"></i> Reservar Cita</a></li>
             </ul>
             <ul class="navbar-nav align-items-center gap-3">
                 <li class="nav-item d-none d-lg-block">
@@ -425,10 +429,10 @@
             <div class="col-lg-3 col-md-6">
                 <h6 class="fw-bold mb-4" style="color: #8db55b; letter-spacing: 1px;">SERVICIOS</h6>
                 <ul class="list-unstyled">
-                    <li class="mb-3"><a href="#" class="footer-link">Reservar cita</a></li>
-                    <li class="mb-3"><a href="#" class="footer-link">Farmacia en línea</a></li>
-                    <li class="mb-3"><a href="#" class="footer-link">Centro de Ayuda</a></li>
-                    <li class="mb-3"><a href="#" class="footer-link">Panel del paciente</a></li>
+                    <li class="mb-3"><a th:href="@{/paciente/reservar}" class="footer-link">Reservar cita</a></li>
+                    <li class="mb-3"><a th:href="@{/farmacia}" class="footer-link">Farmacia en línea</a></li>
+                    <li class="mb-3"><a th:href="@{/ayuda}" class="footer-link">Centro de Ayuda</a></li>
+                    <li class="mb-3"><a th:href="@{/terminos}" class="footer-link">Términos y Condiciones</a></li>
                 </ul>
             </div>
             
@@ -437,7 +441,7 @@
                 <ul class="list-unstyled" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
                     <li class="d-flex align-items-center mb-3">
                         <i class="bi bi-whatsapp fs-5" style="color: #8db55b; margin-right: 12px;"></i>
-                        <span>WhatsApp: 927 872 904</span>
+                        <span>WhatsApp: 914 870 501</span>
                     </li>
                     <li class="d-flex align-items-center mb-3">
                         <i class="bi bi-envelope fs-5" style="color: #8db55b; margin-right: 12px;"></i>
@@ -469,7 +473,7 @@
 </footer>
 
 <!-- BOTÓN FLOTANTE WHATSAPP -->
-<a href="https://wa.me/51927872904?text=Hola,%20deseo%20realizar%20una%20consulta%20en%20la%20Cl%C3%ADnica%20Limatambo" target="_blank" class="whatsapp-float" title="Chatea con nosotros en WhatsApp">
+<a href="https://wa.me/51914870501?text=Hola,%20deseo%20realizar%20una%20consulta%20en%20la%20Cl%C3%ADnica%20Limatambo" target="_blank" class="whatsapp-float" title="Chatea con nosotros en WhatsApp">
     <i class="bi bi-whatsapp"></i>
 </a>
 

@@ -29,6 +29,9 @@ public class Pago {
     @Column(length = 20)
     private String estado = "Pagado";
 
+    @Column(name = "nombre_cliente_farmacia", length = 100)
+    private String nombreClienteFarmacia;
+
     // Getters y Setters
     public Integer getIdPago() { return idPago; }
     public void setIdPago(Integer idPago) { this.idPago = idPago; }
@@ -47,4 +50,7 @@ public class Pago {
 
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
+
+    public String getNombreClienteFarmacia() { return nombreClienteFarmacia; }
+    public void setNombreClienteFarmacia(String nombreClienteFarmacia) { this.nombreClienteFarmacia = nombreClienteFarmacia; }
 }

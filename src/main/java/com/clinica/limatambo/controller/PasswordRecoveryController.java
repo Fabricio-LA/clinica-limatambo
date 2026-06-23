@@ -88,6 +88,12 @@ public class PasswordRecoveryController {
             @RequestParam("password") String password,
             Model model) {
 
+        if (password == null || !password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\\W_]).{8,}$")) {
+            model.addAttribute("error", "La contraseña debe tener al menos 8 caracteres, mayúscula, minúscula, número y un carácter especial.");
+            model.addAttribute("token", token);
+            return "reset-password";
+        }
+
         Optional<PasswordResetToken> tokenOpt = tokenRepository.findByToken(token);
 
         if (!tokenOpt.isPresent() || tokenOpt.get().getFechaExpiracion().isBefore(LocalDateTime.now())) {

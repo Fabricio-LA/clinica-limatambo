@@ -38,6 +38,11 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             border: 1px solid rgba(0,0,0,0.05);
         }
+        
+        .bg-success-light { background-color: rgba(40, 167, 69, 0.15) !important; color: #28a745 !important; }
+        .bg-primary-light { background-color: rgba(0, 123, 255, 0.15) !important; color: #007bff !important; }
+        .bg-warning-light { background-color: rgba(255, 193, 7, 0.2) !important; color: #ffc107 !important; }
+        .bg-white-light { background-color: rgba(255, 255, 255, 0.25) !important; color: #ffffff !important; }
     </style>
 </head>
 
@@ -49,14 +54,23 @@
             <i class="bi bi-heart-pulse-fill text-white fs-3 me-2"></i>
             <span class="fw-bold text-white tracking-wide">LIMATAMBO <span style="color: var(--matcha-light);">ADMIN</span></span>
         </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto align-items-center">
-                <li class="nav-item text-light me-4">
+            <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
+                <li class="nav-item"><a class="nav-link text-white opacity-75" th:href="@{/}">Inicio</a></li>
+            </ul>
+            <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+                <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-white fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
+                <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-white fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                
+                <li class="nav-item text-light me-lg-4">
                     <i class="bi bi-person-circle me-1"></i> <span sec:authentication="name">admin</span>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item mt-2 mt-lg-0">
                     <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill">Salir</button>
+                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill w-100">Salir</button>
                     </form>
                 </li>
             </ul>
@@ -102,7 +116,7 @@
                     <p class="text-muted small mb-0">Resumen operativo de Clínica Limatambo</p>
                 </div>
                 <div>
-                    <a href="/admin/reporte-mensual.csv" class="btn btn-light text-success btn-sm fw-bold"><i class="bi bi-file-earmark-spreadsheet-fill me-1"></i> Reporte Mensual (Excel)</a>
+                    <a href="/admin/reporte-mensual.csv" class="btn btn-success rounded-pill px-4 shadow-sm fw-bold"><i class="bi bi-file-earmark-spreadsheet-fill mr-2"></i> Reporte Mensual (Excel)</a>
                 </div>
             </div>
 
@@ -111,7 +125,7 @@
                 <div class="col-md-3">
                     <div class="modern-card metric-card shadow-sm h-100 p-3">
                         <div class="d-flex align-items-center">
-                            <div class="metric-icon bg-success bg-opacity-10 text-success me-3">
+                            <div class="metric-icon bg-success-light mr-4">
                                 <i class="bi bi-calendar2-check"></i>
                             </div>
                             <div>
@@ -124,7 +138,7 @@
                 <div class="col-md-3">
                     <div class="modern-card metric-card shadow-sm h-100 p-3">
                         <div class="d-flex align-items-center">
-                            <div class="metric-icon bg-primary bg-opacity-10 text-primary me-3">
+                            <div class="metric-icon bg-primary-light mr-4">
                                 <i class="bi bi-people"></i>
                             </div>
                             <div>
@@ -137,7 +151,7 @@
                 <div class="col-md-3">
                     <div class="modern-card metric-card shadow-sm h-100 p-3">
                         <div class="d-flex align-items-center">
-                            <div class="metric-icon bg-warning bg-opacity-10 text-warning me-3">
+                            <div class="metric-icon bg-warning-light mr-4">
                                 <i class="bi bi-boxes"></i>
                             </div>
                             <div>
@@ -150,8 +164,8 @@
                 <div class="col-md-3">
                     <div class="modern-card metric-card shadow-sm h-100 p-3" style="background: linear-gradient(135deg, var(--matcha-main), var(--matcha-dark)); color: white;">
                         <div class="d-flex align-items-center">
-                            <div class="metric-icon bg-white bg-opacity-25 text-white me-3">
-                                <i class="bi bi-cash-stack"></i>
+                            <div class="metric-icon bg-white-light mr-4">
+                                <i class="bi bi-currency-dollar"></i>
                             </div>
                             <div>
                                 <h6 class="text-white-50 small mb-1">Ingresos Mensuales</h6>
