@@ -77,7 +77,12 @@
                 
                 <div class="mb-4">
                     <label class="form-label small fw-bold">Contraseña</label>
-                    <input type="password" name="password" class="form-control bg-light border-0" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$" title="Debe tener al menos 8 caracteres, incluir mayúscula, minúscula, número y carácter especial" required>
+                    <div class="input-group">
+                        <input type="password" id="passwordInputRegistro" name="password" class="form-control bg-light border-0" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$" title="Debe tener al menos 8 caracteres, incluir mayúscula, minúscula, número y carácter especial" required>
+                        <button class="btn btn-light bg-light border-0" type="button" id="togglePasswordBtnRegistro" style="color: var(--matcha-main);">
+                            <i class="bi bi-eye-slash" id="togglePasswordIconRegistro"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="form-check mb-4">
@@ -134,6 +139,25 @@
             if (telefono) {
                 telefono.addEventListener('input', function() {
                     this.value = this.value.replace(/\D/g, '').substring(0, 9);
+                });
+            }
+
+            const passwordInputRegistro = document.getElementById('passwordInputRegistro');
+            const togglePasswordBtnRegistro = document.getElementById('togglePasswordBtnRegistro');
+            const togglePasswordIconRegistro = document.getElementById('togglePasswordIconRegistro');
+            
+            if(togglePasswordBtnRegistro) {
+                togglePasswordBtnRegistro.addEventListener('click', function () {
+                    const type = passwordInputRegistro.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInputRegistro.setAttribute('type', type);
+                    
+                    if (type === 'password') {
+                        togglePasswordIconRegistro.classList.remove('bi-eye');
+                        togglePasswordIconRegistro.classList.add('bi-eye-slash');
+                    } else {
+                        togglePasswordIconRegistro.classList.remove('bi-eye-slash');
+                        togglePasswordIconRegistro.classList.add('bi-eye');
+                    }
                 });
             }
         });
