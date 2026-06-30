@@ -161,3 +161,26 @@ body { font-family: 'Poppins', sans-serif; background-color: #F9FBF7; }
 .delivery-option:hover { border-color: #8FB935; }
 .delivery-option.selected { border-color: #8FB935; background: #fdfefb; box-shadow: 0 4px 10px rgba(143,185,53,0.1); }
 .delivery-icon { width: 40px; height: 40px; border-radius: 50%; background: #F2F6E8; color: #6a8f33; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+/* FLOATING CART BUTTON */
+.btn-floating-cart {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #8FB935;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+.btn-floating-cart:hover {
+    background-color: #7a9e2d;
+    color: white;
+    transform: scale(1.05);
+}

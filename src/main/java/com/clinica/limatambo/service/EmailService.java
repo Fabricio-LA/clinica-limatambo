@@ -55,6 +55,16 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+    public void enviarCorreoConfirmacionCita(String destinatario, String nombrePaciente, String fecha, String hora) {
+        SimpleMailMessage mensaje = new SimpleMailMessage();
+        mensaje.setTo(destinatario);
+        mensaje.setSubject("Cita Confirmada - Clínica Limatambo");
+        mensaje.setText("Hola " + nombrePaciente + ",\n\n" +
+                "Te escribimos para confirmar tu asistencia a la cita médica programada para el día " + fecha + " a las " + hora + ".\n\n" +
+                "Te esperamos.\n\n" +
+                "Atentamente,\n" +
+                "Clínica Limatambo");
+        mailSender.send(mensaje);
+    }
 }
-
-

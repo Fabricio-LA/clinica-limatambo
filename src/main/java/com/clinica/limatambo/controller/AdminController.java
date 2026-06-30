@@ -57,6 +57,9 @@ public class AdminController {
     @Autowired
     private MovimientoInventarioRepository movimientoInventarioRepository;
 
+    @Autowired
+    private com.clinica.limatambo.service.EmailService emailService;
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         long totalCitas = citaRepository.count();
@@ -95,6 +98,25 @@ public class AdminController {
         
         // 1. Gráfico de Demanda de Citas (Últimos 7 días)
         List<Cita> todasLasCitas = citaRepository.findAll();
+        
+        long citasCanceladas = todasLasCitas.stream().filter(c -> "Cancelada".equals(c.getEstado()) || "Cancelada_Medico".equals(c.getEstado())).count();
+        long citasAtendidas = todasLasCitas.stream().filter(c -> "Atendida".equals(c.getEstado()) || "Completada".equals(c.getEstado())).count();
+        long citasPendientes = todasLasCitas.stream().filter(c -> "Confirmada".equals(c.getEstado()) || "Pendiente".equals(c.getEstado())).count();
+        
+        model.addAttribute("citasCanceladas", citasCanceladas);
+        model.addAttribute("citasAtendidas", citasAtendidas);
+        model.addAttribute("citasPendientes", citasPendientes);
+
+        List<Insumo> todosInsumos = insumoRepository.findAll();
+        java.util.Map<String, List<Insumo>> insumosPorCategoria = todosInsumos.stream().collect(java.util.stream.Collectors.groupingBy(i -> i.getCategoria() != null ? i.getCategoria() : "Sin Categoría"));
+        List<InsumoStatsDTO> insumosStats = new ArrayList<>();
+        for (java.util.Map.Entry<String, List<Insumo>> entry : insumosPorCategoria.entrySet()) {
+            long total = entry.getValue().size();
+            long bajoStock = entry.getValue().stream().filter(i -> i.getStockActual() <= i.getStockMinimo()).count();
+            insumosStats.add(new InsumoStatsDTO(entry.getKey(), total, bajoStock));
+        }
+        model.addAttribute("insumosStats", insumosStats);
+
         long[] demandaCitasData = new long[7];
         String[] demandaCitasLabels = new String[7];
         LocalDate hoy = LocalDate.now();
@@ -456,6 +478,7 @@ public class AdminController {
         public com.clinica.limatambo.model.Paciente paciente;
         public Integer edadPaciente;
         public String nombreMedico;
+        public boolean puedeConfirmar;
         
         public AdminCitaDTO(Cita cita, String nombrePaciente, com.clinica.limatambo.model.Paciente paciente, Integer edadPaciente, String nombreMedico) {
             this.cita = cita;
@@ -463,6 +486,27 @@ public class AdminController {
             this.paciente = paciente;
             this.edadPaciente = edadPaciente;
             this.nombreMedico = nombreMedico;
+            
+            this.puedeConfirmar = false;
+            if ("Pendiente".equals(cita.getEstado()) && cita.getFechaCita() != null && cita.getHoraCita() != null) {
+                java.time.LocalDateTime fechaHoraCita = java.time.LocalDateTime.of(cita.getFechaCita(), cita.getHoraCita());
+                java.time.LocalDateTime limiteConfirmacion = java.time.LocalDateTime.now().plusHours(24);
+                // Habilitar si la cita es dentro de las próximas 24 horas (o ya pasó pero sigue pendiente)
+                if (!fechaHoraCita.isAfter(limiteConfirmacion)) {
+                    this.puedeConfirmar = true;
+                }
+            }
+        }
+    }
+
+    public static class InsumoStatsDTO {
+        public String categoria;
+        public long totalItems;
+        public long itemsStockBajo;
+        public InsumoStatsDTO(String categoria, long totalItems, long itemsStockBajo) {
+            this.categoria = categoria;
+            this.totalItems = totalItems;
+            this.itemsStockBajo = itemsStockBajo;
         }
     }
 
@@ -592,6 +636,39 @@ public class AdminController {
             }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al editar cita: " + e.getMessage());
+        }
+        return "redirect:/admin/citas";
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/citas/confirmar")
+    public String confirmarCita(@org.springframework.web.bind.annotation.RequestParam Integer idCita,
+                                org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            java.util.Optional<Cita> opt = citaRepository.findById(idCita);
+            if (opt.isPresent()) {
+                Cita cita = opt.get();
+                if ("Pendiente".equals(cita.getEstado())) {
+                    cita.setEstado("Confirmada");
+                    citaRepository.save(cita);
+                    
+                    // Enviar correo al paciente si es posible
+                    if (cita.getIdPaciente() != null) {
+                        java.util.Optional<com.clinica.limatambo.model.Paciente> pacOpt = pacienteRepository.findById(cita.getIdPaciente());
+                        if (pacOpt.isPresent()) {
+                            java.util.Optional<Usuario> usuOpt = usuarioRepository.findById(pacOpt.get().getIdUsuario());
+                            if (usuOpt.isPresent()) {
+                                String correo = usuOpt.get().getEmail() != null ? usuOpt.get().getEmail() : usuOpt.get().getUsername();
+                                String fechaStr = cita.getFechaCita() != null ? cita.getFechaCita().toString() : "";
+                                String horaStr = cita.getHoraCita() != null ? cita.getHoraCita().toString() : "";
+                                emailService.enviarCorreoConfirmacionCita(correo, pacOpt.get().getNombre(), fechaStr, horaStr);
+                            }
+                        }
+                    }
+                    redirectAttributes.addFlashAttribute("success", "Cita #" + idCita + " confirmada y notificada al paciente.");
+                }
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al confirmar cita: " + e.getMessage());
         }
         return "redirect:/admin/citas";
     }

@@ -331,8 +331,17 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small">Días de Atención</label>
-                            <input type="text" class="form-control rounded-pill" name="dias" th:value="${medico.diasLaborables}" required placeholder="Ej: 1,2,3,4,5">
-                            <small class="text-muted d-block mt-1">1: Lunes, 2: Martes, 3: Miércoles, 4: Jueves, 5: Viernes, 6: Sábado, 7: Domingo (Separados por coma)</small>
+                            <input type="hidden" id="inputDiasAtencion" name="dias" th:value="${medico.diasLaborables}" required>
+                            <div class="d-flex justify-content-between gap-1 mt-2" id="dayButtonsContainer">
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="1">L</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="2">M</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="3">X</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="4">J</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="5">V</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="6">S</button>
+                                <button type="button" class="btn btn-outline-success rounded-circle day-btn p-0 fw-bold" style="width: 40px; height: 40px;" data-day="7">D</button>
+                            </div>
+                            <small class="text-muted d-block mt-2">Haz clic en los días para marcarlos como disponibles</small>
                         </div>
                         <div class="row g-3">
                             <div class="col-6">
@@ -375,6 +384,44 @@
                     }
                 });
             });
+        }
+
+        // Lógica de botones de días
+        const inputDias = document.getElementById('inputDiasAtencion');
+        const dayButtons = document.querySelectorAll('.day-btn');
+        
+        if (inputDias && dayButtons.length > 0) {
+            // Inicializar botones según el valor actual
+            const currentDays = inputDias.value.split(',');
+            dayButtons.forEach(btn => {
+                if (currentDays.includes(btn.getAttribute('data-day'))) {
+                    btn.classList.remove('btn-outline-success');
+                    btn.classList.add('btn-success');
+                }
+                
+                // Agregar evento click
+                btn.addEventListener('click', function() {
+                    const day = this.getAttribute('data-day');
+                    if (this.classList.contains('btn-success')) {
+                        this.classList.remove('btn-success');
+                        this.classList.add('btn-outline-success');
+                    } else {
+                        this.classList.remove('btn-outline-success');
+                        this.classList.add('btn-success');
+                    }
+                    updateHiddenDias();
+                });
+            });
+            
+            function updateHiddenDias() {
+                const selected = [];
+                dayButtons.forEach(btn => {
+                    if (btn.classList.contains('btn-success')) {
+                        selected.push(btn.getAttribute('data-day'));
+                    }
+                });
+                inputDias.value = selected.join(',');
+            }
         }
     });
 </script>

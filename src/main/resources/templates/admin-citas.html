@@ -106,7 +106,7 @@
             <!-- Filtros -->
             <div class="modern-card border-0 shadow-sm rounded-4 mb-4 p-3">
                 <div class="row g-3">
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label small fw-bold text-muted">Fecha</label>
                         <input type="date" id="filtroFecha" class="form-control bg-light border-0">
                     </div>
@@ -114,9 +114,19 @@
                         <label class="form-label small fw-bold text-muted">Médico</label>
                         <input type="text" id="filtroMedico" class="form-control bg-light border-0" placeholder="Nombre del Médico...">
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label small fw-bold text-muted">Buscar Paciente</label>
                         <input type="text" id="filtroPaciente" class="form-control bg-light border-0" placeholder="Nombre o DNI...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label small fw-bold text-muted">Estado</label>
+                        <select id="filtroEstado" class="form-control bg-light border-0" style="appearance: auto; cursor: pointer;">
+                            <option value="">Todos</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="confirmada">Confirmadas</option>
+                            <option value="atendida">Atendidas / Completadas</option>
+                            <option value="cancelada">Canceladas</option>
+                        </select>
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <button class="btn btn-outline-secondary w-100" id="btnLimpiar">Limpiar</button>
@@ -178,6 +188,11 @@
                                         th:if="${dto.cita.estado == 'Pendiente'}">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+
+                                <form th:action="@{/admin/citas/confirmar}" method="post" class="d-inline" th:if="${dto.puedeConfirmar}">
+                                    <input type="hidden" name="idCita" th:value="${dto.cita.idCita}">
+                                    <button type="submit" class="btn btn-sm btn-light text-success rounded-circle me-1" title="Confirmar Cita" onclick="return confirm('¿Marcar como confirmada y notificar al paciente?');"><i class="bi bi-check-circle-fill"></i></button>
+                                </form>
 
                                 <form th:action="@{/admin/citas/cancelar}" method="post" class="d-inline" th:if="${dto.cita.estado == 'Pendiente'}">
                                     <input type="hidden" name="idCita" th:value="${dto.cita.idCita}">
@@ -288,12 +303,14 @@
         const filtroFecha = document.getElementById('filtroFecha');
         const filtroMedico = document.getElementById('filtroMedico');
         const filtroPaciente = document.getElementById('filtroPaciente');
+        const filtroEstado = document.getElementById('filtroEstado');
         const btnLimpiar = document.getElementById('btnLimpiar');
 
         function filtrarCitas() {
             const valFecha = filtroFecha.value;
             const valMedico = filtroMedico.value.toLowerCase().trim();
             const valPaciente = filtroPaciente.value.toLowerCase().trim();
+            const valEstado = filtroEstado.value.toLowerCase().trim();
             
             const rows = document.querySelectorAll('tbody tr');
             rows.forEach(row => {
@@ -302,12 +319,22 @@
                 const fechaTexto = row.children[1].querySelector('.fw-bold').textContent;
                 const pacienteTexto = row.children[2].textContent.toLowerCase();
                 const medicoTexto = row.children[3].textContent.toLowerCase();
+                const estadoTexto = row.children[4].textContent.toLowerCase().trim();
                 
                 let matchFecha = valFecha === '' || fechaTexto.includes(valFecha);
                 let matchMedico = valMedico === '' || medicoTexto.includes(valMedico);
                 let matchPaciente = valPaciente === '' || pacienteTexto.includes(valPaciente);
+                
+                let matchEstado = true;
+                if (valEstado !== '') {
+                    if (valEstado === 'atendida') {
+                        matchEstado = estadoTexto.includes('atendida') || estadoTexto.includes('completada');
+                    } else {
+                        matchEstado = estadoTexto.includes(valEstado);
+                    }
+                }
 
-                if (matchFecha && matchMedico && matchPaciente) {
+                if (matchFecha && matchMedico && matchPaciente && matchEstado) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
@@ -318,11 +345,13 @@
         filtroFecha.addEventListener('change', filtrarCitas);
         filtroMedico.addEventListener('input', filtrarCitas);
         filtroPaciente.addEventListener('input', filtrarCitas);
+        filtroEstado.addEventListener('change', filtrarCitas);
         
         btnLimpiar.addEventListener('click', function() {
             filtroFecha.value = '';
             filtroMedico.value = '';
             filtroPaciente.value = '';
+            filtroEstado.value = '';
             filtrarCitas();
         });
     });
