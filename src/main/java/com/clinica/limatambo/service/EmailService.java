@@ -3,6 +3,7 @@ package com.clinica.limatambo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Async
     public void enviarCorreoRecuperacion(String destinatario, String enlaceRecuperacion) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setTo(destinatario);
@@ -26,6 +28,7 @@ public class EmailService {
         mailSender.send(mensaje);
     }
 
+    @Async
     public void enviarCorreoCancelacionCita(String destinatario, String nombrePaciente, String fecha, String hora) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setTo(destinatario);
@@ -39,6 +42,7 @@ public class EmailService {
         mailSender.send(mensaje);
     }
 
+    @Async
     public void enviarBoletaConAdjunto(String destinatario, byte[] pdfAdjunto, String numeroBoleta) {
         try {
             jakarta.mail.internet.MimeMessage mensaje = mailSender.createMimeMessage();
@@ -56,6 +60,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void enviarCorreoConfirmacionCita(String destinatario, String nombrePaciente, String fecha, String hora) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setTo(destinatario);
