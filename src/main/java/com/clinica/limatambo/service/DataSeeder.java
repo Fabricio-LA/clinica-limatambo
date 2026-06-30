@@ -112,17 +112,17 @@ public class DataSeeder implements CommandLineRunner {
     private void seedInsumos() {
         if (insumoRepository.count() < 10) {
             List<Insumo> productos = Arrays.asList(
-                createInsumo("Metformina 500mg", "Caja × 30 tabletas", 25.90, true, 50, "Medicamentos", "/images/medicamentos/Metformina_500mg.jpg"),
-                createInsumo("Ibuprofeno 400mg", "Caja × 20 tabletas", 8.50, false, 100, "Medicamentos", "/images/medicamentos/Ibuprofeno_400mg.jpg"),
-                createInsumo("Amoxicilina 500mg", "Caja × 21 cápsulas", 18.00, true, 30, "Medicamentos", "/images/medicamentos/Amoxicilina_500mg.jpg"),
-                createInsumo("Losartán 50mg", "Caja × 30 tabletas", 22.50, true, 0, "Medicamentos", "/images/medicamentos/losartan_50mg.jpg"),
-                createInsumo("Loratadina 10mg", "Caja × 10 tabletas", 15.00, false, 40, "Medicamentos", "/images/medicamentos/Loratadina_10mg.jpg"),
-                createInsumo("Omeprazol 20mg", "Caja × 14 cápsulas", 12.00, false, 80, "Medicamentos", "/images/medicamentos/Omeprazol_20mg.jpg"),
-                createInsumo("Paracetamol 500mg", "Caja × 20 tabletas", 5.50, false, 200, "Medicamentos", "/images/medicamentos/Paracetamol_500mg.jpg"),
-                createInsumo("Eucerin Ph5", "Tubo × 40ml", 85.00, false, 15, "Dermocosmética", "/images/medicamentos/Eucerin_Ph5.JPG"),
-                createInsumo("Vitamina C 1g", "Caja × 10 tabletas", 32.00, false, 60, "Vitaminas y Nutrición", "/images/medicamentos/vitamina_c_1g.jpg"),
-                createInsumo("Alcohol en Gel Antibacterial", "Frasco × 250ml", 12.50, false, 150, "Cuidado Personal", "/images/medicamentos/alcohol_gel.jpg"),
-                createInsumo("Tensiómetro Digital", "Unidad", 145.00, false, 15, "Botiquín y Equipos", "/images/medicamentos/tensiometro.jpg")
+                createInsumo("Metformina 500mg", "Caja × 30 tabletas", 25.90, true, 50, "Medicamentos", "Metformina_500mg.jpg"),
+                createInsumo("Ibuprofeno 400mg", "Caja × 20 tabletas", 8.50, false, 100, "Medicamentos", "Ibuprofeno_400mg.jpg"),
+                createInsumo("Amoxicilina 500mg", "Caja × 21 cápsulas", 18.00, true, 30, "Medicamentos", "Amoxicilina_500mg.jpg"),
+                createInsumo("Losartán 50mg", "Caja × 30 tabletas", 22.50, true, 0, "Medicamentos", "losartan_50mg.jpg"),
+                createInsumo("Loratadina 10mg", "Caja × 10 tabletas", 15.00, false, 40, "Medicamentos", "Loratadina_10mg.jpg"),
+                createInsumo("Omeprazol 20mg", "Caja × 14 cápsulas", 12.00, false, 80, "Medicamentos", "Omeprazol_20mg.jpg"),
+                createInsumo("Paracetamol 500mg", "Caja × 20 tabletas", 5.50, false, 200, "Medicamentos", "Paracetamol_500mg.jpg"),
+                createInsumo("Eucerin Ph5", "Tubo × 40ml", 85.00, false, 15, "Dermocosmética", "Eucerin_Ph5.JPG"),
+                createInsumo("Vitamina C 1g", "Caja × 10 tabletas", 32.00, false, 60, "Vitaminas y Nutrición", "vitamina_c_1g.jpg"),
+                createInsumo("Alcohol en Gel Antibacterial", "Frasco × 250ml", 12.50, false, 150, "Cuidado Personal", "alcohol_gel.jpg"),
+                createInsumo("Tensiómetro Digital", "Unidad", 145.00, false, 15, "Botiquín y Equipos", "tensiometro.jpg")
             );
             insumoRepository.saveAll(productos);
             System.out.println("Insumos sembrados con imágenes.");
