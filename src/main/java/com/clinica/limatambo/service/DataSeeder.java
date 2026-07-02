@@ -15,7 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.context.annotation.Profile;
+
 @Component
+@Profile("prod")
 public class DataSeeder implements CommandLineRunner {
 
     @Autowired private UsuarioRepository usuarioRepository;
@@ -31,7 +34,10 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // DB is already seeded manually by the user
+        seedRolesYUsuariosAdmin();
+        seedEspecialidadesYMedicos();
+        seedInsumos();
+        seedPacientesCitasYPagos();
     }
 
     private void seedRolesYUsuariosAdmin() {
