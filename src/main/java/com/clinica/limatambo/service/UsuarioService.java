@@ -35,10 +35,14 @@ public class UsuarioService implements UserDetailsService {
         Rol rol = rolRepository.findById(usuario.getIdRol())
                 .orElseThrow(() -> new UsernameNotFoundException("Rol no encontrado para el usuario: " + username));
 
+        String nombreRol = rol.getNombreRol().toUpperCase();
+        if (nombreRol.equals("ADMINISTRADOR")) nombreRol = "ADMIN";
+        if (nombreRol.equals("RECEPCIONISTA")) nombreRol = "RECEPCION";
+
         return new User(
                 usuario.getUsername(),
                 usuario.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombreRol()))
+                List.of(new SimpleGrantedAuthority("ROLE_" + nombreRol))
         );
     }
 }
