@@ -66,26 +66,30 @@ public class DataSeeder implements CommandLineRunner {
             System.out.println("Roles sembrados con éxito.");
         }
 
-        if (usuarioRepository.findByUsername("admin").isEmpty()) {
-            Usuario u = new Usuario();
-            u.setUsername("admin");
-            u.setPassword(passwordEncoder.encode("admin123"));
-            u.setEmail("admin@limatambo.com");
-            u.setIdRol(1); // Administrador
-            u.setEstado(true);
-            usuarioRepository.save(u);
-            System.out.println("Usuario Administrador sembrado.");
-        }
+        try {
+            if (usuarioRepository.findByUsername("admin").isEmpty()) {
+                Usuario u = new Usuario();
+                u.setUsername("admin");
+                u.setPassword(passwordEncoder.encode("admin123"));
+                u.setEmail("admin@limatambo.com");
+                u.setIdRol(1); // Administrador
+                u.setEstado(true);
+                usuarioRepository.save(u);
+                System.out.println("Usuario Administrador sembrado.");
+            }
 
-        if (usuarioRepository.findByUsername("recepcion").isEmpty()) {
-            Usuario u = new Usuario();
-            u.setUsername("recepcion");
-            u.setPassword(passwordEncoder.encode("recepcion123"));
-            u.setEmail("recepcion@limatambo.com");
-            u.setIdRol(4); // Recepcionista
-            u.setEstado(true);
-            usuarioRepository.save(u);
-            System.out.println("Usuario Recepcionista sembrado.");
+            if (usuarioRepository.findByUsername("recepcion").isEmpty()) {
+                Usuario u = new Usuario();
+                u.setUsername("recepcion");
+                u.setPassword(passwordEncoder.encode("recepcion123"));
+                u.setEmail("recepcion@limatambo.com");
+                u.setIdRol(4); // Recepcionista
+                u.setEstado(true);
+                usuarioRepository.save(u);
+                System.out.println("Usuario Recepcionista sembrado.");
+            }
+        } catch (Exception e) {
+            System.out.println("Advertencia: No se pudieron sembrar los usuarios admin/recepcion. Posible conflicto de roles. " + e.getMessage());
         }
     }
 
