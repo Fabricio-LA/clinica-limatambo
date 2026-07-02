@@ -1,4 +1,4 @@
-﻿package com.clinica.limatambo.service;
+package com.clinica.limatambo.service;
 
 import com.clinica.limatambo.model.*;
 import com.clinica.limatambo.repository.*;
@@ -31,10 +31,7 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        seedRolesYUsuariosAdmin();
-        seedEspecialidadesYMedicos();
-        seedInsumos();
-        seedPacientesCitasYPagos();
+        // DB is already seeded manually by the user
     }
 
     private void seedRolesYUsuariosAdmin() {
