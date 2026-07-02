@@ -108,11 +108,11 @@ public class DataSeeder implements CommandLineRunner {
             List<Especialidad> especialidades = especialidadRepository.findAll();
             String[] nombresM = {"Carlos", "Luis", "Jorge", "Mario", "Pedro"};
             String[] apellidosM = {"Gomez", "Perez", "Vargas", "Lopez", "Diaz"};
-            String[] fotosM = {"doc_m_1.jpg", "doc_m_2.jpg", "doc_m_3.jpg", "doc_m_4.jpg", "doc_m_5.jpg"};
+            String[] fotosM = {"doc_f_1.jpg", "doc_f_2.jpg", "doc_f_3.jpg", "doc_f_4.jpg", "doc_f_5.jpg"};
 
             String[] nombresF = {"Maria", "Ana", "Laura", "Sofia", "Lucia"};
             String[] apellidosF = {"Rojas", "Silva", "Torres", "Castro", "Ramirez"};
-            String[] fotosF = {"doc_f_1.jpg", "doc_f_2.jpg", "doc_f_3.jpg", "doc_f_4.jpg", "doc_f_5.jpg"};
+            String[] fotosF = {"doc_m_1.jpg", "doc_m_2.jpg", "doc_m_3.jpg", "doc_m_4.jpg", "doc_m_5.jpg"};
 
             Random r = new Random();
             
@@ -167,18 +167,19 @@ public class DataSeeder implements CommandLineRunner {
                 createInsumo("Metformina 500mg", "Caja × 30 tabletas", 25.90, true, 50, "Medicamentos", "Metformina_500mg.jpg"),
                 createInsumo("Ibuprofeno 400mg", "Caja × 20 tabletas", 8.50, false, 100, "Medicamentos", "Ibuprofeno_400mg.jpg"),
                 createInsumo("Amoxicilina 500mg", "Caja × 21 cápsulas", 18.00, true, 30, "Medicamentos", "Amoxicilina_500mg.jpg"),
-                createInsumo("Losartán 50mg", "Caja × 30 tabletas", 22.50, true, 0, "Medicamentos", "Losartán_50mg.JPG"),
+                createInsumo("Losartán 50mg", "Caja × 30 tabletas", 18.50, true, 200, "Medicamentos", "losartan_50mg.jpg"),
                 createInsumo("Loratadina 10mg", "Caja × 10 tabletas", 15.00, false, 40, "Medicamentos", "Loratadina_10mg.jpg"),
                 createInsumo("Omeprazol 20mg", "Caja × 14 cápsulas", 12.00, false, 80, "Medicamentos", "Omeprazol_20mg.jpg"),
                 createInsumo("Paracetamol 500mg", "Caja × 20 tabletas", 5.50, false, 200, "Medicamentos", "Paracetamol_500mg.jpg"),
-                createInsumo("Atorvastatina 20mg", "Caja × 30 tabletas", 38.00, true, 25, "Medicamentos", "Atorvastatina_20mg.JPG"),
                 createInsumo("Eucerin Ph5", "Tubo × 40ml", 85.00, false, 15, "Dermocosmética", "Eucerin_Ph5.JPG"),
-                createInsumo("Vitamina C 1g", "Caja × 10 tabletas", 32.00, false, 60, "Vitaminas y Nutrición", "Vitamina C_1g.JPG"),
+                createInsumo("Vitamina C 1g", "Frasco × 100 tabletas", 45.00, false, 80, "Suplementos", "vitamina_c_1g.jpg"),
+                createInsumo("Alcohol en Gel Antibacterial", "Frasco × 250ml", 12.50, false, 150, "Cuidado Personal", "alcohol_gel.jpg"),
+                createInsumo("Tensiómetro Digital", "Unidad", 120.00, false, 30, "Equipos Médicos", "tensiometro.jpg"),
+                createInsumo("Atorvastatina 20mg", "Caja × 30 tabletas", 38.00, true, 25, "Medicamentos", "Atorvastatina_20mg.JPG"),
                 createInsumo("Colágeno Hidrolizado", "Frasco × 60 cápsulas", 45.00, false, 40, "Vitaminas y Nutrición", "Colágeno_Hidrolizado.JPG"),
                 createInsumo("Magnesio", "Frasco × 60 cápsulas", 68.00, false, 35, "Vitaminas y Nutrición", "Magnesio_60.JPG"),
                 createInsumo("Multivitamínico Completo", "Frasco × 100 tabletas", 55.00, false, 80, "Vitaminas y Nutrición", "Multivitamínico_Completo.JPG"),
                 createInsumo("Suplemento Proteico en Polvo", "Lata × 400g", 95.00, false, 20, "Vitaminas y Nutrición", "Suplemento Proteico en Polvo.JPG"),
-                createInsumo("Alcohol en Gel Antibacterial", "Frasco × 250ml", 12.50, false, 150, "Cuidado Personal", "Alcohol en Gel Antibacterial.JPG"),
                 createInsumo("Pasta Dental Sensibilidad", "Tubo × 75ml", 18.00, false, 90, "Cuidado Personal", "Pasta Dental Sensibilidad.JPG"),
                 createInsumo("Enjuague Bucal", "Frasco × 500ml", 22.00, false, 110, "Cuidado Personal", "Enjuague Bucal.JPG"),
                 createInsumo("Jabón Líquido Antibacterial", "Frasco × 300ml", 15.00, false, 200, "Cuidado Personal", "Jabón Líquido Antibacterial.JPG"),
