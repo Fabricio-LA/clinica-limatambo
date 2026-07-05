@@ -186,6 +186,10 @@
                                         th:onclick="abrirModalEditar([[${insumo.idInsumo}]], [[${insumo.nombreInsumo}]], [[${insumo.descripcion}]], [[${insumo.categoria}]], [[${insumo.stockMinimo}]], [[${insumo.precioUnitario}]], [[${insumo.unidadMedida}]])">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+                                <button class="btn btn-sm btn-light text-danger rounded-circle" title="Eliminar"
+                                        th:onclick="abrirModalEliminar([[${insumo.idInsumo}]], [[${insumo.nombreInsumo}]])">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(insumos)}">
@@ -285,7 +289,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Seleccionar Insumo</label>
-                        <select name="idInsumo" class="form-select" required>
+                        <select name="idInsumo" class="form-select bg-light border-0" required>
                             <option value="">Seleccione...</option>
                             <option th:each="insumo : ${insumos}" th:value="${insumo.idInsumo}" th:text="${insumo.nombreInsumo} + ' (Stock: ' + ${insumo.stockActual} + ')'"></option>
                         </select>
@@ -320,7 +324,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Seleccionar Insumo</label>
-                        <select name="idInsumo" class="form-select" required>
+                        <select name="idInsumo" class="form-select bg-light border-0" required>
                             <option value="">Seleccione...</option>
                             <option th:each="insumo : ${insumos}" th:value="${insumo.idInsumo}" th:text="${insumo.nombreInsumo} + ' (Stock: ' + ${insumo.stockActual} + ')'"></option>
                         </select>
@@ -343,6 +347,30 @@
     </div>
 </div>
 
+<!-- Modal Eliminar Insumo -->
+<div class="modal fade" id="eliminarInsumoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold text-danger"><i class="bi bi-trash me-2"></i> Eliminar Insumo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="/admin/inventario/eliminar" method="post">
+                <input type="hidden" name="idInsumo" id="delete_idInsumo">
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas eliminar el insumo <strong id="delete_nombreInsumo"></strong>?</p>
+                    <p class="text-muted small mb-0">Esta acción también eliminará todo el historial de movimientos de este insumo y no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger px-4">Sí, Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Javascript para Modales y Búsqueda -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function abrirModalEditar(id, nombre, desc, cat, min, precio, unidad) {
@@ -353,9 +381,15 @@
         document.getElementById('edit_stockMinimo').value = min;
         document.getElementById('edit_precioUnitario').value = precio;
         document.getElementById('edit_unidadMedida').value = unidad;
-        var modal = new bootstrap.Modal(document.getElementById('editarInsumoModal'));
-        modal.show();
+        new bootstrap.Modal(document.getElementById('editarInsumoModal')).show();
     }
+
+    function abrirModalEliminar(id, nombre) {
+        document.getElementById('delete_idInsumo').value = id;
+        document.getElementById('delete_nombreInsumo').innerText = nombre;
+        new bootstrap.Modal(document.getElementById('eliminarInsumoModal')).show();
+    }
+
 
     function filterInventario() {
         const fName = document.getElementById('filterName').value.toLowerCase();

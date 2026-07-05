@@ -370,6 +370,16 @@ public class AdminController {
         return "redirect:/admin/inventario?exito=editado";
     }
 
+    @PostMapping("/inventario/eliminar")
+    public String eliminarInsumo(@RequestParam Integer idInsumo) {
+        java.util.Optional<Insumo> optInsumo = insumoRepository.findById(idInsumo);
+        if (optInsumo.isPresent()) {
+            insumoRepository.deleteById(idInsumo);
+            return "redirect:/admin/inventario?exito=eliminado";
+        }
+        return "redirect:/admin/inventario?error=no_encontrado";
+    }
+
     @PostMapping("/inventario/entrada")
     public String registrarEntrada(@RequestParam Integer idInsumo, @RequestParam Integer cantidad, @RequestParam String motivo, Authentication authentication) {
         java.util.Optional<Insumo> optInsumo = insumoRepository.findById(idInsumo);
