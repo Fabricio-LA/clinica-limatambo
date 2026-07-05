@@ -108,7 +108,7 @@
                 <div class="row g-3">
                     <div class="col-md-2">
                         <label class="form-label small fw-bold text-muted">Fecha</label>
-                        <input type="date" id="filtroFecha" class="form-control bg-light border-0">
+                        <input type="text" id="filtroFecha" class="form-control bg-light border-0" placeholder="Ej: 2026-07-01 to 2026-07-15">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label small fw-bold text-muted">Médico</label>
@@ -321,7 +321,23 @@
                 const medicoTexto = row.children[3].textContent.toLowerCase();
                 const estadoTexto = row.children[4].textContent.toLowerCase().trim();
                 
-                let matchFecha = valFecha === '' || fechaTexto.includes(valFecha);
+                let matchFecha = true;
+                if (valFecha !== '') {
+                    if (valFecha.includes(' a ')) {
+                        const partes = valFecha.split(' a ');
+                        const start = partes[0];
+                        const end = partes.length > 1 ? partes[1] : start;
+                        matchFecha = fechaTexto >= start && fechaTexto <= end;
+                    } else if (valFecha.includes(' to ')) { // Flatpickr default fallback
+                        const partes = valFecha.split(' to ');
+                        const start = partes[0];
+                        const end = partes.length > 1 ? partes[1] : start;
+                        matchFecha = fechaTexto >= start && fechaTexto <= end;
+                    } else {
+                        matchFecha = fechaTexto === valFecha;
+                    }
+                }
+                
                 let matchMedico = valMedico === '' || medicoTexto.includes(valMedico);
                 let matchPaciente = valPaciente === '' || pacienteTexto.includes(valPaciente);
                 
@@ -348,7 +364,11 @@
         filtroEstado.addEventListener('change', filtrarCitas);
         
         btnLimpiar.addEventListener('click', function() {
-            filtroFecha.value = '';
+            if (filtroFecha._flatpickr) {
+                filtroFecha._flatpickr.clear();
+            } else {
+                filtroFecha.value = '';
+            }
             filtroMedico.value = '';
             filtroPaciente.value = '';
             filtroEstado.value = '';
@@ -359,6 +379,15 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#filtroFecha", {
+            mode: "range",
+            locale: "es",
+            dateFormat: "Y-m-d",
+            placeholder: "Rango de fechas"
+        });
+    });
+
     let fpInstance = null;
     document.getElementById('nuevaCitaMedico').addEventListener('change', function() {
         const option = this.options[this.selectedIndex];
