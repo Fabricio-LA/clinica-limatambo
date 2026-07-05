@@ -6,6 +6,7 @@
     --matcha-light: #A8CC6A;
     --text-dark: #2C3E50;
     --white: #FFFFFF;
+    --surface: #f8fbed;
 }
 
 body {
@@ -13,6 +14,7 @@ body {
     color: var(--text-dark);
     margin: 0;
     line-height: 1.6;
+    background-color: var(--surface) !important;
 }
 
 /* NAVBAR */
