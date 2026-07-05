@@ -373,7 +373,7 @@
                 const term = this.value.toLowerCase().trim();
                 const items = document.querySelectorAll('.cita-atendida-item');
                 items.forEach(item => {
-                    const card = item.querySelector('.card');
+                    const card = item.querySelector('.modern-card');
                     if (card) {
                         const data = card.getAttribute('data-busqueda') || "";
                         if (data.includes(term)) {
