@@ -167,7 +167,7 @@
 <nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm py-1">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 50px; width: auto; transform: scale(3.2); transform-origin: left center; margin-left: 20px;">
+            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 50px; width: auto; transform: scale(4.2); transform-origin: left center; margin-left: 25px; position: relative; top: 8px;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -202,7 +202,7 @@
                     <div class="nav-divider"></div>
                     <div class="dropdown">
                         <a class="btn-iniciar-sesion dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> <span sec:authentication="name">Usuario</span>
+                            <i class="bi bi-person-circle"></i> <span sec:authentication="principal.nombreReal">Usuario</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-2">
                             <li><a class="dropdown-item" th:href="@{/dashboard-router}">Mi Perfil</a></li>
@@ -399,14 +399,8 @@
     <div class="container mt-3">
         <div class="row g-5 pb-4 align-items-start justify-content-between">
             <div class="col-lg-4 col-md-12">
-                <div class="d-flex align-items-center gap-4 mb-3">
-                    <div style="width: 48px; height: 48px; background-color: #8db55b; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i class="bi bi-heart-pulse-fill text-white fs-4"></i>
-                    </div>
-                    <div>
-                        <h4 class="fw-bold text-white mb-0" style="letter-spacing: -0.5px;">Clínica Limatambo</h4>
-                        <span style="color: #8db55b; font-size: 0.95rem;">Salud con confianza</span>
-                    </div>
+                <div class="mb-3" style="overflow: hidden;">
+                    <img th:src="@{/images/LOGO_LIMATAMBO_ALTOCONTRASTE.png}" alt="Clínica Limatambo" style="height: 400px; width: auto; margin: -140px 0 -130px -95px; max-width: none;">
                 </div>
                 <p class="lh-lg mt-4" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.75);">
                     Más de 20 años brindando atención médica de excelencia a nuestros pacientes y sus familias.
