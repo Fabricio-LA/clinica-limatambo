@@ -451,6 +451,7 @@ body {
 }
 .nav-link-custom:hover {
     color: var(--matcha-dark);
+    text-decoration: none !important;
 }
 .nav-link-custom.active {
     color: var(--matcha-dark);
