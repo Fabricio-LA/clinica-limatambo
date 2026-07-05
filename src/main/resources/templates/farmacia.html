@@ -53,7 +53,7 @@
                         Hola, <span sec:authentication="name">Usuario</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
-                        <li><a class="dropdown-item" th:href="@{/paciente/panel}"><i class="bi bi-person-circle me-2"></i>Mi Panel</a></li>
+                        <li><a class="dropdown-item" th:href="@{/dashboard-router}"><i class="bi bi-person-circle me-2"></i>Mi Perfil</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <form th:action="@{/logout}" method="post" class="m-0 p-0">
