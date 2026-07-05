@@ -12,14 +12,7 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background-color: #f8fbf6; }
 
-        /* NAVBAR */
-        .navbar-limatambo {
-            background: #fff;
-            border-bottom: 1px solid var(--matcha-soft);
-        }
-        .navbar-limatambo .navbar-brand { font-weight: 700; color: var(--matcha-dark); font-size: 1.15rem; }
-        .navbar-limatambo .nav-link { color: #444; font-weight: 500; padding: 8px 16px; transition: color .2s; }
-        .navbar-limatambo .nav-link:hover { color: var(--matcha-main); }
+        /* NAVBAR REMOVED */
         
         .terminos-container {
             background: #fff;
@@ -64,55 +57,58 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
-            <i class="bi bi-heart-pulse-fill" style="color:var(--matcha-main); font-size:1.4rem;"></i>
-            Clínica Limatambo
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 95px; width: auto;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto align-items-center gap-1">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/#especialidades}">Especialidades</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/#especialistas}">Médicos</a></li>
-                <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/ayuda}">Ayuda</a></li>
+            <ul class="navbar-nav mx-auto align-items-center">
+                <li class="nav-item"><a class="nav-link-custom" th:href="@{/}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link-custom" th:href="@{/#especialidades}">Especialidades</a></li>
+                <li class="nav-item"><a class="nav-link-custom" th:href="@{/#especialistas}">Médicos</a></li>
+                <li class="nav-item"><a class="nav-link-custom" th:href="@{/ayuda}">Ayuda</a></li>
                 
                 <!-- Opciones visibles solo en móvil -->
-                <li class="nav-item d-lg-none mt-2 w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
-                <li class="nav-item d-lg-none mb-2 w-100 text-center"><a class="nav-link fw-bold" style="color: var(--matcha-main);" th:href="@{/paciente/reservar}"><i class="bi bi-calendar2-plus me-1"></i> Reservar Cita</a></li>
+                <li class="nav-item d-lg-none mt-3 w-100 text-center"><a class="btn-farmacia justify-content-center" th:href="@{/farmacia}"><i class="bi bi-cart2"></i> Farmacia</a></li>
+                <li class="nav-item d-lg-none mb-3 mt-2 w-100 text-center"><a class="btn-reservar-cita w-100 text-center" th:href="@{/paciente/reservar}">Reservar Cita</a></li>
             </ul>
-            <ul class="navbar-nav align-items-center gap-3">
-                <li class="nav-item d-none d-lg-block">
-                    <a th:href="@{/farmacia}" class="btn bg-white rounded-pill d-flex align-items-center gap-2 px-3 fw-semibold shadow-sm" style="border: 1px solid rgba(143,185,53,0.3); color: #2C3E50;">
-                        <i class="bi bi-bag"></i> Farmacia
+            <div class="d-none d-lg-flex align-items-center">
+                <a th:href="@{/farmacia}" class="btn-farmacia text-decoration-none">
+                    <i class="bi bi-cart2"></i> Farmacia
+                </a>
+                <a th:href="@{/paciente/reservar}" class="btn-reservar-cita text-decoration-none ms-3">
+                    Reservar Cita
+                </a>
+                
+                <div sec:authorize="isAnonymous()" class="d-flex align-items-center">
+                    <div class="nav-divider"></div>
+                    <a th:href="@{/login}" class="btn-iniciar-sesion">
+                        <i class="bi bi-person-circle"></i> Iniciar Sesión
                     </a>
-                </li>
-                <li class="nav-item d-none d-lg-block">
-                    <a th:href="@{/paciente/reservar}" class="btn rounded-pill px-4 fw-semibold text-white shadow-sm" style="background-color: #8FB935; border-color: #8FB935;">
-                        Reservar Cita
-                    </a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a th:href="@{/login}" class="nav-link fw-semibold ms-2" style="color:var(--matcha-main);">Iniciar Sesión</a>
-                </li>
-                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
-                    <a class="nav-link dropdown-toggle fw-semibold" href="#" data-bs-toggle="dropdown">
-                        Hola, <span sec:authentication="name">Usuario</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm">
-                        <li><a class="dropdown-item" th:href="@{/dashboard-router}">Mi Perfil</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <form th:action="@{/logout}" method="post">
-                                <button type="submit" class="dropdown-item text-danger">Cerrar Sesión</button>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                </div>
+                
+                <div sec:authorize="isAuthenticated()" class="d-flex align-items-center ms-3">
+                    <div class="nav-divider"></div>
+                    <div class="dropdown">
+                        <a class="btn-iniciar-sesion dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <span sec:authentication="name">Usuario</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-2">
+                            <li><a class="dropdown-item" th:href="@{/dashboard-router}">Mi Perfil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="dropdown-item text-danger">Cerrar Sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </nav>

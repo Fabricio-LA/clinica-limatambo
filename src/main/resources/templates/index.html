@@ -159,92 +159,6 @@
             box-shadow: 0 8px 28px rgba(37,211,102,.6);
             color: #fff;
         }
-
-        /* NAVBAR CUSTOM STITCH STYLES */
-        .navbar-limatambo {
-            background-color: var(--surface) !important; 
-            border-bottom: none !important;
-        }
-        .nav-link-custom {
-            font-size: 15px;
-            color: #7b8e73;
-            font-weight: 600;
-            padding: 5px 0;
-            margin: 0 15px;
-            position: relative;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        .nav-link-custom:hover {
-            color: var(--matcha-dark);
-        }
-        .nav-link-custom.active {
-            color: var(--matcha-dark);
-        }
-        .nav-link-custom.active::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--matcha-main);
-            border-radius: 2px;
-        }
-        .btn-farmacia {
-            background-color: transparent;
-            border: 1px solid var(--matcha-dark);
-            color: var(--matcha-dark);
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s;
-        }
-        .btn-farmacia:hover {
-            background-color: var(--matcha-dark);
-            color: white;
-        }
-        .btn-reservar-cita {
-            background-color: var(--matcha-dark);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 9px 24px;
-            font-size: 15px;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-        .btn-reservar-cita:hover {
-            background-color: #2b3d17;
-            color: white;
-        }
-        .btn-iniciar-sesion {
-            color: var(--matcha-dark);
-            font-weight: 700;
-            font-size: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-        .btn-iniciar-sesion:hover {
-            opacity: 0.8;
-            color: var(--matcha-dark);
-        }
-        .btn-iniciar-sesion i {
-            font-size: 1.3rem;
-        }
-        .nav-divider {
-            width: 1px;
-            height: 28px;
-            background-color: #c8d2c2;
-            margin: 0 16px;
-        }
     </style>
 </head>
 <body>
@@ -253,7 +167,7 @@
 <nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm py-3">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 65px; width: auto;">
+            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 95px; width: auto;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
