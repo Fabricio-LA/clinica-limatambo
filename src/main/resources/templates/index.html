@@ -164,25 +164,24 @@
 <body>
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light navbar-limatambo sticky-top shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
-            <i class="bi bi-heart-pulse-fill" style="color:var(--matcha-main); font-size:1.4rem;"></i>
-            Clínica Limatambo
+        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
+            <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Clínica Limatambo" style="height: 65px; width: auto;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto align-items-center gap-1">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#especialidades">Especialidades</a></li>
-                <li class="nav-item"><a class="nav-link" href="#especialistas">Médicos</a></li>
-                <li class="nav-item"><a class="nav-link fw-semibold" th:href="@{/ayuda}">Ayuda</a></li>
+            <ul class="navbar-nav mx-auto align-items-center gap-2">
+                <li class="nav-item"><a class="nav-link fs-5" th:href="@{/}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link fs-5" href="#especialidades">Especialidades</a></li>
+                <li class="nav-item"><a class="nav-link fs-5" href="#especialistas">Médicos</a></li>
+                <li class="nav-item"><a class="nav-link fs-5 fw-semibold" th:href="@{/ayuda}">Ayuda</a></li>
                 
                 <!-- Opciones visibles solo en móvil -->
-                <li class="nav-item d-lg-none mt-2 w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
-                <li class="nav-item d-lg-none mb-2 w-100 text-center"><a class="nav-link fw-bold" style="color: var(--matcha-main);" th:href="@{/paciente/reservar}"><i class="bi bi-calendar2-plus me-1"></i> Reservar Cita</a></li>
+                <li class="nav-item d-lg-none mt-2 w-100 text-center"><a class="nav-link fs-5 text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
+                <li class="nav-item d-lg-none mb-2 w-100 text-center"><a class="nav-link fs-5 fw-bold" style="color: var(--matcha-main);" th:href="@{/paciente/reservar}"><i class="bi bi-calendar2-plus me-1"></i> Reservar Cita</a></li>
             </ul>
             <ul class="navbar-nav align-items-center gap-3">
                 <li class="nav-item d-none d-lg-block">
