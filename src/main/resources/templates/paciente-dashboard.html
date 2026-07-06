@@ -11,34 +11,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light navbar-clinica sticky-top shadow-sm bg-white">
+<body class="bg-app-surface">
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #fcfdfa; border-bottom: 1px solid #e0e0e0;">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-                <i class="bi bi-hospital-fill me-2" style="color: var(--matcha-main);"></i>
-                <span class="fw-bold" style="color: var(--matcha-dark);">LIMATAMBO</span>
+                <span class="fw-bold fs-4" style="color: var(--matcha-dark);">LIMATAMBO</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
-                    <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" th:href="@{/farmacia}">Farmacia</a></li>
+                <ul class="navbar-nav mx-auto align-items-center d-none d-lg-flex gap-4">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold px-0" th:href="@{/}" style="color: var(--matcha-dark); border-bottom: 2px solid var(--matcha-dark);">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-secondary border rounded-pill px-3 py-1" th:href="@{/farmacia}" style="background-color: transparent; border-color: #c4c4c4 !important; font-size: 0.9rem;">Farmacia</a>
+                    </li>
                 </ul>
-                <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
+                <ul class="navbar-nav ms-auto align-items-center gap-3 mt-3 mt-lg-0">
                     <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
                     <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
                     
-                    <li class="nav-item">
-                        <span class="nav-link text-dark fw-bold">
-                            <i class="bi bi-person-circle me-1 text-success"></i> 
-                            Hola, <span th:text="${paciente != null ? paciente.nombre : 'Paciente'}">Paciente</span>
+                    <li class="nav-item d-flex align-items-center gap-3">
+                        <span class="text-dark fw-semibold" style="font-size: 0.95rem;">
+                            <i class="bi bi-person-circle fs-5 me-1 text-dark align-middle"></i> 
+                            <span th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Paciente'}">Paciente</span>
                         </span>
-                    </li>
-                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm px-3 rounded-pill">Cerrar Sesión</button>
+                        <form th:action="@{/logout}" method="post" class="m-0">
+                            <button type="submit" class="btn btn-link text-decoration-none fw-bold px-0" style="color: #c45b5b; font-size: 0.95rem;">Cerrar Sesión</button>
                         </form>
                     </li>
                 </ul>
@@ -47,6 +48,14 @@
     </nav>
 
     <div class="container py-5">
+        <div th:if="${param.reservaExito}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-4 p-4 mb-4 d-flex align-items-center" style="background-color: #fcfdfa; border-left: 5px solid var(--matcha-main) !important;">
+            <i class="bi bi-check-circle-fill fs-2 me-3" style="color: var(--matcha-main);"></i>
+            <div>
+                <h5 class="fw-bold mb-1" style="color: var(--matcha-dark);">¡Cita Confirmada!</h5>
+                <p class="mb-0 text-muted small">Tu reserva se ha procesado con éxito. Te esperamos en la Clínica Limatambo.</p>
+            </div>
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+        </div>
         <div th:if="${param.perfilActualizado}" class="alert alert-success alert-dismissible fade show border-0 shadow-sm rounded-3">
             <i class="bi bi-check-circle-fill me-2"></i>Perfil actualizado correctamente.
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -64,188 +73,210 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
         <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="modern-card border-0 shadow-sm rounded-4 text-center p-4 mb-4">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3 mx-auto overflow-hidden" style="width: 100px; height: 100px;">
+            <div class="col-lg-3">
+                <div class="border text-center p-4 mb-4" style="background-color: #f2f6e9; border-color: #e0e0e0 !important; border-radius: 25px;">
+                    <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-3 mx-auto overflow-hidden shadow-sm" style="width: 120px; height: 120px; border: 3px solid var(--matcha-main);">
                         <img th:if="${paciente.fotoPerfil != null}" th:src="@{${paciente.fotoPerfil}}" class="w-100 h-100 object-fit-cover" alt="Foto de perfil">
-                        <i th:unless="${paciente.fotoPerfil != null}" class="bi bi-person-fill fs-1" style="color: var(--matcha-main);"></i>
+                        <i th:unless="${paciente.fotoPerfil != null}" class="bi bi-person-fill" style="font-size: 4rem; color: var(--matcha-main);"></i>
                     </div>
-                    <h5 class="fw-bold mb-1" th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Mi Perfil'}">Mi Perfil</h5>
-                    <p class="text-muted small mb-3" th:text="${paciente != null ? 'DNI: ' + paciente.dni : ''}">DNI</p>
-                    <div class="text-start border-top pt-3">
-                        <p class="mb-2 small"><i class="bi bi-envelope text-success me-2"></i><span th:text="${usuario.email != null ? usuario.email : usuario.username}"></span></p>
-                        <p class="mb-2 small"><i class="bi bi-telephone text-success me-2"></i><span th:text="${paciente.telefono != null ? paciente.telefono : 'No registrado'}"></span></p>
-                        <p class="mb-2 small"><i class="bi bi-geo-alt text-success me-2"></i><span th:text="${paciente.direccion != null ? paciente.direccion : 'No registrada'}"></span></p>
-                        <p class="mb-3 small"><i class="bi bi-shield-check text-success me-2"></i><span class="badge bg-success" th:text="${paciente.tipoSeguro != null ? paciente.tipoSeguro : 'Particular'}">Particular</span></p>
+                    <h5 class="fw-bold mb-1" style="color: #212529;" th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Mi Perfil'}">Mi Perfil</h5>
+                    <p class="small mb-4" style="color: #495057;" th:text="${paciente != null ? 'DNI: ' + paciente.dni : ''}">DNI</p>
+                    
+                    <div class="text-start">
+                        <div class="info-box-v3">
+                            <i class="bi bi-envelope"></i>
+                            <span class="small fw-semibold text-secondary" th:text="${usuario.email != null ? usuario.email : usuario.username}"></span>
+                        </div>
+                        <div class="info-box-v3">
+                            <i class="bi bi-telephone"></i>
+                            <span class="small fw-semibold text-secondary" th:text="${paciente.telefono != null ? paciente.telefono : 'No registrado'}"></span>
+                        </div>
+                        <div class="info-box-v3">
+                            <i class="bi bi-geo-alt"></i>
+                            <span class="small fw-semibold text-secondary" th:text="${paciente.direccion != null ? paciente.direccion : 'No registrada'}"></span>
+                        </div>
                     </div>
-                    <div class="d-flex flex-column gap-2 mt-2">
-                        <button class="btn btn-outline-success btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil"><i class="bi bi-pencil-square me-1"></i>Editar Datos</button>
-                        <button class="btn btn-outline-secondary btn-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#modalCambiarPassword"><i class="bi bi-key me-1"></i>Cambiar Contraseña</button>
+                    <div class="d-flex flex-column gap-2 mt-4">
+                        <button class="btn btn-outline-matcha rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil"><i class="bi bi-pencil me-1"></i> Editar Datos</button>
+                        <button class="btn btn-outline-secondary-soft rounded-pill fw-bold" data-bs-toggle="modal" data-bs-target="#modalCambiarPassword"><i class="bi bi-key me-1"></i> Cambiar Contraseña</button>
                     </div>
                 </div>
 
-                <div class="modern-card border-0 shadow-sm rounded-4 p-4 text-center" style="background-color: #fcfdfa; border: 2px dashed var(--matcha-main) !important;">
+                <div class="modern-card border-0 shadow-sm p-4 text-center" style="background-color: #fcfdfa; border: 2px dashed var(--matcha-main) !important; border-radius: 25px;">
                     <i class="bi bi-calendar2-plus fs-1 text-success mb-2"></i>
-                    <h6 class="fw-bold text-success mb-3">¿Necesitas una consulta?</h6>
-                    <a th:href="@{/paciente/reservar}" class="btn btn-reservar w-100">Nueva Reserva</a>
+                    <h6 class="fw-bold text-success mb-3">¿Necesitas otra consulta?</h6>
+                    <a th:href="@{/paciente/reservar}" class="btn btn-reservar w-100 rounded-pill">+ Agendar Nueva</a>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <h4 class="fw-bold mb-4" style="color: var(--matcha-dark)">Mis Citas Médicas</h4>
+            <div class="col-lg-9">
+                <div class="d-flex align-items-center mb-3">
+                    <h3 class="fw-bold mb-0" style="color: #212529">Mis Citas Médicas</h3>
+                </div>
+                
+                <div class="tabs-citas">
+                    <div class="tab-cita active" onclick="filtrarCitas('proximas', this)">Próximas</div>
+                    <div class="tab-cita" onclick="filtrarCitas('pasadas', this)">Pasadas</div>
+                </div>
 
-                <div th:if="${#lists.isEmpty(citas)}" class="alert alert-light border border-success border-opacity-25 rounded-4 p-5 text-center shadow-sm">
+                <div th:if="${#lists.isEmpty(citas)}" class="alert border rounded-4 p-5 text-center mt-3" style="background-color: #fcfdfa; border-color: #e0e0e0 !important;">
                     <i class="bi bi-calendar-x fs-1 text-muted mb-3"></i>
                     <h5 class="fw-bold text-secondary">No tienes citas programadas</h5>
                     <p class="text-muted small">Tus próximas reservas aparecerán aquí.</p>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-12" th:each="dto : ${citas}">
-                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden">
-                            <div class="card-body p-4 position-relative">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
-                                            <i class="bi bi-person-fill fs-3" style="color: var(--matcha-main);"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="fw-bold mb-0" th:text="${dto.nombreMedico}">Dr. Nombre</h5>
-                                            <small class="text-muted">Consulta Médica</small>
-                                        </div>
-                                    </div>
-                                    <div class="ms-3 flex-shrink-0">
-                                        <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge bg-warning text-dark border shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i>Pendiente</span>
-                                        <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge bg-success shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i>Confirmada</span>
-                                        <span th:if="${dto.cita.estado == 'Cancelada'}" class="badge bg-danger shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i>Cancelada</span>
-                                        <span th:if="${dto.cita.estado == 'Cancelada_Medico'}" class="badge bg-warning text-dark border border-warning shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-exclamation-circle me-1"></i>Pendiente (Reprogramar)</span>
-                                        <span th:if="${dto.cita.estado == 'Atendida'}" class="badge bg-primary shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-clipboard-check me-1"></i>Atendida</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="row g-3 bg-light p-3 rounded-3 mb-3">
-                                    <div class="col-sm-6 d-flex align-items-center">
-                                        <i class="bi bi-calendar3 text-success me-2"></i>
-                                        <span class="fw-bold" th:text="${dto.cita.fechaCita}">2026-05-15</span>
-                                    </div>
-                                    <div class="col-sm-6 d-flex align-items-center">
-                                        <i class="bi bi-clock text-success me-2"></i>
-                                        <span class="fw-bold" th:text="${dto.cita.horaCita}">10:00:00</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="d-flex gap-2">
-                                    <button type="button" th:if="${dto.cita.estado != 'Cancelada' && dto.cita.estado != 'Atendida'}" class="btn btn-outline-success btn-sm px-3" data-bs-toggle="modal" th:data-bs-target="'#modificarModal' + ${dto.cita.idCita}">
-                                        <i class="bi bi-pencil-square me-1"></i> Modificar
-                                    </button>
-                                    <form th:if="${dto.cita.estado != 'Cancelada' && dto.cita.estado != 'Cancelada_Medico' && dto.cita.estado != 'Atendida'}" th:action="@{/citas/cancelar/{id}(id=${dto.cita.idCita})}" method="post" onsubmit="return confirm('¿Estás seguro de cancelar esta cita?');">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3">
-                                            <i class="bi bi-x-circle me-1"></i> Cancelar
-                                        </button>
-                                    </form>
-                                    <button type="button" th:if="${dto.cita.estado == 'Atendida' && dto.cita.detalleConsulta != null}" class="btn btn-primary btn-sm px-3 shadow-sm fw-bold" data-bs-toggle="modal" th:data-bs-target="'#detalleModal' + ${dto.cita.idCita}">
-                                        <i class="bi bi-file-medical me-1"></i> Ver Detalle Clínico
-                                    </button>
-                                </div>
-                                
-                            </div>
-                        </div>
-
-                        <!-- Modal Detalles de Consulta -->
-                        <div class="modal fade" th:id="'detalleModal' + ${dto.cita.idCita}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 shadow-lg">
-                                    <div class="modal-header bg-light">
-                                        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-journal-medical me-2 text-primary"></i>Resumen de Consulta</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body p-4">
-                                        <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2">Diagnóstico y Recomendaciones Médicas</h6>
-                                        <p class="text-dark mb-0" style="white-space: pre-wrap;" th:text="${dto.cita.detalleConsulta}"></p>
-                                    </div>
-                                    <div class="modal-footer border-0 pt-0">
-                                        <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Entendido</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" th:id="'modificarModal' + ${dto.cita.idCita}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 shadow-lg">
-                                    <div class="modal-header bg-light">
-                                        <h5 class="modal-title fw-bold"><i class="bi bi-calendar-event me-2"></i>Reprogramar Cita</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <form th:action="@{/citas/modificar/{id}(id=${dto.cita.idCita})}" method="post">
-                                        <div class="modal-body p-4">
-                                            <p class="small text-muted mb-4">Selecciona la nueva fecha y hora para tu cita con <strong th:text="${dto.nombreMedico}">Dr.</strong></p>
-                                            <input type="hidden" th:id="'idMedicoModal' + ${dto.cita.idCita}" th:value="${dto.cita.idMedico}">
-                                            <input type="hidden" th:id="'diasMedicoModal' + ${dto.cita.idCita}" th:value="${dto.medico.diasLaborables}">
-                                            
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold small">Nueva Fecha</label>
-                                                <input type="text" class="form-control bg-white input-fecha-modal" 
-                                                       name="nuevaFecha" 
-                                                       th:id="'inputFechaModal' + ${dto.cita.idCita}"
-                                                       th:data-fecha-cancelada="${dto.cita.estado == 'Cancelada_Medico' ? dto.cita.fechaCita : ''}"
-                                                       th:value="${dto.cita.estado == 'Cancelada_Medico' ? '' : dto.cita.fechaCita}" required readonly>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold small">Nueva Hora</label>
-                                                <input type="hidden" name="nuevaHora" th:id="'inputHoraHiddenModal' + ${dto.cita.idCita}" th:value="${dto.cita.horaCita}" required>
-                                                <div th:id="'contenedorHorasModal' + ${dto.cita.idCita}" class="d-flex flex-wrap gap-2 mb-2">
-                                                </div>
-                                                <small th:id="'alertaHorarioModal' + ${dto.cita.idCita}" class="text-danger fw-bold" style="display: none;">Este doctor no atiende en el día seleccionado o ya no tiene turnos.</small>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer border-0 pt-0">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
-                                            <button type="submit" class="btn btn-reservar">Guardar Cambios</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
+                <div class="row g-4" id="contenedorCitas">
+                    <div class="col-md-6 cita-card-container" th:each="dto : ${citas}" th:data-fecha="${dto.cita.fechaCita}">
                         
+                        <div class="card-cita-v3">
+                            <div class="border-left-indicator" 
+                                 th:classappend="${dto.cita.estado == 'Pendiente' or dto.cita.estado == 'Cancelada_Medico' ? 'border-left-warning' : (dto.cita.estado == 'Cancelada' ? 'border-left-danger' : (dto.cita.estado == 'Confirmada' ? 'border-left-success' : 'border-left-primary'))}">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="doctor-info">
+                                    <div class="doctor-icon" th:classappend="${dto.cita.estado == 'Cancelada' ? 'danger' : ''}">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombreMedico}">Dr. Nombre</h6>
+                                        <small class="text-muted fw-bold" style="font-size: 10px;">CONSULTA MÉDICA</small>
+                                    </div>
+                                </div>
+                                <div class="badge-status">
+                                    <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-clock me-1"></i>Pendiente</span>
+                                    <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge badge-soft-success px-3 py-1 rounded-pill"><i class="bi bi-check-circle me-1"></i>Confirmada</span>
+                                    <span th:if="${dto.cita.estado == 'Cancelada'}" class="badge badge-soft-danger px-3 py-1 rounded-pill"><i class="bi bi-x-circle me-1"></i>Cancelada</span>
+                                    <span th:if="${dto.cita.estado == 'Cancelada_Medico'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-exclamation-circle me-1"></i>Reprogramar</span>
+                                    <span th:if="${dto.cita.estado == 'Atendida'}" class="badge badge-soft-primary px-3 py-1 rounded-pill"><i class="bi bi-clipboard-check me-1"></i>Atendida</span>
+                                </div>
+                            </div>
+                            
+                            <div class="fecha-box">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-calendar3" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a;' : 'color: var(--matcha-main);'}"></i>
+                                    <span class="fw-bold text-secondary small" th:text="${dto.cita.fechaCita}">2026-05-15</span>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-clock" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a;' : 'color: var(--matcha-main);'}"></i>
+                                    <span class="fw-bold text-secondary small" th:text="${dto.cita.horaCita}">10:00:00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="actions">
+                                <button type="button" th:if="${dto.cita.estado != 'Cancelada' && dto.cita.estado != 'Atendida'}" class="btn btn-outline-matcha rounded-pill" data-bs-toggle="modal" th:data-bs-target="'#modificarModal' + ${dto.cita.idCita}">
+                                    Modificar
+                                </button>
+                                <form th:if="${dto.cita.estado != 'Cancelada' && dto.cita.estado != 'Cancelada_Medico' && dto.cita.estado != 'Atendida'}" th:action="@{/citas/cancelar/{id}(id=${dto.cita.idCita})}" method="post" onsubmit="return confirm('¿Estás seguro de cancelar esta cita?');">
+                                    <button type="submit" class="btn btn-outline-danger rounded-pill">
+                                        Cancelar
+                                    </button>
+                                </form>
+                                <button type="button" th:if="${dto.cita.estado == 'Cancelada'}" class="btn btn-outline-secondary-soft rounded-pill w-100" onclick="window.location.href='/paciente/reservar'">
+                                    Re-agendar Cita
+                                </button>
+                                <button type="button" th:if="${dto.cita.estado == 'Atendida' && dto.cita.detalleConsulta != null}" class="btn btn-reservar rounded-pill w-100" data-bs-toggle="modal" th:data-bs-target="'#detalleModal' + ${dto.cita.idCita}">
+                                    Ver Detalle Clínico
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
     
+    <!-- MODALES DE CITAS MOVIDOS FUERA DEL BUCLE PARA NO ENSUCIAR EL HTML DEL GRID -->
+    <th:block th:each="dto : ${citas}">
+        <div class="modal fade" th:id="'detalleModal' + ${dto.cita.idCita}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold text-dark"><i class="bi bi-journal-medical me-2 text-primary"></i>Resumen de Consulta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <h6 class="fw-bold text-secondary mb-3 border-bottom pb-2">Diagnóstico y Recomendaciones Médicas</h6>
+                        <p class="text-dark mb-0" style="white-space: pre-wrap;" th:text="${dto.cita.detalleConsulta}"></p>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">Entendido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" th:id="'modificarModal' + ${dto.cita.idCita}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fw-bold"><i class="bi bi-calendar-event me-2"></i>Reprogramar Cita</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/citas/modificar/{id}(id=${dto.cita.idCita})}" method="post">
+                        <div class="modal-body p-4">
+                            <p class="small text-muted mb-4">Selecciona la nueva fecha y hora para tu cita con <strong th:text="${dto.nombreMedico}">Dr.</strong></p>
+                            <input type="hidden" th:id="'idMedicoModal' + ${dto.cita.idCita}" th:value="${dto.cita.idMedico}">
+                            <input type="hidden" th:id="'diasMedicoModal' + ${dto.cita.idCita}" th:value="${dto.medico.diasLaborables}">
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Nueva Fecha</label>
+                                <input type="text" class="form-control bg-white input-fecha-modal" 
+                                       name="nuevaFecha" 
+                                       th:id="'inputFechaModal' + ${dto.cita.idCita}"
+                                       th:data-fecha-cancelada="${dto.cita.estado == 'Cancelada_Medico' ? dto.cita.fechaCita : ''}"
+                                       th:value="${dto.cita.estado == 'Cancelada_Medico' ? '' : dto.cita.fechaCita}" required readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Nueva Hora</label>
+                                <input type="hidden" name="nuevaHora" th:id="'inputHoraHiddenModal' + ${dto.cita.idCita}" th:value="${dto.cita.horaCita}" required>
+                                <div th:id="'contenedorHorasModal' + ${dto.cita.idCita}" class="d-flex flex-wrap gap-2 mb-2">
+                                </div>
+                                <small th:id="'alertaHorarioModal' + ${dto.cita.idCita}" class="text-danger fw-bold" style="display: none;">Este doctor no atiende en el día seleccionado o ya no tiene turnos.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-reservar">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
     <!-- MODAL EDITAR PERFIL -->
     <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Editar Perfil</h5>
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header" style="background-color: #f8fbed; border-bottom: 1px solid #eaf1e3;">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-person-lines-fill me-2" style="color: var(--matcha-main);"></i>Editar Perfil</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form th:action="@{/paciente/perfil}" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
+                    <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small">Foto de Perfil</label>
-                            <input type="file" class="form-control rounded-pill" name="foto" accept="image/png, image/jpeg">
+                            <input type="file" class="form-control rounded-pill bg-light" name="foto" accept="image/png, image/jpeg">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small">Correo Electrónico</label>
-                            <input type="email" class="form-control rounded-pill" name="email" th:value="${usuario.email != null ? usuario.email : usuario.username}" required>
+                            <input type="email" class="form-control rounded-pill bg-light" name="email" th:value="${usuario.email != null ? usuario.email : usuario.username}" required>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-6">
                                 <label class="form-label fw-bold text-muted small">Teléfono</label>
-                                <input type="text" class="form-control rounded-pill" name="telefono" th:value="${paciente.telefono}" pattern="^\d{7,15}$" title="Ingrese un número de teléfono válido" inputmode="numeric">
+                                <input type="text" class="form-control rounded-pill bg-light" name="telefono" th:value="${paciente.telefono}" pattern="^\d{7,15}$" title="Ingrese un número de teléfono válido" inputmode="numeric">
                             </div>
                             <div class="col-6">
                                 <label class="form-label fw-bold text-muted small">Dirección</label>
-                                <input type="text" class="form-control rounded-pill" name="direccion" th:value="${paciente.direccion}">
+                                <input type="text" class="form-control rounded-pill bg-light" name="direccion" th:value="${paciente.direccion}">
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-top-0 pt-0">
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-success rounded-pill px-4">Guardar Cambios</button>
+                    <div class="modal-footer border-0 pt-0 pb-4 px-4 d-flex gap-2">
+                        <button type="button" class="btn btn-outline-secondary-soft rounded-pill fw-bold flex-grow-1" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-reservar rounded-pill flex-grow-1">Guardar Cambios</button>
                     </div>
                 </form>
             </div>
@@ -255,24 +286,24 @@
     <!-- MODAL CAMBIAR CONTRASEÑA -->
     <div class="modal fade" id="modalCambiarPassword" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-sm">
-            <div class="modal-content border-0 rounded-4 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold">Cambiar Contraseña</h5>
+            <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+                <div class="modal-header" style="background-color: #f8fbed; border-bottom: 1px solid #eaf1e3;">
+                    <h5 class="modal-title fw-bold text-dark"><i class="bi bi-shield-lock me-2" style="color: var(--matcha-main);"></i>Cambiar Contraseña</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form th:action="@{/paciente/password}" method="post">
-                    <div class="modal-body">
+                    <div class="modal-body p-4">
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small">Contraseña Actual</label>
-                            <input type="password" class="form-control rounded-pill" name="currentPassword" required>
+                            <input type="password" class="form-control rounded-pill bg-light" name="currentPassword" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small">Nueva Contraseña</label>
-                            <input type="password" class="form-control rounded-pill" name="newPassword" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$" title="Debe tener al menos 8 caracteres, incluir mayúscula, minúscula, número y carácter especial" required>
+                            <input type="password" class="form-control rounded-pill bg-light" name="newPassword" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$" title="Debe tener al menos 8 caracteres, incluir mayúscula, minúscula, número y carácter especial" required>
                         </div>
                     </div>
-                    <div class="modal-footer border-top-0 pt-0 justify-content-center">
-                        <button type="submit" class="btn btn-success rounded-pill w-100">Actualizar Contraseña</button>
+                    <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-center">
+                        <button type="submit" class="btn btn-reservar rounded-pill w-100">Actualizar Contraseña</button>
                     </div>
                 </form>
             </div>
@@ -302,6 +333,7 @@
                         flatpickr(inputFecha, {
                             locale: "es",
                             minDate: "today",
+                            maxDate: new Date(new Date().setMonth(new Date().getMonth() + 3)),
                             disable: [
                                 function(date) {
                                     if (!diasFlat.includes(date.getDay())) return true;
@@ -326,12 +358,10 @@
         });
 
         function seleccionarHoraModal(btn, hora, idCita) {
-            document.querySelectorAll('#contenedorHorasModal' + idCita + ' .btn-hora').forEach(b => {
-                b.classList.remove('btn-success');
-                b.classList.add('btn-outline-success');
+            document.querySelectorAll('#contenedorHorasModal' + idCita + ' .btn-hora-v2').forEach(b => {
+                b.classList.remove('selected');
             });
-            btn.classList.remove('btn-outline-success');
-            btn.classList.add('btn-success');
+            btn.classList.add('selected');
             
             document.getElementById('inputHoraHiddenModal' + idCita).value = hora;
         }
@@ -359,21 +389,29 @@
                             let btn = document.createElement('button');
                             btn.type = 'button';
                             let horaCorta = item.hora.substring(0, 5);
-                            btn.innerText = horaCorta;
+                            
+                            // Formato AM/PM
+                            let splitHora = horaCorta.split(':');
+                            let h = parseInt(splitHora[0]);
+                            let m = splitHora[1];
+                            let ampm = h >= 12 ? 'PM' : 'AM';
+                            let h12 = h % 12;
+                            h12 = h12 ? h12 : 12;
+                            let horaFormateada = (h12 < 10 ? '0'+h12 : h12) + ':' + m + ' ' + ampm;
+                            
+                            btn.innerText = horaFormateada;
                             
                             // Permitir la hora si es exactamente la misma que ya tiene la cita actual (porque el backend la reportará ocupada)
                             let esLaHoraActual = (horaCorta + ':00' === horaActualGuardada || horaCorta === horaActualGuardada.substring(0,5));
                             
                             if (!item.disponible && !esLaHoraActual) {
-                                btn.className = 'btn btn-sm btn-hora btn-secondary';
+                                btn.className = 'btn-hora-v2 opacity-50';
                                 btn.disabled = true;
-                                btn.style.opacity = '0.5';
                                 btn.title = 'No disponible';
                             } else {
-                                btn.className = 'btn btn-sm btn-hora btn-outline-success fw-bold';
+                                btn.className = 'btn-hora-v2';
                                 if (esLaHoraActual) {
-                                    btn.classList.remove('btn-outline-success');
-                                    btn.classList.add('btn-success');
+                                    btn.classList.add('selected');
                                     document.getElementById('inputHoraHiddenModal' + idCita).value = item.hora;
                                 }
                                 btn.onclick = function() { seleccionarHoraModal(this, item.hora, idCita); };
@@ -387,6 +425,47 @@
                     contenedorHoras.innerHTML = '<div class="text-danger small w-100">Error de conexión</div>';
                 });
         }
+        // Lógica de Tabs
+        function filtrarCitas(tipo, elementoTab) {
+            // Actualizar clases de los tabs
+            document.querySelectorAll('.tab-cita').forEach(el => el.classList.remove('active'));
+            elementoTab.classList.add('active');
+
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+
+            document.querySelectorAll('.cita-card-container').forEach(card => {
+                const fechaCitaRaw = card.getAttribute('data-fecha');
+                if(!fechaCitaRaw) return;
+                
+                // Fecha de la cita viene en formato YYYY-MM-DD (del dto.cita.fechaCita)
+                const partes = fechaCitaRaw.split('-');
+                const fechaCita = new Date(partes[0], partes[1] - 1, partes[2]);
+                fechaCita.setHours(0,0,0,0);
+
+                if (tipo === 'proximas') {
+                    if (fechaCita >= hoy) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                } else if (tipo === 'pasadas') {
+                    if (fechaCita < hoy) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Inicializar el filtro por defecto al cargar (Próximas)
+        window.addEventListener('load', () => {
+            const tabActivo = document.querySelector('.tab-cita.active');
+            if(tabActivo) {
+                filtrarCitas('proximas', tabActivo);
+            }
+        });
     </script>
 </body>
 </html>
