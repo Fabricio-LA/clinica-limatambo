@@ -107,6 +107,7 @@ public class DashboardController {
                         citasAtendidas.add(dto);
                         if (cita.getFechaCita().equals(hoy)) {
                             totalAtendidosHoy++;
+                            citasHoy.add(dto);
                         }
                     } else if (cita.getFechaCita().equals(hoy)) {
                         if (!"Cancelada".equals(cita.getEstado()) && !"Cancelada_Medico".equals(cita.getEstado())) {
@@ -168,15 +169,22 @@ public class DashboardController {
                 List<CitaPacienteDTO> citasDTO = new ArrayList<>();
                 for (Cita cita : citas) {
                     String nombreMedico = "Desconocido";
+                    String especialidad = "Consulta General";
                     Medico medicoObj = null;
                     if (cita.getIdMedico() != null) {
                         Optional<Medico> m = medicoRepository.findById(cita.getIdMedico());
                         if (m.isPresent()) {
                             medicoObj = m.get();
                             nombreMedico = "Dr. " + m.get().getNombre() + " " + m.get().getApellido();
+                            if (m.get().getIdEspecialidad() != null) {
+                                Optional<Especialidad> esp = especialidadRepository.findById(m.get().getIdEspecialidad());
+                                if (esp.isPresent()) {
+                                    especialidad = esp.get().getNombreEspecialidad();
+                                }
+                            }
                         }
                     }
-                    citasDTO.add(new CitaPacienteDTO(cita, nombreMedico, medicoObj));
+                    citasDTO.add(new CitaPacienteDTO(cita, nombreMedico, medicoObj, especialidad));
                 }
                 
                 model.addAttribute("paciente", paciente);
@@ -280,15 +288,18 @@ public class DashboardController {
         private Cita cita;
         private String nombreMedico;
         private Medico medico;
+        private String especialidad;
 
-        public CitaPacienteDTO(Cita cita, String nombreMedico, Medico medico) {
+        public CitaPacienteDTO(Cita cita, String nombreMedico, Medico medico, String especialidad) {
             this.cita = cita;
             this.nombreMedico = nombreMedico;
             this.medico = medico;
+            this.especialidad = especialidad;
         }
 
         public Cita getCita() { return cita; }
         public String getNombreMedico() { return nombreMedico; }
         public Medico getMedico() { return medico; }
+        public String getEspecialidad() { return especialidad; }
     }
 }

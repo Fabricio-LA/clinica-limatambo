@@ -87,7 +87,15 @@ public class AdminController {
             }
         }
 
-        long medicosActivos = medicoRepository.count();
+        long medicosActivos = medicoRepository.findAll().stream()
+                .filter(m -> {
+                    if (m.getIdUsuario() != null) {
+                        return usuarioRepository.findById(m.getIdUsuario())
+                            .map(u -> Boolean.TRUE.equals(u.getEstado()))
+                            .orElse(false);
+                    }
+                    return false;
+                }).count();
 
         model.addAttribute("totalCitas", totalCitas);
         model.addAttribute("totalPacientes", totalPacientes);
@@ -99,7 +107,7 @@ public class AdminController {
         // 1. Gráfico de Demanda de Citas (Últimos 7 días)
         List<Cita> todasLasCitas = citaRepository.findAll();
         
-        long citasCanceladas = todasLasCitas.stream().filter(c -> "Cancelada".equals(c.getEstado()) || "Cancelada_Medico".equals(c.getEstado())).count();
+        long citasCanceladas = todasLasCitas.stream().filter(c -> "Cancelada".equals(c.getEstado()) || "Cancelada_Medico".equals(c.getEstado()) || "Ausente".equals(c.getEstado())).count();
         long citasAtendidas = todasLasCitas.stream().filter(c -> "Atendida".equals(c.getEstado()) || "Completada".equals(c.getEstado())).count();
         long citasPendientes = todasLasCitas.stream().filter(c -> "Confirmada".equals(c.getEstado()) || "Pendiente".equals(c.getEstado())).count();
         
@@ -138,7 +146,7 @@ public class AdminController {
             .filter(c -> c.getFechaCita() != null && c.getFechaCita().isEqual(hoy) && ("Confirmada".equals(c.getEstado()) || "Pendiente".equals(c.getEstado())))
             .count();
         long canceladasHoy = todasLasCitas.stream()
-            .filter(c -> c.getFechaCita() != null && c.getFechaCita().isEqual(hoy) && "Cancelada".equals(c.getEstado()))
+            .filter(c -> c.getFechaCita() != null && c.getFechaCita().isEqual(hoy) && ("Cancelada".equals(c.getEstado()) || "Cancelada_Medico".equals(c.getEstado()) || "Ausente".equals(c.getEstado())))
             .count();
         
         model.addAttribute("chartLabelsCitas", java.util.Arrays.toString(demandaCitasLabels).replace("'", "\""));
@@ -436,7 +444,19 @@ public class AdminController {
     }
 
     @GetMapping("/ventas")
-    public String adminVentas(Model model) {
+    public String adminVentas(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer mes,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Integer anio,
+            Model model) {
+        
+        LocalDate hoy = LocalDate.now();
+        
+        // Si mes == 0, significa "Todos los meses"
+        boolean mostrarTodos = (mes != null && mes == 0);
+        
+        int mesSeleccionado = (mes != null) ? mes : hoy.getMonthValue();
+        int anioSeleccionado = (anio != null) ? anio : hoy.getYear();
+        
         List<Pago> pagos = pagoRepository.findAll();
         BigDecimal ingresosMes = BigDecimal.ZERO;
         long ventasMes = 0;
@@ -444,33 +464,55 @@ public class AdminController {
         List<PagoInfoDTO> pagosInfo = new ArrayList<>();
         
         for (Pago p : pagos) {
-            String nombrePaciente = p.getCita() != null ? "Público en General" : (p.getNombreClienteFarmacia() != null ? p.getNombreClienteFarmacia() : "Público en General");
-            if (p.getCita() != null && p.getCita().getIdPaciente() != null) {
-                java.util.Optional<com.clinica.limatambo.model.Paciente> pac = pacienteRepository.findById(p.getCita().getIdPaciente());
-                if (pac.isPresent()) {
-                    nombrePaciente = pac.get().getNombre() + " " + pac.get().getApellido();
+            if (p.getFechaPago() != null && (mostrarTodos || (p.getFechaPago().getMonthValue() == mesSeleccionado && p.getFechaPago().getYear() == anioSeleccionado))) {
+                String nombrePaciente = p.getCita() != null ? "Público en General" : (p.getNombreClienteFarmacia() != null ? p.getNombreClienteFarmacia() : "Público en General");
+                if (p.getCita() != null && p.getCita().getIdPaciente() != null) {
+                    java.util.Optional<com.clinica.limatambo.model.Paciente> pac = pacienteRepository.findById(p.getCita().getIdPaciente());
+                    if (pac.isPresent()) {
+                        nombrePaciente = pac.get().getNombre() + " " + pac.get().getApellido();
+                    }
                 }
-            }
-            
-            if (p.getFechaPago() != null && p.getFechaPago().getYear() == LocalDate.now().getYear() && p.getFechaPago().getMonth() == LocalDate.now().getMonth()) {
+                
                 if (p.getMonto() != null && "Pagado".equals(p.getEstado())) {
                     ingresosMes = ingresosMes.add(p.getMonto());
                     ventasMes++;
                 }
+                pagosInfo.add(new PagoInfoDTO(p, nombrePaciente));
             }
-            pagosInfo.add(new PagoInfoDTO(p, nombrePaciente));
         }
-        
-        // Pagos Pendientes: citas confirmadas sin pago
-        long pagosPendientes = citaRepository.findAll().stream()
-                .filter(c -> "Confirmada".equals(c.getEstado()) && pagos.stream().noneMatch(pg -> pg.getCita() != null && pg.getCita().getIdCita().equals(c.getIdCita())))
-                .count();
+
+        // Generar lista de los últimos 12 meses para el filtro
+        List<MesFiltroDTO> mesesFiltro = new ArrayList<>();
+        LocalDate fechaAux = LocalDate.now();
+        java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy", new java.util.Locale("es", "ES"));
+        for (int i = 0; i < 12; i++) {
+            String label = fechaAux.format(fmt);
+            label = label.substring(0, 1).toUpperCase() + label.substring(1);
+            mesesFiltro.add(new MesFiltroDTO(fechaAux.getMonthValue(), fechaAux.getYear(), label));
+            fechaAux = fechaAux.minusMonths(1);
+        }
 
         model.addAttribute("pagosInfo", pagosInfo);
         model.addAttribute("ingresosMes", ingresosMes);
         model.addAttribute("ventasMes", ventasMes);
-        model.addAttribute("pagosPendientes", pagosPendientes);
+        model.addAttribute("mesesFiltro", mesesFiltro);
+        model.addAttribute("mesSeleccionado", mostrarTodos ? 0 : mesSeleccionado);
+        model.addAttribute("anioSeleccionado", mostrarTodos ? 0 : anioSeleccionado);
         return "admin-ventas";
+    }
+
+    public static class MesFiltroDTO {
+        public int mes;
+        public int anio;
+        public String nombreMes;
+        public MesFiltroDTO(int mes, int anio, String nombreMes) {
+            this.mes = mes;
+            this.anio = anio;
+            this.nombreMes = nombreMes;
+        }
+        public int getMes() { return mes; }
+        public int getAnio() { return anio; }
+        public String getNombreMes() { return nombreMes; }
     }
 
     public static class PagoInfoDTO {
@@ -538,6 +580,14 @@ public class AdminController {
                 redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya existe.");
                 return "redirect:/admin/usuarios";
             }
+            if (email != null && !email.trim().isEmpty() && usuarioRepository.findByEmail(email).isPresent()) {
+                redirectAttributes.addFlashAttribute("error", "El correo electrónico ya está registrado.");
+                return "redirect:/admin/usuarios";
+            }
+            if (idRol == 3 && pacienteRepository.existsByDni(dni)) {
+                redirectAttributes.addFlashAttribute("error", "El DNI ya se encuentra registrado.");
+                return "redirect:/admin/usuarios";
+            }
             Usuario nuevoUsuario = new Usuario();
             nuevoUsuario.setUsername(username);
             nuevoUsuario.setPassword(passwordEncoder.encode(password));
@@ -572,16 +622,55 @@ public class AdminController {
     @org.springframework.web.bind.annotation.PostMapping("/usuarios/editar")
     public String editarUsuario(
             @org.springframework.web.bind.annotation.RequestParam Integer idUsuario,
+            @org.springframework.web.bind.annotation.RequestParam String username,
             @org.springframework.web.bind.annotation.RequestParam(required = false) String email,
-            @org.springframework.web.bind.annotation.RequestParam Integer idRol,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String password,
             org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
         try {
             java.util.Optional<Usuario> opt = usuarioRepository.findById(idUsuario);
             if (opt.isPresent()) {
                 Usuario u = opt.get();
+                
+                // Validar que el username no exista en otro usuario
+                java.util.Optional<Usuario> checkUser = usuarioRepository.findByUsername(username);
+                if (checkUser.isPresent() && !checkUser.get().getIdUsuario().equals(idUsuario)) {
+                    redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya está en uso por otra cuenta.");
+                    return "redirect:/admin/usuarios";
+                }
+                
+                // Validar que el email no exista en otro usuario
+                if (email != null && !email.trim().isEmpty()) {
+                    java.util.Optional<Usuario> checkEmail = usuarioRepository.findByEmail(email);
+                    if (checkEmail.isPresent() && !checkEmail.get().getIdUsuario().equals(idUsuario)) {
+                        redirectAttributes.addFlashAttribute("error", "El correo electrónico ya está registrado por otra cuenta.");
+                        return "redirect:/admin/usuarios";
+                    }
+                }
+                
+                // Si es el usuario logueado actualmente, detectamos para actualizar la sesión de Spring Security
+                org.springframework.security.core.Authentication auth = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+                boolean esMismoUsuario = auth != null && auth.getName().equals(u.getUsername());
+                
+                u.setUsername(username);
                 u.setEmail(email);
-                u.setIdRol(idRol);
+                
+                // Actualizar contraseña si se proporcionó una nueva
+                if (password != null && !password.trim().isEmpty()) {
+                    u.setPassword(passwordEncoder.encode(password));
+                }
+                
                 usuarioRepository.save(u);
+
+                if (esMismoUsuario) {
+                    org.springframework.security.authentication.UsernamePasswordAuthenticationToken newAuth =
+                        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                            username,
+                            auth.getCredentials(),
+                            auth.getAuthorities()
+                        );
+                    org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(newAuth);
+                }
+                
                 redirectAttributes.addFlashAttribute("success", "Usuario actualizado correctamente.");
             } else {
                 redirectAttributes.addFlashAttribute("error", "Usuario no encontrado.");

@@ -11,242 +11,331 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import org.springframework.context.annotation.Profile;
+import java.util.stream.Collectors;
 
 @Component
-@Profile("prod")
 public class DataSeeder implements CommandLineRunner {
 
     @Autowired private UsuarioRepository usuarioRepository;
-    @Autowired private RolRepository rolRepository;
-    @Autowired private EspecialidadRepository especialidadRepository;
     @Autowired private PacienteRepository pacienteRepository;
     @Autowired private HistorialRepository historialRepository;
     @Autowired private CitaRepository citaRepository;
     @Autowired private PagoRepository pagoRepository;
-    @Autowired private InsumoRepository insumoRepository;
     @Autowired private MedicoRepository medicoRepository;
     @Autowired private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        seedRolesYUsuariosAdmin();
-        seedEspecialidadesYMedicos();
-        seedInsumos();
+        // El DataSeeder ha sido puesto a dormir por petición
+        if (true) return;
+        
+        // Ejecutamos únicamente la limpieza de paciente_gen/paciente_demo y el sembrado de los 15 pacientes peruanos
         seedPacientesCitasYPagos();
-    }
-
-    private void seedRolesYUsuariosAdmin() {
-        if (rolRepository.count() == 0) {
-            Rol r1 = new Rol(); r1.setNombreRol("ADMIN");
-            Rol r2 = new Rol(); r2.setNombreRol("MEDICO");
-            Rol r3 = new Rol(); r3.setNombreRol("PACIENTE");
-            Rol r4 = new Rol(); r4.setNombreRol("RECEPCIONISTA");
-            rolRepository.saveAll(Arrays.asList(r1, r2, r3, r4));
-        }
-
-        if (usuarioRepository.findByUsername("admin").isEmpty()) {
-            Usuario u = new Usuario();
-            u.setUsername("admin");
-            u.setPassword(passwordEncoder.encode("admin123"));
-            u.setEmail("admin@limatambo.com");
-            u.setIdRol(1); // Administrador
-            u.setEstado(true);
-            usuarioRepository.save(u);
-        }
-        if (usuarioRepository.findByUsername("recepcion").isEmpty()) {
-            Usuario u = new Usuario();
-            u.setUsername("recepcion");
-            u.setPassword(passwordEncoder.encode("recepcion123"));
-            u.setEmail("recepcion@limatambo.com");
-            u.setIdRol(4); // Recepcionista
-            u.setEstado(true);
-            usuarioRepository.save(u);
-        }
-    }
-
-    private void seedEspecialidadesYMedicos() {
-        if (especialidadRepository.count() == 0) {
-            Especialidad e1 = new Especialidad(); e1.setNombreEspecialidad("Cardiología");
-            Especialidad e2 = new Especialidad(); e2.setNombreEspecialidad("Dermatología");
-            Especialidad e3 = new Especialidad(); e3.setNombreEspecialidad("Pediatría");
-            Especialidad e4 = new Especialidad(); e4.setNombreEspecialidad("Medicina General");
-            Especialidad e5 = new Especialidad(); e5.setNombreEspecialidad("Neurología");
-            especialidadRepository.saveAll(Arrays.asList(e1, e2, e3, e4, e5));
-        }
-
-        if (medicoRepository.count() == 0) {
-            List<Especialidad> especialidades = especialidadRepository.findAll();
-            String[] nombresM = {"Carlos", "Luis", "Jorge", "Mario", "Pedro"};
-            String[] apellidosM = {"Gomez", "Perez", "Vargas", "Lopez", "Diaz"};
-            String[] fotosM = {"doc_m_1.jpg", "doc_m_2.jpg", "doc_m_3.jpg", "doc_m_4.jpg", "doc_m_5.jpg"};
-
-            String[] nombresF = {"Maria", "Ana", "Laura", "Sofia", "Lucia"};
-            String[] apellidosF = {"Rojas", "Silva", "Torres", "Castro", "Ramirez"};
-            String[] fotosF = {"doc_f_1.jpg", "doc_f_2.jpg", "doc_f_3.jpg", "doc_f_4.jpg", "doc_f_5.jpg"};
-
-            Random r = new Random();
-            
-            for (int i = 0; i < 5; i++) {
-                // Doctor (Male)
-                Usuario uM = new Usuario();
-                uM.setUsername("dr_" + nombresM[i].toLowerCase());
-                uM.setPassword(passwordEncoder.encode("medico123"));
-                uM.setEmail("dr_" + nombresM[i].toLowerCase() + "@limatambo.com");
-                uM.setIdRol(2); // Medico
-                uM.setEstado(true);
-                usuarioRepository.save(uM);
-
-                Medico m1 = new Medico();
-                m1.setNombre(nombresM[i]);
-                m1.setApellido(apellidosM[i]);
-                m1.setIdEspecialidad(especialidades.get(r.nextInt(especialidades.size())).getIdEspecialidad());
-                m1.setIdUsuario(uM.getIdUsuario());
-                m1.setHoraInicio(LocalTime.of(8, 0));
-                m1.setHoraFin(LocalTime.of(16, 0));
-                m1.setDiasLaborables("1,2,3,4,5");
-                m1.setFotoPerfil(fotosM[i]);
-                medicoRepository.save(m1);
-
-                // Doctor (Female)
-                Usuario uF = new Usuario();
-                uF.setUsername("dra_" + nombresF[i].toLowerCase());
-                uF.setPassword(passwordEncoder.encode("medico123"));
-                uF.setEmail("dra_" + nombresF[i].toLowerCase() + "@limatambo.com");
-                uF.setIdRol(2);
-                uF.setEstado(true);
-                usuarioRepository.save(uF);
-
-                Medico m2 = new Medico();
-                m2.setNombre(nombresF[i]);
-                m2.setApellido(apellidosF[i]);
-                m2.setIdEspecialidad(especialidades.get(r.nextInt(especialidades.size())).getIdEspecialidad());
-                m2.setIdUsuario(uF.getIdUsuario());
-                m2.setHoraInicio(LocalTime.of(9, 0));
-                m2.setHoraFin(LocalTime.of(17, 0));
-                m2.setDiasLaborables("1,3,5");
-                m2.setFotoPerfil(fotosF[i]);
-                medicoRepository.save(m2);
-            }
-        }
-    }
-
-    private void seedInsumos() {
-        if (insumoRepository.count() == 0) {
-            List<Insumo> productos = Arrays.asList(
-                createInsumo("Metformina 500mg", "Caja × 30 tabletas", 25.90, true, 50, "Medicamentos", "/images/medicamentos/Metformina_500mg.jpg"),
-                createInsumo("Ibuprofeno 400mg", "Caja × 20 tabletas", 8.50, false, 100, "Medicamentos", "/images/medicamentos/Ibuprofeno_400mg.jpg"),
-                createInsumo("Amoxicilina 500mg", "Caja × 21 cápsulas", 18.00, true, 30, "Medicamentos", "/images/medicamentos/Amoxicilina_500mg.jpg"),
-                createInsumo("Losartán 50mg", "Caja × 30 tabletas", 18.50, true, 200, "Medicamentos", "/images/medicamentos/losartan_50mg.jpg"),
-                createInsumo("Loratadina 10mg", "Caja × 10 tabletas", 15.00, false, 40, "Medicamentos", "/images/medicamentos/Loratadina_10mg.jpg"),
-                createInsumo("Omeprazol 20mg", "Caja × 14 cápsulas", 12.00, false, 80, "Medicamentos", "/images/medicamentos/Omeprazol_20mg.jpg"),
-                createInsumo("Paracetamol 500mg", "Caja × 20 tabletas", 5.50, false, 200, "Medicamentos", "/images/medicamentos/Paracetamol_500mg.jpg"),
-                createInsumo("Atorvastatina 20mg", "Caja × 30 tabletas", 38.00, true, 25, "Medicamentos", "/images/medicamentos/Atorvastatina_20mg.JPG"),
-                createInsumo("Eucerin Ph5", "Tubo × 40ml", 85.00, false, 15, "Dermocosmética", "/images/medicamentos/Eucerin_Ph5.JPG"),
-                createInsumo("Vitamina C 1g", "Frasco × 100 tabletas", 45.00, false, 80, "Suplementos", "/images/medicamentos/vitamina_c_1g.jpg"),
-                createInsumo("Alcohol en Gel Antibacterial", "Frasco × 250ml", 12.50, false, 150, "Cuidado Personal", "/images/medicamentos/alcohol_gel.jpg"),
-                createInsumo("Tensiómetro Digital", "Unidad", 120.00, false, 30, "Equipos Médicos", "/images/medicamentos/tensiometro.jpg")
-            );
-            insumoRepository.saveAll(productos);
-        }
-    }
-
-    private Insumo createInsumo(String name, String pack, double price, boolean reqRx, int stock, String category, String image) {
-        Insumo i = new Insumo();
-        i.setNombreInsumo(name);
-        i.setDescripcion(pack);
-        i.setPrecioUnitario(BigDecimal.valueOf(price));
-        i.setRequiereReceta(reqRx);
-        i.setStockActual(stock);
-        i.setCategoria(category);
-        i.setImagen(image);
-        return i;
+        
+        // Escribimos dinámicamente el archivo de credenciales leyendo la base de datos real
+        writeCredentialsFile();
     }
 
     private void seedPacientesCitasYPagos() {
-        if (usuarioRepository.findByUsername("paciente_gen_1").isPresent()) {
+        // Nombres que generamos anteriormente para limpiarlos
+        List<String> usernamesAnteriores = java.util.Arrays.asList(
+            "jquispe", "mquispe", "amamani", "lcondori", "jflores", "lrojas", "mhuaman", "fchavez", 
+            "ldiaz", "vvargas", "agutierrez", "ecruz", "hperez", "pcastillo", "jmendoza", "olujan", 
+            "sflores", "jrojas", "chuaman", "rdiaz", "jgutierrez", "mcruz", "eperez", "dcastillo", 
+            "smendoza", "salfaro", "rlinares", "tsoto", "cvargas", "gramirez", "dpoma", "jmedina", 
+            "ryana", "esanchez", "egomez", "sguerrero", "wtorres", "lsilva", "amorales", "icastro"
+        );
+
+        // 1. LIMPIEZA AUTOMÁTICA SEGURA DE ANTIGUOS USUARIOS
+        List<Usuario> usuariosAntiguos = usuarioRepository.findAll().stream()
+                .filter(u -> u.getUsername().startsWith("paciente_gen_") 
+                          || u.getUsername().startsWith("paciente_demo") 
+                          || usernamesAnteriores.contains(u.getUsername())
+                          || u.getUsername().startsWith("700000"))
+                .collect(Collectors.toList());
+
+        if (!usuariosAntiguos.isEmpty()) {
+            for (Usuario u : usuariosAntiguos) {
+                java.util.Optional<com.clinica.limatambo.model.Paciente> pacOpt = pacienteRepository.findAll().stream()
+                        .filter(p -> u.getIdUsuario().equals(p.getIdUsuario()))
+                        .findFirst();
+                
+                if (pacOpt.isPresent()) {
+                    com.clinica.limatambo.model.Paciente pac = pacOpt.get();
+                    
+                    historialRepository.findAll().stream()
+                            .filter(h -> pac.getIdPaciente().equals(h.getIdPaciente()))
+                            .forEach(h -> historialRepository.delete(h));
+                    
+                    List<Cita> citasPaciente = citaRepository.findAll().stream()
+                            .filter(c -> pac.getIdPaciente().equals(c.getIdPaciente()))
+                            .collect(Collectors.toList());
+                    
+                    for (Cita c : citasPaciente) {
+                        pagoRepository.findAll().stream()
+                                .filter(pg -> pg.getCita() != null && c.getIdCita().equals(pg.getCita().getIdCita()))
+                                .forEach(pg -> pagoRepository.delete(pg));
+                        
+                        citaRepository.delete(c);
+                    }
+                    
+                    pacienteRepository.delete(pac);
+                }
+                usuarioRepository.delete(u);
+            }
+        }
+
+        // 2. EVITAR DUPLICACIÓN DE LOS PACIENTES AUTOGENERADOS
+        if (usuarioRepository.findByUsername("70000000").isPresent()) {
             return; 
         }
 
         List<Medico> medicos = medicoRepository.findAll();
         if (medicos.isEmpty()) return;
 
-        String[] nombres = {"Carlos", "María", "Jorge", "Ana", "Luis", "Carmen", "Juan", "Rosa", "Pedro", "Luz", "Jose", "Marta", "Miguel", "Julia", "Victor"};
-        String[] apellidos = {"Quispe", "Mamani", "Condori", "Flores", "Rojas", "Huamán", "Chuquimia", "Chávez", "Díaz", "Vargas", "Gutiérrez", "Cruz", "Pérez", "Castillo", "Mendoza"};
-        String[] seguros = {"PARTICULAR", "RIMAC", "PACIFICO", "MAPFRE", "EPS"};
+        // Nombres y apellidos peruanos realistas para los 15 pacientes
+        String[] primerNombreM = {"Juan", "Carlos", "Luis", "Jorge", "José", "Miguel", "Fabricio", "Pedro", "Víctor", "Andrés", "Marcos", "Hugo", "Diego", "Javier", "Oscar"};
+        String[] segundoNombreM = {"Marcelo", "Alberto", "Antonio", "Enrique", "Manuel", "Daniel", "David", "Francisco", "Eduardo", "Ángel", "Ramón", "Arturo", "Fernando", "Alexander", "Jesús"};
+        
+        String[] primerNombreF = {"María", "Ana", "Laura", "Sofía", "Lucía", "Carmen", "Rosa", "Luz", "Marta", "Julia", "Elena", "Gabriela", "Patricia", "Sandra", "Diana"};
+        String[] segundoNombreF = {"Elena", "Isabel", "Beatriz", "Cristina", "Milagros", "Cecilia", "Patricia", "Victoria", "Teresa", "Inés", "Pilar", "Mercedes", "Esther", "Elizabeth", "Carolina"};
+
+        String[] apellidosPaternos = {"Quispe", "Mamani", "Condori", "Flores", "Rojas", "Huamán", "Chávez", "Díaz", "Vargas", "Gutiérrez", "Cruz", "Pérez", "Castillo", "Mendoza", "Luján"};
+        String[] apellidosMaternos = {"Sánchez", "Gómez", "Guerrero", "Ortiz", "Torres", "Silva", "Morales", "Castro", "Salazar", "Herrera", "Medina", "Poma", "Vásquez", "Ramos", "Espinoza"};
+
+        String[] seguros = {"PARTICULAR", "RIMAC", "PACIFICO", "MAPFRE", "SIS", "ESSALUD"};
+        String[] distritos = {"Miraflores", "Jesús María", "San Isidro", "Lince", "Magdalena del Mar", "Surco", "San Borja", "Pueblo Libre", "La Molina", "San Miguel"};
         
         Random r = new Random();
         String pass = passwordEncoder.encode("123123");
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 30; i++) {
+            boolean esVaron = (i % 2 == 0);
+            String pNombre = esVaron ? primerNombreM[i % primerNombreM.length] : primerNombreF[i % primerNombreF.length];
+            String sNombre = esVaron ? segundoNombreM[i % segundoNombreM.length] : segundoNombreF[i % segundoNombreF.length];
+            String apPaterno = apellidosPaternos[i % apellidosPaternos.length];
+            String apMaterno = apellidosMaternos[i % apellidosMaternos.length];
+
+            String nombreCompleto = pNombre + " " + sNombre;
+            String apellidoCompleto = apPaterno + " " + apMaterno;
+
+            // Generar DNI determinista que servirá como Usuario
+            String dni = String.format("%08d", 70000000 + i);
+            String username = dni;
+
             Usuario u = new Usuario();
-            u.setUsername("paciente_gen_" + (i+1));
+            u.setUsername(username);
             u.setPassword(pass);
-            u.setEmail("paciente_gen_" + (i+1) + "@limatambo.com");
+            u.setEmail("paciente" + dni + "@limatambo.com");
             u.setIdRol(3); // Paciente
             u.setEstado(true);
             usuarioRepository.save(u);
 
             Paciente p = new Paciente();
-            p.setNombre(nombres[i]);
-            p.setApellido(apellidos[i]);
-            p.setDni(String.valueOf(70000000 + r.nextInt(9000000)));
+            p.setNombre(nombreCompleto);
+            p.setApellido(apellidoCompleto);
+            p.setDni(dni);
             p.setIdUsuario(u.getIdUsuario());
             p.setTipoSeguro(seguros[r.nextInt(seguros.length)]);
-            p.setDireccion("Av. Las Lomas " + (100 + r.nextInt(500)) + ", Lima");
+            p.setDireccion("Av. Las Lomas " + (100 + i * 50) + ", " + distritos[r.nextInt(distritos.length)]);
             p.setFechaNacimiento(LocalDate.now().minusYears(18 + r.nextInt(50)));
-            p.setTelefono("9" + (10000000 + r.nextInt(89999999)));
+            p.setTelefono("9" + String.format("%08d", 10000000 + i)); // Teléfono único
             pacienteRepository.save(p);
 
             Historial h = new Historial();
             h.setIdPaciente(p.getIdPaciente());
             historialRepository.save(h);
 
-            int numCitas = 1 + r.nextInt(3);
-            for (int j = 0; j < numCitas; j++) {
+            // 1. Citas pasadas generales (4 a 7 citas en los últimos 90 días)
+            int numCitasPasadas = 4 + r.nextInt(4);
+            for (int j = 0; j < numCitasPasadas; j++) {
                 Cita c = new Cita();
                 c.setIdPaciente(p.getIdPaciente());
                 c.setIdMedico(medicos.get(r.nextInt(medicos.size())).getIdMedico());
+                c.setFechaCita(LocalDate.now().minusDays(r.nextInt(90) + 1)); // Últimos 3 meses
+                c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
                 
-                int tipo = r.nextInt(3);
-                if (tipo == 0) { 
-                    c.setFechaCita(LocalDate.now().minusDays(r.nextInt(30) + 1));
-                    c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
+                boolean esAtendida = r.nextInt(10) < 9;
+                if (esAtendida) {
                     c.setEstado("Atendida");
-                    c.setDetalleConsulta("Paciente presentó síntomas generales. Se recetó tratamiento estándar.");
-                } else if (tipo == 1) { 
-                    c.setFechaCita(LocalDate.now().plusDays(r.nextInt(15) + 1));
-                    c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
-                    c.setEstado("Confirmada");
-                } else { 
-                    c.setFechaCita(LocalDate.now().minusDays(r.nextInt(10)));
-                    c.setHoraCita(LocalTime.of(10, 0));
+                    c.setDetalleConsulta("Paciente asistió a consulta de control. Se recetó tratamiento y se indicaron recomendaciones.");
+                } else {
                     c.setEstado("Cancelada");
                 }
                 citaRepository.save(c);
 
-                if (!c.getEstado().equals("Cancelada")) {
+                if (esAtendida) {
                     Pago pago = new Pago();
                     pago.setCita(c);
                     pago.setMonto(BigDecimal.valueOf(100.0 - r.nextInt(30)));
-                    pago.setMetodoPago(r.nextBoolean() ? "Tarjeta" : "Efectivo");
+                    pago.setMetodoPago(r.nextBoolean() ? (r.nextBoolean() ? "Tarjeta" : "Yape") : "Efectivo");
                     pago.setEstado("Pagado");
+                    pago.setFechaPago(c.getFechaCita().atTime(c.getHoraCita()));
                     pagoRepository.save(pago);
                 }
             }
+
+            // 1b. Citas pasadas específicas para rellenar la gráfica de los últimos 7 días (5 a 10 citas por paciente)
+            int numSemanaPasada = 5 + r.nextInt(6); // 5 a 10 citas en la última semana
+            for (int j = 0; j < numSemanaPasada; j++) {
+                Cita c = new Cita();
+                c.setIdPaciente(p.getIdPaciente());
+                c.setIdMedico(medicos.get(r.nextInt(medicos.size())).getIdMedico());
+                c.setFechaCita(LocalDate.now().minusDays(r.nextInt(7) + 1)); // Últimos 7 días (sin incluir hoy)
+                c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
+                
+                boolean esAtendida = r.nextInt(10) < 9;
+                if (esAtendida) {
+                    c.setEstado("Atendida");
+                    c.setDetalleConsulta("Consulta de seguimiento semanal completada.");
+                } else {
+                    c.setEstado("Cancelada");
+                }
+                citaRepository.save(c);
+
+                if (esAtendida) {
+                    Pago pago = new Pago();
+                    pago.setCita(c);
+                    pago.setMonto(BigDecimal.valueOf(100.0 - r.nextInt(30)));
+                    pago.setMetodoPago(r.nextBoolean() ? (r.nextBoolean() ? "Tarjeta" : "Yape") : "Efectivo");
+                    pago.setEstado("Pagado");
+                    pago.setFechaPago(c.getFechaCita().atTime(c.getHoraCita()));
+                    pagoRepository.save(pago);
+                }
+            }
+
+            // 2. Citas para hoy (3 a 5)
+            int numCitasHoy = 3 + r.nextInt(3); // 3, 4, 5
+            for (int j = 0; j < numCitasHoy; j++) {
+                Cita c = new Cita();
+                c.setIdPaciente(p.getIdPaciente());
+                c.setIdMedico(medicos.get(r.nextInt(medicos.size())).getIdMedico());
+                c.setFechaCita(LocalDate.now());
+                c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
+                
+                int hoyEstado = r.nextInt(3);
+                if (hoyEstado == 0) {
+                    c.setEstado("Pendiente");
+                } else if (hoyEstado == 1) {
+                    c.setEstado("Atendida");
+                    c.setDetalleConsulta("Consulta médica de hoy completada con éxito.");
+                } else {
+                    c.setEstado("Cancelada");
+                }
+                citaRepository.save(c);
+
+                if (c.getEstado().equals("Atendida")) {
+                    Pago pago = new Pago();
+                    pago.setCita(c);
+                    pago.setMonto(BigDecimal.valueOf(100.0 - r.nextInt(30)));
+                    pago.setMetodoPago(r.nextBoolean() ? (r.nextBoolean() ? "Tarjeta" : "Yape") : "Efectivo");
+                    pago.setEstado("Pagado");
+                    pago.setFechaPago(c.getFechaCita().atTime(c.getHoraCita()));
+                    pagoRepository.save(pago);
+                }
+            }
+
+            // 3. Citas futuras (4 a 6)
+            int numCitasFuturas = 4 + r.nextInt(3); // 4, 5, 6
+            for (int j = 0; j < numCitasFuturas; j++) {
+                Cita c = new Cita();
+                c.setIdPaciente(p.getIdPaciente());
+                c.setIdMedico(medicos.get(r.nextInt(medicos.size())).getIdMedico());
+                c.setFechaCita(LocalDate.now().plusDays(r.nextInt(30) + 1)); // Próximo mes
+                c.setHoraCita(LocalTime.of(8 + r.nextInt(8), 0));
+                c.setEstado(r.nextBoolean() ? "Confirmada" : "Pendiente");
+                citaRepository.save(c);
+            }
+
+            // 4. Compras en farmacia pasadas (2 a 8)
+            int numComprasFarmacia = 2 + r.nextInt(7); // 2 a 8 compras
+            for (int j = 0; j < numComprasFarmacia; j++) {
+                Pago pagoFarmacia = new Pago();
+                pagoFarmacia.setNombreClienteFarmacia(nombreCompleto);
+                pagoFarmacia.setMonto(BigDecimal.valueOf(15.0 + r.nextInt(80))); // Productos aleatorios simulados por monto
+                pagoFarmacia.setMetodoPago(r.nextBoolean() ? (r.nextBoolean() ? "Tarjeta" : "Yape") : "Efectivo");
+                pagoFarmacia.setEstado("Pagado");
+                pagoFarmacia.setFechaPago(LocalDateTime.now().minusDays(r.nextInt(90)).minusHours(r.nextInt(24)));
+                pagoRepository.save(pagoFarmacia);
+            }
         }
         
-        for (int i = 0; i < 5; i++) {
+        // Ventas de farmacia históricas genéricas adicionales
+        for (int i = 0; i < 30; i++) {
             Pago pagoFarmacia = new Pago();
+            pagoFarmacia.setNombreClienteFarmacia("Público en General");
             pagoFarmacia.setMonto(BigDecimal.valueOf(15.0 + r.nextInt(80)));
-            pagoFarmacia.setMetodoPago("Tarjeta (Farmacia)");
+            pagoFarmacia.setMetodoPago(r.nextBoolean() ? "Tarjeta" : "Efectivo");
             pagoFarmacia.setEstado("Pagado");
-            pagoFarmacia.setFechaPago(LocalDateTime.now().minusHours(r.nextInt(48)));
+            pagoFarmacia.setFechaPago(LocalDateTime.now().minusDays(r.nextInt(90)).minusHours(r.nextInt(24)));
             pagoRepository.save(pagoFarmacia);
+        }
+    }
+
+    private void writeCredentialsFile() {
+        try {
+            StringBuilder content = new StringBuilder();
+            content.append("========================================================================\n");
+            content.append("             CLÍNICA LIMATAMBO - CREDENCIALES DEL SISTEMA\n");
+            content.append("========================================================================\n\n");
+            
+            content.append("------------------------------------------------------------------------\n");
+            content.append("1. ADMINISTRADORES Y RECEPCIONISTAS\n");
+            content.append("------------------------------------------------------------------------\n");
+            List<Usuario> admins = usuarioRepository.findAll().stream().filter(u -> u.getIdRol() == 1).collect(Collectors.toList());
+            for (Usuario u : admins) {
+                content.append(String.format("* [ADMIN] - Usuario: %s - Email: %s (Contraseña: admin123 si es el de defecto)\n", u.getUsername(), u.getEmail()));
+            }
+            List<Usuario> recepcionistas = usuarioRepository.findAll().stream().filter(u -> u.getIdRol() == 4).collect(Collectors.toList());
+            for (Usuario u : recepcionistas) {
+                content.append(String.format("* [RECEPCIONISTA] - Usuario: %s - Email: %s (Contraseña: recepcion123 si es el de defecto)\n", u.getUsername(), u.getEmail()));
+            }
+            content.append("\n");
+            
+            content.append("------------------------------------------------------------------------\n");
+            content.append("2. MÉDICOS REGISTRADOS EN LA BASE DE DATOS (Contraseña: medico123 si es de defecto)\n");
+            content.append("------------------------------------------------------------------------\n");
+            List<Medico> medicos = medicoRepository.findAll();
+            for (Medico m : medicos) {
+                String username = "[Sin Usuario]";
+                String email = "[Sin Email]";
+                if (m.getIdUsuario() != null) {
+                    Usuario u = usuarioRepository.findById(m.getIdUsuario()).orElse(null);
+                    if (u != null) {
+                        username = u.getUsername();
+                        email = u.getEmail();
+                    }
+                }
+                content.append(String.format("* Dr(a). %s %s - Usuario: %s - Email: %s\n", m.getNombre(), m.getApellido(), username, email));
+            }
+            content.append("\n");
+            
+            content.append("------------------------------------------------------------------------\n");
+            content.append("3. PACIENTES REGISTRADOS EN LA BASE DE DATOS (Contraseña: 123123 si son autogenerados)\n");
+            content.append("------------------------------------------------------------------------\n");
+            List<Paciente> pacientes = pacienteRepository.findAll();
+            for (Paciente p : pacientes) {
+                String username = "[Sin Usuario]";
+                String email = "[Sin Email]";
+                if (p.getIdUsuario() != null) {
+                    Usuario u = usuarioRepository.findById(p.getIdUsuario()).orElse(null);
+                    if (u != null) {
+                        username = u.getUsername();
+                        email = u.getEmail();
+                    }
+                }
+                content.append(String.format("* %s %s - Usuario: %s - Email: %s\n", p.getNombre(), p.getApellido(), username, email));
+            }
+            
+            java.nio.file.Files.write(
+                java.nio.file.Paths.get("c:/Users/ratab/Documents/Proyectos_WEB/limatambo - copia/credenciales_sistema.txt"),
+                content.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8)
+            );
+        } catch (Exception e) {
+            System.err.println("Error al escribir el archivo de credenciales: " + e.getMessage());
         }
     }
 }

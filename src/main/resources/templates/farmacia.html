@@ -503,7 +503,7 @@
 
             let btnHTML = '';
             if (p.stock === 0) {
-                btnHTML = `<button class="btn-nostock"><i class="bi bi-bell"></i> Avisar cuando haya stock</button>`;
+                btnHTML = `<button class="btn-nostock" onclick="avisarStock()"><i class="bi bi-bell"></i> Avisar cuando haya stock</button>`;
             } else if (!isUnlocked) {
                 btnHTML = `<button class="btn-locked" onclick="document.getElementById('recetaInput').click()"><i class="bi bi-upload"></i> Cargar receta para comprar</button>`;
             } else if (cart[p.id]) {
@@ -566,6 +566,20 @@
             renderProducts();
         }
     });
+
+    function avisarStock() {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Notificación Activada',
+                text: 'Te llegará una notificación a tu correo cuando haya stock.',
+                confirmButtonText: 'Excelente',
+                confirmButtonColor: '#8FB935'
+            });
+        } else {
+            alert('Te llegará una notificación a tu correo cuando haya stock.');
+        }
+    }
 
     // CART LOGIC
     function addToCart(id) {
@@ -1036,7 +1050,7 @@
     });
 </script>
 <!-- Script para interceptar reservas de admin -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" sec:authorize="hasAnyRole('ADMIN', 'MEDICO')"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script sec:authorize="hasAnyRole('ADMIN', 'MEDICO')">
     document.addEventListener("DOMContentLoaded", function() {
         var links = document.querySelectorAll('a[href$="/paciente/reservar"]');

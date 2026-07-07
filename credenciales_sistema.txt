@@ -1,0 +1,79 @@
+========================================================================
+             CLÍNICA LIMATAMBO - CREDENCIALES DEL SISTEMA
+========================================================================
+
+------------------------------------------------------------------------
+1. ADMINISTRADORES Y RECEPCIONISTAS
+------------------------------------------------------------------------
+* [ADMIN] - Usuario: admin01 - Email: null (Contraseña: admin123 si es el de defecto)
+* [ADMIN] - Usuario: admin02 - Email:  (Contraseña: admin123 si es el de defecto)
+
+------------------------------------------------------------------------
+2. MÉDICOS REGISTRADOS EN LA BASE DE DATOS (Contraseña: medico123 si es de defecto)
+------------------------------------------------------------------------
+* Dr(a). Carlos Mendoza - Usuario: 10000001 - Email: null
+* Dr(a). Ana Suárez - Usuario: 10000002 - Email: null
+* Dr(a). Jorge Linares - Usuario: 10000003 - Email: null
+* Dr(a). Elena Vargas - Usuario: 10000004 - Email: null
+* Dr(a). Luis Fernández - Usuario: 20000001 - Email: null
+* Dr(a). Marta Ríos - Usuario: 20000002 - Email: null
+* Dr(a). Pedro Gómez - Usuario: 20000003 - Email: null
+* Dr(a). Sofía Castro - Usuario: 20000004 - Email: null
+* Dr(a). Lucía Martínez - Usuario: 30000001 - Email: null
+* Dr(a). Ricardo Paz - Usuario: 30000002 - Email: null
+* Dr(a). Julia Rojas - Usuario: 30000003 - Email: null
+* Dr(a). Andrés Soto - Usuario: 30000004 - Email: null
+* Dr(a). Carmen Torres - Usuario: 40000001 - Email: null
+* Dr(a). David Ruiz - Usuario: 40000002 - Email: null
+* Dr(a). Valeria Cruz - Usuario: 40000003 - Email: null
+* Dr(a). Héctor Salas - Usuario: 40000004 - Email: null
+* Dr(a). Laura Pérez - Usuario: 50000001 - Email: null
+* Dr(a). Beatriz Luna - Usuario: 50000002 - Email: null
+* Dr(a). Miguel Vega - Usuario: 50000003 - Email: null
+* Dr(a). Rosa Silva - Usuario: 50000004 - Email: null
+* Dr(a). Hugo Quispe - Usuario: 60000001 - Email: null
+* Dr(a). Natalia Ponce - Usuario: 60000002 - Email: null
+* Dr(a). Óscar Díaz - Usuario: 60000003 - Email: null
+* Dr(a). Diana García - Usuario: 60000004 - Email: null
+
+------------------------------------------------------------------------
+3. PACIENTES REGISTRADOS EN LA BASE DE DATOS (Contraseña: 123123 si son autogenerados)
+------------------------------------------------------------------------
+* María González - Usuario: paciente01 - Email: null
+* Fabricio Marcelo Lujan Alfaro - Usuario: 75131514 - Email: draverla2002@gmail.com
+* Gaudy Ximena Alfaro Zavala - Usuario: 02320336 - Email: zavalaximena@gmail.com
+* Sebastian Quispe - Usuario: 72345678 - Email: lujanfm@globalhitss.com
+* Reichel Saavedra - Usuario: 75179016 - Email: adrianzensaa@gmail.com
+* Javier Ars Lujan Alfaro - Usuario: 75151819 - Email: manticora1999@gmail.com
+* test Test - Usuario: 7654321 - Email: kjqnwkjnjksnkjna@gmail.com
+* 5675765 6767 - Usuario: asdxcvf - Email: adxcghvhbjbuygb@gmail.com
+* Juan Marcelo Quispe Sánchez - Usuario: 70000000 - Email: paciente70000000@limatambo.com
+* Ana Isabel Mamani Gómez - Usuario: 70000001 - Email: paciente70000001@limatambo.com
+* Luis Antonio Condori Guerrero - Usuario: 70000002 - Email: paciente70000002@limatambo.com
+* Sofía Cristina Flores Ortiz - Usuario: 70000003 - Email: paciente70000003@limatambo.com
+* José Manuel Rojas Torres - Usuario: 70000004 - Email: paciente70000004@limatambo.com
+* Carmen Cecilia Huamán Silva - Usuario: 70000005 - Email: paciente70000005@limatambo.com
+* Fabricio David Chávez Morales - Usuario: 70000006 - Email: paciente70000006@limatambo.com
+* Luz Victoria Díaz Castro - Usuario: 70000007 - Email: paciente70000007@limatambo.com
+* Víctor Eduardo Vargas Salazar - Usuario: 70000008 - Email: paciente70000008@limatambo.com
+* Julia Inés Gutiérrez Herrera - Usuario: 70000009 - Email: paciente70000009@limatambo.com
+* Marcos Ramón Cruz Medina - Usuario: 70000010 - Email: paciente70000010@limatambo.com
+* Gabriela Mercedes Pérez Poma - Usuario: 70000011 - Email: paciente70000011@limatambo.com
+* Diego Fernando Castillo Vásquez - Usuario: 70000012 - Email: paciente70000012@limatambo.com
+* Sandra Elizabeth Mendoza Ramos - Usuario: 70000013 - Email: paciente70000013@limatambo.com
+* Oscar Jesús Luján Espinoza - Usuario: 70000014 - Email: paciente70000014@limatambo.com
+* María Elena Quispe Sánchez - Usuario: 70000015 - Email: paciente70000015@limatambo.com
+* Carlos Alberto Mamani Gómez - Usuario: 70000016 - Email: paciente70000016@limatambo.com
+* Laura Beatriz Condori Guerrero - Usuario: 70000017 - Email: paciente70000017@limatambo.com
+* Jorge Enrique Flores Ortiz - Usuario: 70000018 - Email: paciente70000018@limatambo.com
+* Lucía Milagros Rojas Torres - Usuario: 70000019 - Email: paciente70000019@limatambo.com
+* Miguel Daniel Huamán Silva - Usuario: 70000020 - Email: paciente70000020@limatambo.com
+* Rosa Patricia Chávez Morales - Usuario: 70000021 - Email: paciente70000021@limatambo.com
+* Pedro Francisco Díaz Castro - Usuario: 70000022 - Email: paciente70000022@limatambo.com
+* Marta Teresa Vargas Salazar - Usuario: 70000023 - Email: paciente70000023@limatambo.com
+* Andrés Ángel Gutiérrez Herrera - Usuario: 70000024 - Email: paciente70000024@limatambo.com
+* Elena Pilar Cruz Medina - Usuario: 70000025 - Email: paciente70000025@limatambo.com
+* Hugo Arturo Pérez Poma - Usuario: 70000026 - Email: paciente70000026@limatambo.com
+* Patricia Esther Castillo Vásquez - Usuario: 70000027 - Email: paciente70000027@limatambo.com
+* Javier Alexander Mendoza Ramos - Usuario: 70000028 - Email: paciente70000028@limatambo.com
+* Diana Carolina Luján Espinoza - Usuario: 70000029 - Email: paciente70000029@limatambo.com

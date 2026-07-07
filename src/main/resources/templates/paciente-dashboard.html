@@ -139,7 +139,7 @@
                                     </div>
                                     <div>
                                         <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombreMedico}">Dr. Nombre</h6>
-                                        <small class="text-muted fw-bold" style="font-size: 10px;">CONSULTA MÉDICA</small>
+                                        <small class="text-muted fw-bold" style="font-size: 10px;" th:text="${'CONSULTA MÉDICA - ' + (dto.especialidad != null ? #strings.toUpperCase(dto.especialidad) : 'CONSULTA GENERAL')}">CONSULTA MÉDICA</small>
                                     </div>
                                 </div>
                                 <div class="badge-status">

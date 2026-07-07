@@ -245,24 +245,6 @@ body {
     color: #ffffff;
 }
 
-/* SCROLLBAR */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--matcha-main);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--matcha-dark);
-}
-
 /* DASHBOARD MODERNIZATION */
 .modern-card {
     border-radius: 20px;
@@ -1111,4 +1093,11 @@ body {
 .btn-outline-secondary-soft:hover {
     background-color: #f8f9fa;
     color: #495057;
+}
+
+/* Prevent unnecessary horizontal scrollbars on responsive tables on desktop */
+@media (min-width: 992px) {
+    .table-responsive {
+        overflow-x: hidden !important;
+    }
 }
