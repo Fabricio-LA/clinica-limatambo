@@ -14,28 +14,27 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-clinica sticky-top shadow-sm bg-white">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-                <i class="bi bi-hospital-fill me-2" style="color: var(--matcha-main);"></i>
-                <span class="fw-bold" style="color: var(--matcha-dark);">LIMATAMBO - Panel Médico</span>
+                <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Logo Limatambo" height="40" class="d-inline-block align-text-top" style="transform: scale(4.8) translateY(1px); transform-origin: left center;">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
-                    <li class="nav-item"><a class="nav-link text-dark" th:href="@{/}">Inicio</a></li>
+                <ul class="navbar-nav mx-auto align-items-center d-none d-lg-flex gap-4">
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link fw-bold px-0" th:href="@{/}" style="color: var(--matcha-dark); border-bottom: 2px solid var(--matcha-dark); line-height: 1;">Inicio</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
                     <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
                     
-                    <li class="nav-item">
-                        <span class="nav-link text-dark fw-bold">
-                            <i class="bi bi-person-badge text-success me-1"></i>
-                            Dr. <span th:text="${medico.nombre + ' ' + medico.apellido}">Nombre</span>
+                    <li class="nav-item d-flex align-items-center">
+                        <span class="text-dark fw-semibold d-flex align-items-center" style="font-size: 0.95rem; margin-right: 1.5rem;">
+                            <i class="bi bi-person-circle fs-5 text-dark align-middle" style="margin-right: 10px !important;"></i> 
+                            Dr. <span th:text="${medico != null ? #strings.arraySplit(medico.nombre, ' ')[0] + ' ' + #strings.arraySplit(medico.apellido, ' ')[0] : 'Médico'}">Médico</span>
                         </span>
-                    </li>
-                    <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
-                        <form th:action="@{/logout}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-outline-danger btn-sm shadow-sm px-3 rounded-pill">Cerrar Sesión</button>
+                        <form th:action="@{/logout}" method="post" class="m-0 d-flex align-items-center">
+                            <button type="submit" class="btn btn-link text-decoration-none fw-bold px-0 m-0" style="color: #c45b5b; font-size: 0.95rem;">Cerrar Sesión</button>
                         </form>
                     </li>
                 </ul>
@@ -46,46 +45,72 @@
     <div class="container py-5">
         <div class="row g-4">
             <div class="col-lg-4">
-                <div class="modern-card border-0 shadow-sm rounded-4 p-4 mb-4 text-center">
-                    <div class="d-inline-flex align-items-center justify-content-center bg-success bg-opacity-10 rounded-circle mb-3 mx-auto" style="width: 80px; height: 80px;">
-                        <i class="bi bi-journal-medical fs-1 text-success"></i>
+                <!-- Perfil Médico -->
+                <div class="modern-card border shadow-sm rounded-4 p-4 mb-4 text-center bg-white" style="border-color: #eaeaea !important;">
+                    <div class="position-relative d-inline-block mb-3">
+                        <img th:src="@{/images/doctores/} + ${medico.fotoPerfil != null ? medico.fotoPerfil : 'default-doctor.png'}" 
+                             alt="Doctor" class="rounded-circle border" style="width: 90px; height: 90px; object-fit: cover; border-color: #eaeaea !important; padding: 2px;">
+                        <i class="bi bi-check-circle-fill text-success position-absolute" style="bottom: 0; right: 0; font-size: 1.2rem; background: white; border-radius: 50%;"></i>
                     </div>
-                    <h5 class="fw-bold mb-1">Citas para Hoy</h5>
-                    <h2 class="fw-bold text-dark mb-0" th:text="${totalCitasHoy}">0</h2>
+                    <h5 class="fw-bold mb-1 text-dark">Dr. <span th:text="${medico.nombre + ' ' + medico.apellido}">Nombre</span></h5>
+                    <p class="text-muted small mb-3" th:text="${especialidadNombre}">Especialidad</p>
+                    
+                    <hr class="border-light opacity-50">
+                    
+                    <div class="d-flex justify-content-around text-center mt-3">
+                        <div>
+                            <small class="text-muted fw-bold" style="font-size: 10px; letter-spacing: 1px;">CITAS HOY</small>
+                            <h3 class="fw-bold mb-0" style="color: var(--matcha-dark);" th:text="${totalCitasHoy}">0</h3>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold" style="font-size: 10px; letter-spacing: 1px;">ATENDIDOS</small>
+                            <h3 class="fw-bold text-dark mb-0" th:text="${totalAtendidosHoy}">0</h3>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="modern-card border-0 shadow-sm rounded-4 p-4 mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-muted mb-0"><i class="bi bi-clock-history me-2"></i>Mi Horario</h6>
-                        <button class="btn btn-sm btn-outline-success rounded-pill" data-bs-toggle="modal" data-bs-target="#modalHorario"><i class="bi bi-pencil-square"></i></button>
+                <!-- Mi Horario -->
+                <div class="modern-card border shadow-sm rounded-4 p-4 mb-4 bg-white" style="border-color: #eaeaea !important;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h6 class="fw-bold text-dark mb-0">
+                            <i class="bi bi-clock me-2" style="color: var(--matcha-dark);"></i>Mi Horario
+                        </h6>
+                        <button class="btn btn-sm text-dark p-0" data-bs-toggle="modal" data-bs-target="#modalHorario">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
                     </div>
-                    <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                    <div class="d-flex justify-content-between mb-3">
                         <span class="small text-muted">Días:</span>
-                        <span class="small fw-bold" th:text="${medico.diasLaborablesTexto}">Lun a Vie</span>
+                        <span class="small text-dark" th:text="${medico.diasLaborablesTexto}">Lun - Vie</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span class="small text-muted">Horas:</span>
-                        <span class="small fw-bold text-success" th:text="${medico.horaInicio + ' - ' + medico.horaFin}">08:00 - 14:00</span>
+                        <span class="small fw-bold" style="color: var(--matcha-dark);" th:text="${medico.horaInicio + ' - ' + medico.horaFin}">08:00 - 14:00</span>
                     </div>
                 </div>
-                <div class="modern-card border-0 shadow-sm rounded-4 p-0 overflow-hidden">
-                    <div class="bg-warning bg-opacity-25 p-3 border-bottom border-warning border-opacity-50">
+
+                <!-- Alertas Recientes -->
+                <div class="modern-card border shadow-sm rounded-4 p-0 overflow-hidden" style="background-color: #fff9e6; border-color: #f1ddb0 !important;">
+                    <div class="p-3 border-bottom" style="background-color: #ffc107; border-color: #f1ddb0 !important;">
                         <h6 class="fw-bold text-dark mb-0">
-                            <i class="bi bi-bell-fill text-warning me-2"></i>Alertas Recientes
+                            <i class="bi bi-exclamation-triangle" style="margin-right: 12px;"></i>Alertas Recientes
                         </h6>
                     </div>
                     <div class="p-3">
-                        <div th:if="${#lists.isEmpty(alertasHoy)}" class="text-center py-3">
-                            <i class="bi bi-check2-circle text-muted fs-3 d-block mb-2"></i>
-                            <small class="text-muted">Todo tranquilo. No hay cancelaciones para el día de hoy.</small>
+                        <div th:if="${#lists.isEmpty(alertasHoy)}" class="text-center py-2">
+                            <small class="text-muted">No hay cancelaciones para el día de hoy.</small>
                         </div>
                         <div class="d-flex flex-column gap-2" th:if="${not #lists.isEmpty(alertasHoy)}">
-                            <div th:each="alerta : ${alertasHoy}" class="alert alert-warning mb-0 p-2 small border-0 d-flex align-items-start rounded-3 position-relative">
-                                <i class="bi bi-exclamation-triangle-fill text-warning-emphasis me-2 mt-1"></i>
-                                <div class="pe-3">
-                                    <strong th:text="${alerta.nombrePaciente}">Paciente</strong> ha modificado o cancelado su cita del <strong th:text="${alerta.cita.fechaCita}"></strong> a las <strong th:text="${alerta.cita.horaCita}">00:00</strong>.
-                                    <form th:action="@{/citas/descartar-alerta/{id}(id=${alerta.cita.idCita})}" method="post" class="position-absolute top-0 end-0 mt-1 me-1">
-                                        <button type="submit" class="btn btn-sm btn-link text-muted p-0" title="Descartar alerta"><i class="bi bi-x fs-5"></i></button>
+                            <div th:each="alerta : ${alertasHoy}" class="mb-0 small d-flex flex-column rounded-3 position-relative">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-exclamation-circle text-warning mt-1" style="margin-right: 12px;"></i>
+                                    <div class="pe-1 text-dark" style="font-size: 13px;">
+                                        <strong th:text="${alerta.nombrePaciente}">Paciente</strong> ha modificado o cancelado su cita del <strong th:text="${alerta.cita.fechaCita}"></strong> a las <strong th:text="${alerta.cita.horaCita}">00:00</strong>.
+                                    </div>
+                                </div>
+                                <div class="text-end mt-2">
+                                    <form th:action="@{/citas/descartar-alerta/{id}(id=${alerta.cita.idCita})}" method="post" class="m-0">
+                                        <button type="submit" class="btn btn-sm btn-link p-0 text-decoration-none" style="color: #f39c12; font-size: 12px;">Marcar como leído</button>
                                     </form>
                                 </div>
                             </div>
@@ -114,65 +139,60 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
 
-                <div th:if="${#lists.isEmpty(citasHoy)}" class="alert alert-light border border-success border-opacity-25 rounded-4 p-5 text-center shadow-sm">
-                    <i class="bi bi-calendar-check fs-1 text-muted mb-3"></i>
-                    <h5 class="fw-bold text-secondary">Agenda libre</h5>
-                    <p class="text-muted small">No tienes pacientes programados para el día de hoy.</p>
+                <div th:if="${#lists.isEmpty(citasHoy)}" class="modern-card border shadow-sm rounded-4 p-5 text-center bg-white" style="border-color: #eaeaea !important;">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3 mx-auto" style="width: 70px; height: 70px; background-color: #e8f5e9;">
+                        <i class="bi bi-calendar-check fs-2" style="color: var(--matcha-main);"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">Agenda libre</h5>
+                    <p class="text-muted small mb-0">No tienes pacientes programados para este momento del día.</p>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-12" th:each="dto : ${citasHoy}">
-                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden" th:classappend="${dto.cita.estado == 'Atendida' || dto.cita.estado == 'Ausente'} ? 'opacity-50' : ''">
-                            <div class="card-body p-4 position-relative">
-                                
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
-                                            <i class="bi bi-person-fill fs-3 text-success"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h5>
-                                            <small class="text-muted fw-bold" style="letter-spacing: 0.5px;" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' | Edad: ' + ${dto.edadPaciente != null ? dto.edadPaciente + ' años' : '-'}">DNI | Edad</small>
-                                        </div>
-                                    </div>
-                                    <div class="ms-3 flex-shrink-0">
-                                        <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge bg-warning text-dark border shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i>Pendiente</span>
-                                        <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge bg-success shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-check-circle me-1"></i>Confirmada</span>
-                                        <span th:if="${dto.cita.estado == 'Atendida'}" class="badge bg-primary shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-clipboard-check me-1"></i>Completada</span>
-                                        <span th:if="${dto.cita.estado == 'Ausente'}" class="badge bg-secondary shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-person-x me-1"></i>Ausente</span>
-                                    </div>
+                <div class="d-flex flex-column gap-3">
+                    <div th:each="dto : ${citasHoy}">
+                        <div class="modern-card border shadow-sm rounded-3 p-3 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center" th:classappend="${dto.cita.estado == 'Atendida' || dto.cita.estado == 'Ausente'} ? 'opacity-50' : ''" style="border-color: #eaeaea !important;">
+                            
+                            <!-- Left info -->
+                            <div class="d-flex align-items-center mb-3 mb-md-0" style="gap: 24px;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: #eef2e6;">
+                                    <i class="bi bi-person fs-4" style="color: #5c6c4c;"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h6>
+                                    <small class="text-muted" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' • Edad: ' + ${dto.edadPaciente != null ? dto.edadPaciente + ' años' : '-'}">DNI | Edad</small>
+                                </div>
+                            </div>
+                            
+                            <!-- Right info & actions -->
+                            <div class="d-flex flex-column align-items-md-end gap-2">
+                                <div class="text-dark small d-flex flex-column text-md-end mb-2 mb-md-0">
+                                    <span><i class="bi bi-calendar3" style="margin-right: 12px;"></i><span th:text="${dto.cita.fechaCita}"></span></span>
+                                    <span><i class="bi bi-clock" style="margin-right: 12px;"></i><span th:text="${dto.cita.horaCita}">11:00</span></span>
                                 </div>
                                 
-                                <div class="row g-3 bg-light p-3 rounded-3 mb-3">
-                                    <div class="col-sm-6 d-flex align-items-center">
-                                        <i class="bi bi-clock text-success me-2"></i>
-                                        <span class="fw-bold fs-5 text-dark" th:text="${dto.cita.horaCita}">10:00:00</span>
-                                    </div>
-                                    <div class="col-sm-6 d-flex align-items-center text-end justify-content-end" th:if="${dto.paciente != null && dto.paciente.telefono != null && !dto.paciente.telefono.empty}">
-                                        <i class="bi bi-telephone text-success me-2"></i>
-                                        <span class="text-muted" th:text="${dto.paciente.telefono}">Celular</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex gap-2" th:if="${dto.cita.estado == 'Pendiente' || dto.cita.estado == 'Confirmada'}">
-                                    <button type="button" class="btn btn-primary btn-sm px-4 fw-bold" data-bs-toggle="modal" th:data-bs-target="'#atendidaModal' + ${dto.cita.idCita}">
-                                        <i class="bi bi-clipboard-check me-1"></i> Marcar Completada
+                                <div class="d-flex align-items-center flex-wrap justify-content-md-end" style="gap: 16px;">
+                                    <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge bg-warning text-dark border-0 rounded-pill px-3 py-2"><i class="bi bi-clock-history" style="margin-right: 8px;"></i>Pendiente</span>
+                                    <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge bg-success border-0 rounded-pill px-3 py-2"><i class="bi bi-check-circle" style="margin-right: 8px;"></i>Confirmada</span>
+                                    <span th:if="${dto.cita.estado == 'Atendida'}" class="badge bg-primary border-0 rounded-pill px-3 py-2"><i class="bi bi-clipboard-check" style="margin-right: 8px;"></i>Completada</span>
+                                    <span th:if="${dto.cita.estado == 'Ausente'}" class="badge bg-secondary border-0 rounded-pill px-3 py-2"><i class="bi bi-person-x" style="margin-right: 8px;"></i>Ausente</span>
+                                    
+                                    <button th:if="${dto.cita.estado == 'Pendiente' || dto.cita.estado == 'Confirmada'}" type="button" class="btn btn-outline-success btn-sm rounded-pill px-3 py-1" data-bs-toggle="modal" th:data-bs-target="'#atendidaModal' + ${dto.cita.idCita}">
+                                        <i class="bi bi-clipboard-check" style="margin-right: 8px;"></i> Marcar Completada
                                     </button>
                                     
-                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
+                                    <form th:if="${dto.cita.estado == 'Pendiente' || dto.cita.estado == 'Confirmada'}" th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post" class="m-0">
                                         <input type="hidden" name="nuevoEstado" value="Ausente">
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm px-3" onclick="return confirm('\u00bfConfirmar que el paciente no se present\u00f3 a su consulta?');">
-                                            <i class="bi bi-person-x me-1"></i> Ausente
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-1" onclick="return confirm('\u00bfConfirmar que el paciente no se present\u00f3 a su consulta?');">
+                                            <i class="bi bi-person-x" style="margin-right: 8px;"></i> Ausente
                                         </button>
                                     </form>
 
-                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
+                                    <form th:if="${dto.cita.estado == 'Pendiente' || dto.cita.estado == 'Confirmada'}" th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post" class="m-0">
                                         <input type="hidden" name="nuevoEstado" value="Cancelada_Medico">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita por urgencia m\u00e9dica?');">
-                                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3 py-1" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita por urgencia m\u00e9dica?');">
+                                            <i class="bi bi-x-circle" style="margin-right: 8px;"></i> Cancelar
                                         </button>
                                     </form>
                                 </div>
-                                
                             </div>
                         </div>
                         
@@ -204,63 +224,56 @@
 
                     </div>
                 </div>
-                <h4 class="fw-bold mt-5 mb-4" style="color: var(--matcha-dark)">Próximas Citas</h4>
+                
+                <div class="mt-5 mb-3">
+                    <h5 class="fw-bold mb-0 text-dark">Próximas Citas</h5>
+                </div>
                 
                 <div th:if="${#lists.isEmpty(citasProximas)}" class="alert alert-light border border-success border-opacity-25 rounded-4 p-4 text-center shadow-sm">
                     <i class="bi bi-calendar-event fs-2 text-muted mb-2 d-block"></i>
                     <p class="text-muted small mb-0">No tienes citas programadas para el futuro.</p>
                 </div>
                 
-                <div class="row g-3">
-                    <div class="col-12" th:each="dto : ${citasProximas}">
-                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden">
-                            <div class="card-body p-4 position-relative">
-                                
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 50px; height: 50px;">
-                                            <i class="bi bi-person-fill fs-3 text-secondary"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h5>
-                                            <small class="text-muted fw-bold" style="letter-spacing: 0.5px;" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' | Edad: ' + ${dto.edadPaciente != null ? dto.edadPaciente + ' años' : '-'}">DNI | Edad</small>
-                                        </div>
-                                    </div>
-                                    <div class="ms-3 flex-shrink-0">
-                                        <span class="badge bg-light text-dark border shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-calendar-check me-1"></i>Programada</span>
-                                    </div>
+                <div class="d-flex flex-column gap-3">
+                    <div th:each="dto : ${citasProximas}">
+                        <div class="modern-card border shadow-sm rounded-3 p-3 bg-white d-flex flex-column flex-md-row justify-content-between align-items-md-center" style="border-color: #eaeaea !important;">
+                            
+                            <!-- Left info -->
+                            <div class="d-flex align-items-center mb-3 mb-md-0" style="gap: 24px;">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 45px; height: 45px; background-color: #eef2e6;">
+                                    <i class="bi bi-person fs-4" style="color: #5c6c4c;"></i>
                                 </div>
-                                
-                                <div class="row g-3 bg-light p-3 rounded-3 mb-3">
-                                    <div class="col-sm-6 d-flex align-items-center">
-                                        <i class="bi bi-calendar3 text-secondary me-2"></i>
-                                        <span class="fw-bold text-dark" th:text="${dto.cita.fechaCita}">2026-05-15</span>
-                                    </div>
-                                    <div class="col-sm-6 d-flex align-items-center text-end justify-content-end">
-                                        <i class="bi bi-clock text-secondary me-2"></i>
-                                        <span class="fw-bold text-dark" th:text="${dto.cita.horaCita}">10:00:00</span>
-                                    </div>
+                                <div>
+                                    <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h6>
+                                    <small class="text-muted" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' • Edad: ' + ${dto.edadPaciente != null ? dto.edadPaciente + ' años' : '-'}">DNI | Edad</small>
                                 </div>
-
-                                <div class="d-flex gap-2">
-                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post">
+                            </div>
+                            
+                            <!-- Right info & actions -->
+                            <div class="d-flex flex-column align-items-md-end gap-2">
+                                <div class="text-dark small d-flex flex-column text-md-end mb-2 mb-md-0">
+                                    <span><i class="bi bi-calendar3" style="margin-right: 12px;"></i><span th:text="${dto.cita.fechaCita}">2026-07-18</span></span>
+                                    <span><i class="bi bi-clock" style="margin-right: 12px;"></i><span th:text="${dto.cita.horaCita}">11:00</span></span>
+                                </div>
+                                <div class="d-flex align-items-center" style="gap: 16px;">
+                                    <span class="badge border-0 rounded-pill px-3 py-2" style="background-color: #eef2e6; color: #5c6c4c;"><i class="bi bi-journal-text" style="margin-right: 8px;"></i>Programada</span>
+                                    <form th:action="@{/citas/estado/{id}(id=${dto.cita.idCita})}" method="post" class="m-0">
                                         <input type="hidden" name="nuevoEstado" value="Cancelada_Medico">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita programada por urgencia m\u00e9dica?');">
-                                            <i class="bi bi-x-circle me-1"></i> Cancelar por Urgencia
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1" onclick="return confirm('\u00bfSeguro que deseas cancelar esta cita por urgencia m\u00e9dica?');">
+                                            <i class="bi bi-x-circle" style="margin-right: 8px;"></i> Cancelar por Urgencia
                                         </button>
                                     </form>
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-5 mb-4 flex-wrap gap-3">
-                    <h4 class="fw-bold mb-0" style="color: var(--matcha-dark)">Historial de Pacientes Atendidos</h4>
-                    <div class="input-group" style="max-width: 300px;">
-                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                        <input type="text" id="buscadorAtendidas" class="form-control border-start-0 ps-0" placeholder="Buscar por DNI o Nombre...">
+                <div class="d-flex justify-content-between align-items-center mt-5 mb-3 flex-wrap gap-3">
+                    <h5 class="fw-bold mb-0 text-dark">Historial de Pacientes Atendidos</h5>
+                    <div class="input-group input-group-sm border rounded-3 overflow-hidden" style="max-width: 250px; background-color: #f9f9f9; border-color: #eaeaea !important;">
+                        <span class="input-group-text bg-transparent border-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" id="buscadorAtendidas" class="form-control bg-transparent border-0 shadow-none px-0" placeholder="Buscar por DNI o Nombre...">
                     </div>
                 </div>
                 
@@ -269,26 +282,24 @@
                     <p class="text-muted small mb-0">No hay historial de citas atendidas aún.</p>
                 </div>
                 
-                <div class="row g-3" id="listaAtendidas">
-                    <div class="col-12 cita-atendida-item" th:each="dto : ${citasAtendidas}">
-                        <div class="modern-card border-0 shadow-sm rounded-4 overflow-hidden opacity-75" th:data-busqueda="${#strings.toLowerCase(dto.nombrePaciente + ' ' + (dto.paciente != null ? dto.paciente.dni : ''))}">
-                            <div class="card-body p-3 position-relative">
-                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-secondary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                                            <i class="bi bi-person-fill fs-5 text-secondary"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h6>
-                                            <small class="text-muted" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' | ' + ${dto.cita.fechaCita} + ' | ' + ${dto.cita.horaCita}">DNI | Fecha | Hora</small>
-                                        </div>
+                <div class="d-flex flex-column gap-3" id="listaAtendidas">
+                    <div class="cita-atendida-item" th:each="dto : ${citasAtendidas}">
+                        <div class="modern-card border shadow-sm rounded-3 p-3 bg-white" th:data-busqueda="${#strings.toLowerCase(dto.nombrePaciente + ' ' + (dto.paciente != null ? dto.paciente.dni : ''))}" style="border-color: #eaeaea !important;">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                <div class="d-flex align-items-center" style="gap: 24px;">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px; background-color: #eef2e6;">
+                                        <i class="bi bi-person fs-5" style="color: #5c6c4c;"></i>
                                     </div>
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <span class="badge bg-secondary shadow-sm px-3 py-2 rounded-pill"><i class="bi bi-check2-all me-1"></i>Atendida</span>
-                                        <button type="button" th:if="${dto.cita.detalleConsulta != null}" class="btn btn-outline-primary btn-sm px-3 shadow-sm fw-bold rounded-pill" data-bs-toggle="modal" th:data-bs-target="'#detalleModalMedico' + ${dto.cita.idCita}">
-                                            <i class="bi bi-file-medical me-1"></i> Ver Detalle
-                                        </button>
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark" th:text="${dto.nombrePaciente}">Nombre Paciente</h6>
+                                        <small class="text-muted" style="font-size: 12px;" th:text="'DNI: ' + ${dto.paciente != null ? dto.paciente.dni : '-'} + ' • ' + ${dto.cita.fechaCita} + ' | ' + ${dto.cita.horaCita}">DNI | Fecha | Hora</small>
                                     </div>
+                                </div>
+                                <div class="d-flex align-items-center" style="gap: 16px;">
+                                    <span class="badge bg-secondary text-white border-0 rounded-pill px-3 py-2"><i class="bi bi-check2" style="margin-right: 8px;"></i>Atendida</span>
+                                    <button type="button" th:if="${dto.cita.detalleConsulta != null}" class="btn btn-sm btn-outline-success rounded-pill px-3 py-1 fw-bold" data-bs-toggle="modal" th:data-bs-target="'#detalleModalMedico' + ${dto.cita.idCita}">
+                                        <i class="bi bi-eye" style="margin-right: 8px;"></i> Ver Detalle
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -311,7 +322,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 

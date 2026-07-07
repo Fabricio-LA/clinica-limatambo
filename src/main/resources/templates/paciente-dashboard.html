@@ -15,31 +15,31 @@
     <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #fcfdfa; border-bottom: 1px solid #e0e0e0;">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-                <span class="fw-bold fs-4" style="color: var(--matcha-dark);">LIMATAMBO</span>
+                <img th:src="@{/images/LOGO_LIMATAMBO.png}" alt="Logo Limatambo" height="40" class="d-inline-block align-text-top" style="transform: scale(4.8) translateY(1px); transform-origin: left center;">
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto align-items-center d-none d-lg-flex gap-4">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold px-0" th:href="@{/}" style="color: var(--matcha-dark); border-bottom: 2px solid var(--matcha-dark);">Inicio</a>
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="nav-link fw-bold px-0" th:href="@{/}" style="color: var(--matcha-dark); border-bottom: 2px solid var(--matcha-dark); line-height: 1;">Inicio</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-secondary border rounded-pill px-3 py-1" th:href="@{/farmacia}" style="background-color: transparent; border-color: #c4c4c4 !important; font-size: 0.9rem;">Farmacia</a>
+                    <li class="nav-item d-flex align-items-center" style="margin-left: 2.5rem !important;">
+                        <a class="nav-link text-secondary border px-3 py-1 m-0" th:href="@{/farmacia}" style="background-color: transparent; border-color: #c4c4c4 !important; border-radius: 50px !important; font-size: 0.9rem; line-height: 1;">Farmacia</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto align-items-center gap-3 mt-3 mt-lg-0">
                     <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-dark fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
                     <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-dark fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
                     
-                    <li class="nav-item d-flex align-items-center gap-3">
-                        <span class="text-dark fw-semibold" style="font-size: 0.95rem;">
-                            <i class="bi bi-person-circle fs-5 me-1 text-dark align-middle"></i> 
-                            <span th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Paciente'}">Paciente</span>
+                    <li class="nav-item d-flex align-items-center">
+                        <span class="text-dark fw-semibold d-flex align-items-center" style="font-size: 0.95rem; margin-right: 1.5rem;">
+                            <i class="bi bi-person-circle fs-5 text-dark align-middle" style="margin-right: 10px !important;"></i> 
+                            <span th:text="${paciente != null ? #strings.arraySplit(paciente.nombre, ' ')[0] + ' ' + #strings.arraySplit(paciente.apellido, ' ')[0] : 'Paciente'}">Paciente</span>
                         </span>
-                        <form th:action="@{/logout}" method="post" class="m-0">
-                            <button type="submit" class="btn btn-link text-decoration-none fw-bold px-0" style="color: #c45b5b; font-size: 0.95rem;">Cerrar Sesión</button>
+                        <form th:action="@{/logout}" method="post" class="m-0 d-flex align-items-center">
+                            <button type="submit" class="btn btn-link text-decoration-none fw-bold px-0 m-0" style="color: #c45b5b; font-size: 0.95rem;">Cerrar Sesión</button>
                         </form>
                     </li>
                 </ul>
@@ -76,7 +76,7 @@
             <div class="col-lg-3">
                 <div class="border text-center p-4 mb-4" style="background-color: #f2f6e9; border-color: #e0e0e0 !important; border-radius: 25px;">
                     <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle mb-3 mx-auto overflow-hidden shadow-sm" style="width: 120px; height: 120px; border: 3px solid var(--matcha-main);">
-                        <img th:if="${paciente.fotoPerfil != null}" th:src="@{${paciente.fotoPerfil}}" class="w-100 h-100 object-fit-cover" alt="Foto de perfil">
+                        <img th:if="${paciente.fotoPerfil != null}" th:src="@{${paciente.fotoPerfil}}" class="w-100 h-100 object-fit-cover rounded-circle" alt="Foto de perfil">
                         <i th:unless="${paciente.fotoPerfil != null}" class="bi bi-person-fill" style="font-size: 4rem; color: var(--matcha-main);"></i>
                     </div>
                     <h5 class="fw-bold mb-1" style="color: #212529;" th:text="${paciente != null ? paciente.nombre + ' ' + paciente.apellido : 'Mi Perfil'}">Mi Perfil</h5>
@@ -143,21 +143,21 @@
                                     </div>
                                 </div>
                                 <div class="badge-status">
-                                    <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-clock me-1"></i>Pendiente</span>
-                                    <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge badge-soft-success px-3 py-1 rounded-pill"><i class="bi bi-check-circle me-1"></i>Confirmada</span>
-                                    <span th:if="${dto.cita.estado == 'Cancelada'}" class="badge badge-soft-danger px-3 py-1 rounded-pill"><i class="bi bi-x-circle me-1"></i>Cancelada</span>
-                                    <span th:if="${dto.cita.estado == 'Cancelada_Medico'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-exclamation-circle me-1"></i>Reprogramar</span>
-                                    <span th:if="${dto.cita.estado == 'Atendida'}" class="badge badge-soft-primary px-3 py-1 rounded-pill"><i class="bi bi-clipboard-check me-1"></i>Atendida</span>
+                                    <span th:if="${dto.cita.estado == 'Pendiente'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-clock" style="margin-right: 6px;"></i>Pendiente</span>
+                                    <span th:if="${dto.cita.estado == 'Confirmada'}" class="badge badge-soft-success px-3 py-1 rounded-pill"><i class="bi bi-check-circle" style="margin-right: 6px;"></i>Confirmada</span>
+                                    <span th:if="${dto.cita.estado == 'Cancelada'}" class="badge badge-soft-danger px-3 py-1 rounded-pill"><i class="bi bi-x-circle" style="margin-right: 6px;"></i>Cancelada</span>
+                                    <span th:if="${dto.cita.estado == 'Cancelada_Medico'}" class="badge badge-soft-warning px-3 py-1 rounded-pill"><i class="bi bi-exclamation-circle" style="margin-right: 6px;"></i>Reprogramar</span>
+                                    <span th:if="${dto.cita.estado == 'Atendida'}" class="badge badge-soft-primary px-3 py-1 rounded-pill"><i class="bi bi-clipboard-check" style="margin-right: 6px;"></i>Atendida</span>
                                 </div>
                             </div>
                             
                             <div class="fecha-box">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-calendar3" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a;' : 'color: var(--matcha-main);'}"></i>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar3" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a; margin-right: 8px;' : 'color: var(--matcha-main); margin-right: 8px;'}"></i>
                                     <span class="fw-bold text-secondary small" th:text="${dto.cita.fechaCita}">2026-05-15</span>
                                 </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="bi bi-clock" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a;' : 'color: var(--matcha-main);'}"></i>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock" th:style="${dto.cita.estado == 'Cancelada' ? 'color: #a71d2a; margin-right: 8px;' : 'color: var(--matcha-main); margin-right: 8px;'}"></i>
                                     <span class="fw-bold text-secondary small" th:text="${dto.cita.horaCita}">10:00:00</span>
                                 </div>
                             </div>

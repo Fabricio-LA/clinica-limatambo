@@ -51,26 +51,28 @@
 <nav class="navbar navbar-expand-lg navbar-dark border-bottom sticky-top" style="background-color: var(--matcha-dark);">
     <div class="container-fluid mx-3">
         <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <i class="bi bi-heart-pulse-fill text-white fs-3 me-2"></i>
-            <span class="fw-bold text-white tracking-wide">LIMATAMBO <span style="color: var(--matcha-light);">ADMIN</span></span>
+            <img th:src="@{/images/LOGO_LIMATAMBO_ALTOCONTRASTE.png}" alt="Logo Limatambo" height="40" class="d-inline-block align-text-top" style="transform: scale(4.8) translateY(1px); transform-origin: left center;">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto ms-4 align-items-center d-none d-lg-flex gap-2">
-                <li class="nav-item"><a class="nav-link text-white opacity-75" th:href="@{/}">Inicio</a></li>
+            <ul class="navbar-nav mx-auto align-items-center d-none d-lg-flex gap-4">
+                <li class="nav-item d-flex align-items-center">
+                    <a class="nav-link fw-bold px-0 text-white" th:href="@{/}" style="border-bottom: 2px solid white; line-height: 1;">Inicio</a>
+                </li>
             </ul>
             <ul class="navbar-nav ms-auto align-items-center gap-2 mt-3 mt-lg-0">
                 <li class="nav-item d-lg-none w-100 text-center"><a class="nav-link text-white fw-semibold" th:href="@{/}"><i class="bi bi-house me-1"></i> Inicio</a></li>
                 <li class="nav-item d-lg-none w-100 text-center mb-2"><a class="nav-link text-white fw-semibold" th:href="@{/farmacia}"><i class="bi bi-bag me-1"></i> Farmacia</a></li>
                 
-                <li class="nav-item text-light me-lg-4">
-                    <i class="bi bi-person-circle me-1"></i> <span sec:authentication="name">admin</span>
-                </li>
-                <li class="nav-item mt-2 mt-lg-0">
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-light btn-sm px-4 rounded-pill w-100">Salir</button>
+                <li class="nav-item d-flex align-items-center">
+                    <span class="text-white fw-semibold d-flex align-items-center" style="font-size: 0.95rem; margin-right: 1.5rem;">
+                        <i class="bi bi-person-circle fs-5 text-white align-middle" style="margin-right: 10px !important;"></i> 
+                        <span sec:authentication="name">admin</span>
+                    </span>
+                    <form th:action="@{/logout}" method="post" class="m-0 d-flex align-items-center">
+                        <button type="submit" class="btn btn-link text-decoration-none fw-bold px-0 m-0" style="color: #ff9b9b; font-size: 0.95rem;">Cerrar Sesión</button>
                     </form>
                 </li>
             </ul>

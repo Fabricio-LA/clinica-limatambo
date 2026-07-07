@@ -9,6 +9,8 @@ import com.clinica.limatambo.repository.MedicoRepository;
 import com.clinica.limatambo.repository.PacienteRepository;
 import com.clinica.limatambo.repository.UsuarioRepository;
 import com.clinica.limatambo.repository.PagoRepository;
+import com.clinica.limatambo.repository.EspecialidadRepository;
+import com.clinica.limatambo.model.Especialidad;
 import com.clinica.limatambo.model.Pago;
 import com.clinica.limatambo.service.DescuentoService;
 import java.math.BigDecimal;
@@ -45,8 +47,29 @@ public class CitaController {
     private MedicoRepository medicoRepository;
     
     @Autowired
+    private EspecialidadRepository especialidadRepository;
+    
+    @Autowired
     private com.clinica.limatambo.service.EmailService emailService;
     
+    private double obtenerTarifaBase(String nombreEspecialidad) {
+        if (nombreEspecialidad == null) return 100.0;
+        switch (nombreEspecialidad.toLowerCase()) {
+            case "medicina general": return 80.0;
+            case "odontología":
+            case "odontologia": return 90.0;
+            case "pediatría":
+            case "pediatria": return 100.0;
+            case "dermatología":
+            case "dermatologia": return 110.0;
+            case "cardiología":
+            case "cardiologia": return 120.0;
+            case "ginecología":
+            case "ginecologia": return 120.0;
+            default: return 100.0;
+        }
+    }
+
     private boolean esHorarioValido(Integer idMedico, LocalDate fecha, LocalTime hora) {
         Optional<Medico> medicoOpt = medicoRepository.findById(idMedico);
         if (!medicoOpt.isPresent()) return false;
@@ -89,6 +112,13 @@ public class CitaController {
 
                     // Create Pago for the appointment
                     double tarifaBase = 100.0;
+                    Optional<Medico> mOpt = medicoRepository.findById(cita.getIdMedico());
+                    if (mOpt.isPresent()) {
+                        Optional<Especialidad> eOpt = especialidadRepository.findById(mOpt.get().getIdEspecialidad());
+                        if (eOpt.isPresent()) {
+                            tarifaBase = obtenerTarifaBase(eOpt.get().getNombreEspecialidad());
+                        }
+                    }
                     double desc = 0.0;
                     if (p.getTipoSeguro() != null && !p.getTipoSeguro().isEmpty()) {
                         desc = descuentoService.obtenerPorcentajeDescuento(p.getTipoSeguro().toUpperCase());

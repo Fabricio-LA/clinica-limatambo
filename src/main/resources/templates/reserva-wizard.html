@@ -208,7 +208,7 @@
                             <div class="mt-4 pt-4 px-2" style="border-top: 1px dashed #ccc;">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="text-muted">Tarifa de Consulta:</span>
-                                    <span class="text-dark">S/ 100.00</span>
+                                    <span class="text-dark" id="tarifaBaseMonto">S/ 100.00</span>
                                 </div>
                                 <div class="justify-content-between align-items-center mb-3 d-none" id="coberturaSeguroContainer">
                                     <span class="text-muted">Cobertura Seguro (<span id="nombreSeguroLabel" th:text="${tipoSeguro} + ' ' + ${#numbers.formatDecimal(descuentoSeguro * 100, 0, 0)} + '%'">Ninguno</span>):</span>
@@ -254,6 +254,21 @@
         let medName = "";
         let espIconHtml = "";
         let flatpickrInstance = null;
+        let tarifaSeleccionada = 100.00;
+
+        const preciosEspecialidad = {
+            "medicina general": 80.00,
+            "odontología": 90.00,
+            "odontologia": 90.00,
+            "pediatría": 100.00,
+            "pediatria": 100.00,
+            "dermatología": 110.00,
+            "dermatologia": 110.00,
+            "cardiología": 120.00,
+            "cardiologia": 120.00,
+            "ginecología": 120.00,
+            "ginecologia": 120.00
+        };
 
         function selectEspecialidad(element) {
             document.querySelectorAll('#step1 .card-especialidad-v2').forEach(c => c.classList.remove('selected'));
@@ -261,6 +276,9 @@
             document.getElementById('inputEspecialidad').value = element.getAttribute('data-id');
             espName = element.getAttribute('data-name');
             espIconHtml = element.querySelector('.icon-box-v2').innerHTML;
+            
+            const nameLower = espName ? espName.toLowerCase() : "";
+            tarifaSeleccionada = preciosEspecialidad[nameLower] || 100.00;
             
             let btnNext = document.getElementById('btnNext1');
             btnNext.disabled = false;
@@ -454,7 +472,9 @@
                 hour = hour ? hour : 12; 
                 document.getElementById('resumenHora').innerText = (hour < 10 ? '0'+hour : hour) + ':' + min + ' ' + ampm;
                 
-                const tarifaBase = 100.00;
+                const tarifaBase = tarifaSeleccionada;
+                document.getElementById('tarifaBaseMonto').innerText = 'S/ ' + tarifaBase.toFixed(2);
+                
                 const porcentajeDescuento = /*[[${descuentoSeguro}]]*/ 0;
                 const tipoSeguroStr = /*[[${tipoSeguro}]]*/ 'Ninguno';
                 

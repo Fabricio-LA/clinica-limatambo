@@ -8,6 +8,8 @@ import com.clinica.limatambo.repository.CitaRepository;
 import com.clinica.limatambo.repository.MedicoRepository;
 import com.clinica.limatambo.repository.PacienteRepository;
 import com.clinica.limatambo.repository.UsuarioRepository;
+import com.clinica.limatambo.repository.EspecialidadRepository;
+import com.clinica.limatambo.model.Especialidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -46,6 +48,9 @@ public class DashboardController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private EspecialidadRepository especialidadRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
 
@@ -65,6 +70,16 @@ public class DashboardController {
                 List<CitaDTO> alertasHoy = new ArrayList<>();
                 List<CitaDTO> citasProximas = new ArrayList<>();
                 List<CitaDTO> citasAtendidas = new ArrayList<>();
+                
+                int totalAtendidosHoy = 0;
+                
+                String especialidadNombre = "Especialidad no definida";
+                if (medico.getIdEspecialidad() != null) {
+                    Optional<Especialidad> espOpt = especialidadRepository.findById(medico.getIdEspecialidad());
+                    if (espOpt.isPresent()) {
+                        especialidadNombre = espOpt.get().getNombreEspecialidad();
+                    }
+                }
                 
                 for (Cita cita : citas) {
                     Paciente pacienteObj = null;
@@ -90,6 +105,9 @@ public class DashboardController {
                     
                     if ("Atendida".equals(cita.getEstado())) {
                         citasAtendidas.add(dto);
+                        if (cita.getFechaCita().equals(hoy)) {
+                            totalAtendidosHoy++;
+                        }
                     } else if (cita.getFechaCita().equals(hoy)) {
                         if (!"Cancelada".equals(cita.getEstado()) && !"Cancelada_Medico".equals(cita.getEstado())) {
                             citasHoy.add(dto);
@@ -108,6 +126,8 @@ public class DashboardController {
                 model.addAttribute("citasAtendidas", citasAtendidas);
                 model.addAttribute("alertasHoy", alertasHoy);
                 model.addAttribute("totalCitasHoy", citasHoy.size());
+                model.addAttribute("totalAtendidosHoy", totalAtendidosHoy);
+                model.addAttribute("especialidadNombre", especialidadNombre);
             }
         }
         return "medico-dashboard";
